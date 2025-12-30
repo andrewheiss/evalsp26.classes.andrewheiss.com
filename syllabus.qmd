@@ -32,7 +32,7 @@ library(tinytable)
 ### Contacting me
 
 - [{{< fa calendar-check >}}]{.fa-li} [Schedule an appointment]({{< var instructor.appointment_url >}})
-- [{{< fa brands slack >}}]{.fa-li} [Slack]({{< var course.slack >}})
+- [{{< fa brands discord >}}]{.fa-li} [Discord]({{< var course.discord >}})
 :::
 
 ::::
@@ -136,13 +136,21 @@ You can [find instructions for installing R, RStudio, and all the tidyverse pack
 
 Data science and statistical programming can be difficult. Computers are stupid and little errors in your code can cause hours of headache (even if you've been doing this stuff for years!).
 
-Fortunately there are tons of online resources to help you with this. Two of the most important are [StackOverflow](https://stackoverflow.com/) (a Q&A site with hundreds of thousands of answers to all sorts of programming questions) and [Posit Community](https://community.rstudio.com/) (a forum specifically designed for people using RStudio and the tidyverse (i.e. you)).
+Fortunately there are tons of online resources to help you with this. 
+
+#### Class community on Discord
+
+We have a class Discord server where anyone in the class can ask questions and anyone can answer. The invitation to the server is on iCollege since that's a password protected place and I want the server to be limited to only students in the class.
+
+**I will monitor Discord regularly and will respond quickly.** (It's one of the rare Discord servers where I actually have notifications enabled!) Ask questions about the readings, exercises, and mini projects. You'll likely have similar questions as your peers, and you'll likely be able to answer other peoples' questions too.
+
+#### Online communities
 
 If you use Bluesky or Mastodon or Threads or LinkedIn, post R-related questions and content with `#rstats`. The R community is exceptionally generous and helpful.
 
-Searching for help with R on Google can sometimes be tricky because the program name is, um, a single letter. Google is generally smart enough to figure out what you mean when you search for "r scatterplot", but if it does struggle, try searching for "rstats" instead (e.g. "rstats scatterplot").
+Searching for help with R on Google can sometimes be tricky because the program name is, um, a single letter. Google is generally smart enough to figure out what you mean when you search for "r scatterplot", but if it does struggle, try searching for "rstats" instead (e.g. "rstats scatterplot"). Also, since most of your R work will deal with {ggplot2}, it's often easier to just search for that instead of the letter "r" (e.g. "ggplot scatterplot").
 
-Additionally, we have a class chatroom at [Slack](https://gsuevalsp26.slack.com) where anyone in the class can ask questions and anyone can answer. **I will monitor Slack regularly and will respond quickly.** (It's one of the rare Slack workspaces where I actually have notifications enabled!) Ask questions about the readings, exercises, and project. You'll likely have similar questions as your peers, and you'll likely be able to answer other peoples' questions too.
+You can also check out the [Posit Community](https://community.rstudio.com/), a forum specifically designed for people using RStudio and the tidyverse (i.e. you).
 
 
 ## AI, LLMs, and BS
@@ -218,7 +226,7 @@ You *never* owe me personal information about your health (mental or physical). 
 
 If you need extra help, or if you need more time with something, or if you feel like you're behind or not understanding everything, **do not suffer in silence!** Talk to me! I will work with you. **I promise.**
 
-*Please* sign up for a time to meet with me during student hours at <https://calendly.com/andrewheiss/>. I'm also available through e-mail and Slack. I've enabled notifications on my Slack account, so I'll see your messages quickly!
+*Please* sign up for a time to meet with me during student hours at <https://calendly.com/andrewheiss/>. I'm also available through e-mail and Discord. I've enabled notifications on my Discord account, so I'll see your messages quickly!
 
 I want you to learn lots of things from this class, but I primarily want you to stay healthy, balanced, and grounded during this crisis.
 
@@ -237,11 +245,9 @@ Please watch this video: <small>(*this is not me, btw—this is a different Andr
 
 <iframe src="https://player.vimeo.com/video/270014784" width="640" height="360" frameborder="0" allow="autoplay; fullscreen" allowfullscreen style="display: block; margin: 0 auto 1rem;"></iframe>
 
-Student hours are set times dedicated to all of you (most professors call these "office hours"; I don't).[^studenthours] This means that I will be ~~in my office~~ at home (wistfully) waiting for you to ~~come by~~ talk to me remotely with whatever questions you have. This is the best and easiest way to find me and the best chance for discussing class material and concerns.
+Student hours are set times dedicated to all of you (most professors call these "office hours"; I don't^[There's fairly widespread misunderstanding about what office hours actually are! [Many students often think that they are the times I *shouldn't* be disturbed](https://www.chronicle.com/article/Can-This-Man-Change-How-Elite/245714/), which is the exact opposite of what they're for!]). This means that I will be waiting for you to talk to me (in person or remotely) with whatever questions you have. This is the best and easiest way to find me and the best chance for discussing class material and concerns.
 
-[^studenthours]: There's fairly widespread misunderstanding about what office hours actually are! [Many students often think that they are the times I *shouldn't* be disturbed](https://www.chronicle.com/article/Can-This-Man-Change-How-Elite/245714/), which is the exact opposite of what they're for!
-
-Because of the pandemic, I am not on campus often and generally cannot meet in person. I will generally be on campus at least once a week though (typically on Thursdays), and I can always meet you online via Webex. [Make an appointment with me here](https://calendly.com/andrewheiss/). You can choose an online or in-person slot—if you choose an online slot, the confirmation e-mail will contain a link for a Webex meeting. You can also find me through e-mail and Slack.
+Since my schedule is often chaotic^[Shuttling 5 kids around to different sports and music lessons, parenting while my wife is in her classes (she's a PhD student at UGA), meeting and traveling for research, and so on] I don't have official permanently-set student hours every week. Instead, the best way to meet with me is to [make an appointment with me here](https://calendly.com/andrewheiss/). You can choose an online or in-person slot—if you choose an online slot, the confirmation e-mail will contain a link for a Webex meeting. You can also find me through e-mail and Discord.
 
 ### Late work
 

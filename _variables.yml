@@ -5,12 +5,11 @@ instructor:
   name_no_title: Andrew Heiss
   email: aheiss@gsu.edu
   url: "https://www.andrewheiss.com"
-  mastodon: "https://fediscience.org/users/andrew/"
   bluesky: "https://bsky.app/profile/andrew.heiss.phd"
   github: andrewheiss
   office: "55 Park Place NE, Room 464"
   contact_policy: >-
-    E-mail and Slack are the best ways to get in contact with me. I will try to respond to all course-related e-mails and Slack messages within 24 hours (*really*), but also remember that life can be busy and chaotic for everyone (including me!), so if I don't respond right away, don't worry!
+    E-mail and Discord are the best ways to get in contact with me. I will try to respond to all course-related e-mails and Discord messages within 24 hours (*really*), but also remember that life can be busy and chaotic for everyone (including me!), so if I don't respond right away, don't worry!
   appointment_url: https://calendly.com/andrewheiss/
 
 course:
@@ -23,7 +22,7 @@ course:
   github: "https://www.github.com/andrewheiss/evalsp26.classes.andrewheiss.com"
   url: "https://evalsp26.classes.andrewheiss.com"
   copyright_year: "2026"
-  slack: "https://gsuevalsp26.slack.com"
+  discord: "https://discord.com/"
 
 university:
   name: Georgia State University

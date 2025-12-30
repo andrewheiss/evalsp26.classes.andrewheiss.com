@@ -47,7 +47,7 @@ course-logo: /files/img/eval-hires.png
 ### Contacting me
 
 - [{{< fa calendar-check >}}]{.fa-li} [Schedule an appointment]({{< var instructor.appointment_url >}})
-- [{{< fa brands slack >}}]{.fa-li} [Slack]({{< var course.slack >}})
+- [{{< fa brands discord >}}]{.fa-li} [Discord]({{< var course.discord >}})
 
 {{< var instructor.contact_policy >}}
 :::

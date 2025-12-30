@@ -68,9 +68,9 @@ website:
         file: resource/index.qmd
       - text: "News & FAQs"
         file: news/index.qmd
-      - icon: slack
-        href: "https://gsuevalsp26.slack.com"
-        aria-label: Slack
+      - icon: discord
+        href: "https://discord.com/"
+        aria-label: Discord
       - icon: cloud-fill
         href: "https://posit.cloud"
         aria-label: Posit.cloud
