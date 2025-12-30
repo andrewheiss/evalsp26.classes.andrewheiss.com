@@ -59,15 +59,15 @@ source("R/tar_calendar.R")
 
 # THE MAIN PIPELINE ----
 list(
-  # ## Slides ----
-  # # Render all the slides and make PDFs
-  # build_slides,
+  ## Slides ----
+  # Render all the slides and make PDFs
+  build_slides,
 
-  # # The main index.qmd page loads all_slides as a target to link it as a dependency
-  # tar_combine(
-  #   all_slides,
-  #   tar_select_targets(build_slides, starts_with("slide_pdf_"))
-  # ),
+  # The main index.qmd page loads all_slides as a target to link it as a dependency
+  tar_combine(
+    all_slides,
+    tar_select_targets(build_slides, starts_with("slide_pdf_"))
+  ),
 
 
   # ## Project folders ----

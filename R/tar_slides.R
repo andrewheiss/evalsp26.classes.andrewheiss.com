@@ -44,8 +44,10 @@ render_xaringan <- function(slide_path) {
   # disable it here. This is the same thing that tarchetypes::tar_render() does
   # behind the scenes too.
   withr::local_options(list(crayon.enabled = NULL))
-  rmarkdown::render(slide_path, quiet = TRUE)
-  return(paste0(tools::file_path_sans_ext(slide_path), ".html"))
+  withr::with_dir(here::here(), {
+    rmarkdown::render(slide_path, quiet = TRUE)
+  })
+  paste0(tools::file_path_sans_ext(slide_path), ".html")
 }
 
 
@@ -59,8 +61,8 @@ render_xaringan <- function(slide_path) {
 # to be done manually from a different non-renv session:
 #
 # renderthis::to_pdf(
-#   from = "~/Sites/courses/evalsp26/slides/10-slides.html", 
-#   to = "~/Sites/courses/evalsp26/slides/10-slides.pdf", 
+#   from = "~/Sites/courses/evalsp26/slides/10-slides.html",
+#   to = "~/Sites/courses/evalsp26/slides/10-slides.pdf",
 #   complex_slides = TRUE
 # )
 
@@ -77,37 +79,73 @@ render_xaringan <- function(slide_path) {
 xaringan_to_pdf <- function(slide_path) {
   path_sans_ext <- tools::file_path_sans_ext(slide_path)
 
-  # if (path_sans_ext == "slides/03-class") {
-  #   return(here::here("slides/03-class.pdf"))
-  # }
-
-  if (path_sans_ext == "slides/04-class") {
-    return(here::here("slides/04-class.pdf"))
-  }
-
-  if (path_sans_ext == "slides/05-class") {
-    return(here::here("slides/05-class.pdf"))
-  }
-
-  if (path_sans_ext == "slides/06-class") {
-    return(here::here("slides/06-class.pdf"))
-  }
-
-  if (path_sans_ext == "slides/07-class") {
-    return(here::here("slides/07-class.pdf"))
-  }
-
-  if (path_sans_ext %in% c("slides/10-slides",
-                           "slides/14-slides", 
-                           "slides/07-slides",
-                           "slides/08-slides")) {
+  if (path_sans_ext %in% c("slides/10-slides")) {
     complex <- FALSE
   } else {
-    renderthis::to_pdf(
-      slide_path,
-      to = paste0(path_sans_ext, ".pdf")
-    )
+    withr::with_dir(here::here(), {
+      renderthis::to_pdf(
+        slide_path,
+        to = paste0(path_sans_ext, ".pdf")
+      )
+    })
   }
 
-  return(paste0(tools::file_path_sans_ext(slide_path), ".pdf"))
+  paste0(path_sans_ext, ".pdf")
 }
+
+# xaringan_to_pdf <- function(slide_path) {
+#   path_sans_ext <- tools::file_path_sans_ext(slide_path)
+
+#   # if (path_sans_ext == "slides/12-slides") {
+#   #   return(here_rel("slides/12-slides.pdf"))
+#   # }
+
+#   # if (path_sans_ext == "slides/15-slides") {
+#   #   return(here_rel("slides/15-slides.pdf"))
+#   # }
+  
+#   renderthis::to_pdf(
+#     slide_path,
+#     to = paste0(path_sans_ext, ".pdf")
+#   )
+
+#   return(paste0(tools::file_path_sans_ext(slide_path), ".pdf"))
+# }
+
+# xaringan_to_pdf <- function(slide_path) {
+#   path_sans_ext <- tools::file_path_sans_ext(slide_path)
+
+#   # if (path_sans_ext == "slides/03-class") {
+#   #   return(here::here("slides/03-class.pdf"))
+#   # }
+
+#   if (path_sans_ext == "slides/04-class") {
+#     return(here::here("slides/04-class.pdf"))
+#   }
+
+#   if (path_sans_ext == "slides/05-class") {
+#     return(here::here("slides/05-class.pdf"))
+#   }
+
+#   if (path_sans_ext == "slides/06-class") {
+#     return(here::here("slides/06-class.pdf"))
+#   }
+
+#   if (path_sans_ext == "slides/07-class") {
+#     return(here::here("slides/07-class.pdf"))
+#   }
+
+#   if (path_sans_ext %in% c("slides/10-slides",
+#                            "slides/14-slides", 
+#                            "slides/07-slides",
+#                            "slides/08-slides")) {
+#     complex <- FALSE
+#   } else {
+#     renderthis::to_pdf(
+#       slide_path,
+#       to = paste0(path_sans_ext, ".pdf")
+#     )
+#   }
+
+#   return(paste0(tools::file_path_sans_ext(slide_path), ".pdf"))
+# }
