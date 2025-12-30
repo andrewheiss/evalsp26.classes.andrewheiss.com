@@ -4,7 +4,7 @@ library(tarchetypes)
 suppressPackageStartupMessages(library(tidyverse))
 
 class_number <- "PMAP 8521"
-base_url <- "https://evalsp25.classes.andrewheiss.com/"
+base_url <- "https://evalsp26.classes.andrewheiss.com/"
 page_suffix <- ".html"
 
 options(
@@ -18,10 +18,10 @@ options(
 # This hardcodes the absolute path in _targets.yaml, so to make this more
 # portable, we rewrite it every time this pipeline is run (and we don't track
 # _targets.yaml with git)
-tar_config_set(
-  store = here::here("_targets"),
-  script = here::here("_targets.R")
-)
+# tar_config_set(
+#   store = here::here("_targets"),
+#   script = here::here("_targets.R")
+# )
 
 tar_option_set(
   packages = c("tidyverse"),
@@ -59,26 +59,26 @@ source("R/tar_calendar.R")
 
 # THE MAIN PIPELINE ----
 list(
-  ## Slides ----
-  # Render all the slides and make PDFs
-  build_slides,
+  # ## Slides ----
+  # # Render all the slides and make PDFs
+  # build_slides,
 
-  # The main index.qmd page loads all_slides as a target to link it as a dependency
-  tar_combine(
-    all_slides,
-    tar_select_targets(build_slides, starts_with("slide_pdf_"))
-  ),
+  # # The main index.qmd page loads all_slides as a target to link it as a dependency
+  # tar_combine(
+  #   all_slides,
+  #   tar_select_targets(build_slides, starts_with("slide_pdf_"))
+  # ),
 
 
-  ## Project folders ----
-  # Create/copy data and zip up all the project folders
-  make_data_and_zip_projects,
+  # ## Project folders ----
+  # # Create/copy data and zip up all the project folders
+  # make_data_and_zip_projects,
 
-  # The main index.qmd page loads all_zipped_projects as a target to link it as a dependency
-  tar_combine(
-    all_zipped_projects,
-    tar_select_targets(make_data_and_zip_projects, starts_with("zip_"))
-  ),
+  # # The main index.qmd page loads all_zipped_projects as a target to link it as a dependency
+  # tar_combine(
+  #   all_zipped_projects,
+  #   tar_select_targets(make_data_and_zip_projects, starts_with("zip_"))
+  # ),
 
 
   ## Class schedule calendar ----
@@ -97,21 +97,21 @@ list(
 
   ## Render the README ----
   tar_target(workflow_graph, build_graph(), format = "file"),
-  tar_quarto(readme, here_rel("README.qmd")),
+  tar_quarto(readme, here_rel("README.qmd"))#,
 
 
-  ## Build site ----
-  tar_quarto(site, path = ".", quiet = FALSE),
+  # ## Build site ----
+  # tar_quarto(site, path = ".", quiet = FALSE),
 
 
-  ## Upload site ----
-  tar_target(deploy_script, here_rel("deploy.sh"), format = "file"),
-  tar_target(deploy_site, {
-    # Force dependencies
-    site
-    if (Sys.getenv("UPLOAD_WEBSITES") == "TRUE") {
-      processx::run(paste0("./", deploy_script))
-      cli::cli_alert_success(paste0("Website uploaded to ", base_url))
-    }
-  })
+  # ## Upload site ----
+  # tar_target(deploy_script, here_rel("deploy.sh"), format = "file"),
+  # tar_target(deploy_site, {
+  #   # Force dependencies
+  #   site
+  #   if (Sys.getenv("UPLOAD_WEBSITES") == "TRUE") {
+  #     processx::run(paste0("./", deploy_script))
+  #     cli::cli_alert_success(paste0("Website uploaded to ", base_url))
+  #   }
+  # })
 )

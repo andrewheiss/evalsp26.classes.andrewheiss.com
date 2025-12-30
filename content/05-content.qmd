@@ -1,6 +1,6 @@
 ---
 title: "DAGs and potential outcomes"
-date: "2025-02-13"
+date: "2026-02-12"
 ---
 
 ```{r slides-videos, echo=FALSE, include=FALSE}
@@ -49,6 +49,9 @@ slide_frame("/slides/05-slides.html")
 youtube_list(slide_details, playlist_id)
 ```
 
+
+::: {.content-hidden}
+
 ## In-class stuff
 
 Here are all the materials we'll use in class:
@@ -96,6 +99,8 @@ Here are all the materials we'll use in class:
 </video>
 </div>
 ```
+
+:::
 
 :::: {.content-hidden}
 

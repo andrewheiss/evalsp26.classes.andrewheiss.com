@@ -1,12 +1,13 @@
 ---
 title: "Difference-in-differences II"
-date: "2025-03-13"
+date: "2026-03-12"
 ---
 
 ## Readings
 
 This session is a continuation of [session 8](/content/08-content/).
 
+::: {.content-hidden}
 
 ## In-class stuff
 
@@ -150,3 +151,5 @@ Plot.plot({
   ]}
 )
 ```
+
+:::

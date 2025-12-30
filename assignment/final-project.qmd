@@ -1,6 +1,6 @@
 ---
 title: "Final project"
-date: "2025-05-05"
+date: "2026-05-04"
 ---
 
 Evaluation research is tricky and costly. If you begin an intervention or launch a study prematurely, you can waste time and money—and potentially lives. 
@@ -31,7 +31,7 @@ This project is due by **11:59 PM on Monday, May 5, 2025.** <span style="color: 
 
 I will grade your project using this rubric. I *highly* recommend that you refer to the rubric as you work on your project!
 
-- {{< fa list-check >}}&ensp;[`evalsp25_final-project-rubric.xlsx`](/files/evalsp25_final-project-rubric.xlsx)
+- {{< fa list-check >}}&ensp;[`evalsp26_final-project-rubric.xlsx`](/files/evalsp26_final-project-rubric.xlsx)
 
 You can either run the analysis in RStudio locally on your computer (highly recommended(!!), since you won't have to worry about keeping all your work on Posit's servers), or use an Posit.cloud project. You can make a copy of this Posit.cloud project—it doesn't have anything in it, but I have preinstalled all the packages we've used over the course of the semester, so you don't have to.
 

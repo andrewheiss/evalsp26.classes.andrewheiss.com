@@ -15,15 +15,15 @@ instructor:
 
 course:
   number: "PMAP 8521"
-  semester: "Spring 2025"
+  semester: "Spring 2026"
   days: "Thursdays"
   time: "7:15–9:45 PM"
   location: "Aderhold Learning Center 30"
-  dates: "January 16–May 5, 2025"
-  github: "https://www.github.com/andrewheiss/evalsp25.classes.andrewheiss.com"
-  url: "https://evalsp25.classes.andrewheiss.com"
-  copyright_year: "2025"
-  slack: "https://gsuevalsp25.slack.com"
+  dates: "January 15–May 4, 2026"
+  github: "https://www.github.com/andrewheiss/evalsp26.classes.andrewheiss.com"
+  url: "https://evalsp26.classes.andrewheiss.com"
+  copyright_year: "2026"
+  slack: "https://gsuevalsp26.slack.com"
 
 university:
   name: Georgia State University

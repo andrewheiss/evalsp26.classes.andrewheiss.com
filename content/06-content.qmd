@@ -1,6 +1,6 @@
 ---
 title: "Threats to validity"
-date: "2025-02-20"
+date: "2026-02-19"
 ---
 
 ```{r slides-videos, echo=FALSE, include=FALSE}
@@ -49,6 +49,8 @@ slide_frame("/slides/06-slides.html")
 ```{r show-youtube-list, echo=FALSE, results="asis"}
 youtube_list(slide_details, playlist_id)
 ```
+
+::: {.content-hidden}
 
 ## In-class stuff
 
@@ -116,6 +118,7 @@ Here are all the materials we'll use in class:
 </div>
 ```
 
+:::
 
 ```{verbatim include=FALSE}
 Playlist: https://www.youtube.com/playlist?list=PLS6tnpTr39sFJtz7egfUASfhhz6zuj7GZ

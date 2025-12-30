@@ -1,6 +1,6 @@
 ---
 title: "Randomization and matching"
-date: "2025-02-27"
+date: "2026-02-26"
 ---
 
 ```{r slides-videos, echo=FALSE, include=FALSE}
@@ -53,6 +53,7 @@ slide_frame("/slides/07-slides.html")
 youtube_list(slide_details, playlist_id)
 ```
 
+::: {.content-hidden}
 
 ## In-class stuff
 
@@ -84,6 +85,7 @@ Other helpful resources:
 - [Standard errors](/example/standard-errors.qmd)
 - [Unobserved confounding and sensitivity analysis](/example/confounding-sensitivity.qmd)
 
+:::
 
 ```{verbatim include=FALSE}
 Playlist: https://www.youtube.com/playlist?list=PLS6tnpTr39sGJURMOwN9tf9MNDN4t0JMz

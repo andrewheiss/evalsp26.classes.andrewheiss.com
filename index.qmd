@@ -15,10 +15,10 @@ course-logo: /files/img/eval-hires.png
 
 ```{r set-dependencies, include=FALSE}
 # Site-wide targets dependencies
-withr::with_dir(here::here(), {
-  targets::tar_load(all_zipped_projects)
-  targets::tar_load(all_slides)
-})
+# withr::with_dir(here::here(), {
+#   targets::tar_load(all_zipped_projects)
+#   targets::tar_load(all_slides)
+# })
 ```
 
 ::::: {.home}

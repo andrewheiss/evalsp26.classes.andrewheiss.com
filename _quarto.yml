@@ -26,28 +26,28 @@ csl: files/bib/chicago-author-date.csl
 website:
   title: "Program Evaluation"
   description: "Use modern statistical and data scientific tools to measure causal effects and evaluate public policy"
-  site-url: "https://evalsp25.classes.andrewheiss.com"
+  site-url: "https://evalsp26.classes.andrewheiss.com"
 
-  announcement:
-    icon: calendar-check
-    dismissable: true
-    content: "**Reminder!** The final deadline for all assignments other than the final project is **Tuesday, April 29 at 11:59 PM** ([details](/news/2025-04-23_final-deadlines.html))"
-    type: danger
-    position: below-navbar
+  # announcement:
+  #   icon: calendar-check
+  #   dismissable: true
+  #   content: "**Reminder!** The final deadline for all assignments other than the final project is **Tuesday, April 29 at 11:59 PM** ([details](/news/2025-04-23_final-deadlines.html))"
+  #   type: danger
+  #   position: below-navbar
 
   favicon: "/files/icon-512.png"
 
   twitter-card:
-    image: "/files/social-image-sp25.png"
+    image: "/files/social-image-sp26.png"
     card-style: summary_large_image
     creator: "@andrewheiss"
     # site: "@andrewheiss"
 
   open-graph:
-    image: "/files/social-image-sp25.png"
+    image: "/files/social-image-sp26.png"
     locale: en_US
   
-  repo-url: "https://github.com/andrewheiss/evalsp25.classes.andrewheiss.com"
+  repo-url: "https://github.com/andrewheiss/evalsp26.classes.andrewheiss.com"
   repo-actions: [edit, issue]
   
   page-navigation: true
@@ -69,7 +69,7 @@ website:
       - text: "News & FAQs"
         file: news/index.qmd
       - icon: slack
-        href: "https://gsuevalsp25.slack.com"
+        href: "https://gsuevalsp26.slack.com"
         aria-label: Slack
       - icon: cloud-fill
         href: "https://posit.cloud"

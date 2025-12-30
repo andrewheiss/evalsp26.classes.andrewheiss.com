@@ -1,6 +1,6 @@
 ---
 title: "Measurement and DAGs"
-date: "2025-02-06"
+date: "2026-02-05"
 lightbox: auto
 ---
 
@@ -59,6 +59,7 @@ slide_frame("/slides/04-slides.html")
 youtube_list(slide_details, playlist_id)
 ```
 
+::: {.content-hidden}
 
 ## In-class stuff
 
@@ -72,6 +73,7 @@ Here are all the materials we'll use in class:
 knitr::include_graphics(here::here("files", "img", "mpa-mpp-logic-model.jpg"), error = FALSE)
 ```
 
+:::
 
 ```{verbatim include=FALSE}
 Playlist: https://www.youtube.com/playlist?list=PLS6tnpTr39sFVrHdTifzlyS9dsJjhEhsF

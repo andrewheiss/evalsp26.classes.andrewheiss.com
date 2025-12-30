@@ -1,6 +1,6 @@
 ---
 title: "Problem set 6"
-date: "2025-04-03"
+date: "2026-04-02"
 ---
 
 For this problem set, you'll practice doing regression discontinuity analysis with simulated data from a hypothetical program. This example page will be incredibly useful for you:

@@ -3,7 +3,7 @@ title: Synthetic data for regression discontinuity
 toc: false
 ---
 
-```{r setup, include=FALSE}
+```{r}
 #| label: setup
 #| include: false
 
@@ -21,7 +21,7 @@ options("digits" = 4, "width" = 170)
 options(dplyr.summarise.inform = FALSE)
 ```
 
-```{r libraries, warning=FALSE, message=FALSE}
+```{r}
 #| label: libraries
 #| warning: false
 #| message: false
@@ -216,7 +216,7 @@ ggplot(rdd_data, aes(x = income, y = malaria_risk_sharp, color = net_sharp)) +
   theme(legend.position = "bottom")
 ```
 
-```{r indent="   "}
+```{r}
 #| indent: "   "
 
 model_sharp <- lm(

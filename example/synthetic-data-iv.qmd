@@ -3,7 +3,7 @@ title: Synthetic data for instrumental variables
 toc: false
 ---
 
-```{r setup, include=FALSE}
+```{r}
 #| label: setup
 #| include: false
 
@@ -21,7 +21,7 @@ options("digits" = 4, "width" = 170)
 options(dplyr.summarise.inform = FALSE)
 ```
 
-```{r libraries, warning=FALSE, message=FALSE}
+```{r}
 #| label: libraries
 #| warning: false
 #| message: false
@@ -45,7 +45,7 @@ library(ggdag)
 
    Here's the DAG:
 
-```{r iv-dag, indent="   "}
+```{r}
 #| label: iv-dag
 #| indent: "   "
 
@@ -92,7 +92,7 @@ ggdag_status(iv_dag) +
 
    Fake data time! Here's some heavily annotated code:
 
-```{r indent="   "}
+```{r}
 #| indent: "   "
 
 # Make this randomness consistent
