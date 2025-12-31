@@ -70,15 +70,15 @@ list(
   ),
 
 
-  # ## Project folders ----
-  # # Create/copy data and zip up all the project folders
-  # make_data_and_zip_projects,
+  ## Project folders ----
+  # Create/copy data and zip up all the project folders
+  make_data_and_zip_projects,
 
-  # # The main index.qmd page loads all_zipped_projects as a target to link it as a dependency
-  # tar_combine(
-  #   all_zipped_projects,
-  #   tar_select_targets(make_data_and_zip_projects, starts_with("zip_"))
-  # ),
+  # The main index.qmd page loads all_zipped_projects as a target to link it as a dependency
+  tar_combine(
+    all_zipped_projects,
+    tar_select_targets(make_data_and_zip_projects, starts_with("zip_"))
+  ),
 
 
   ## Class schedule calendar ----
@@ -97,21 +97,21 @@ list(
 
   ## Render the README ----
   tar_target(workflow_graph, build_graph(), format = "file"),
-  tar_quarto(readme, here_rel("README.qmd"))#,
+  tar_quarto(readme, here_rel("README.qmd")),
 
 
-  # ## Build site ----
-  # tar_quarto(site, path = ".", quiet = FALSE),
+  ## Build site ----
+  tar_quarto(site, path = ".", quiet = FALSE),
 
 
-  # ## Upload site ----
-  # tar_target(deploy_script, here_rel("deploy.sh"), format = "file"),
-  # tar_target(deploy_site, {
-  #   # Force dependencies
-  #   site
-  #   if (Sys.getenv("UPLOAD_WEBSITES") == "TRUE") {
-  #     processx::run(paste0("./", deploy_script))
-  #     cli::cli_alert_success(paste0("Website uploaded to ", base_url))
-  #   }
-  # })
+  ## Upload site ----
+  tar_target(deploy_script, here_rel("deploy.sh"), format = "file"),
+  tar_target(deploy_site, {
+    # Force dependencies
+    site
+    if (Sys.getenv("UPLOAD_WEBSITES") == "TRUE") {
+      processx::run(paste0("./", deploy_script))
+      cli::cli_alert_success(paste0("Website uploaded to ", base_url))
+    }
+  })
 )

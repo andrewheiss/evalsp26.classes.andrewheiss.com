@@ -4,7 +4,7 @@
 
 # Program Evaluation for Public Service <a href='https://evalsp26.classes.andrewheiss.com/'><img src='files/icon-512.png' align="right" height="139" /></a>
 
-[PMAP 8521 • Spring 2025](https://evalsp26.classes.andrewheiss.com/)  
+[PMAP 8521 • Spring 2026](https://evalsp26.classes.andrewheiss.com/)  
 [Andrew Heiss](https://www.andrewheiss.com/) • Andrew Young School of
 Policy Studies • Georgia State University
 
@@ -13,7 +13,7 @@ Policy Studies • Georgia State University
 **[Quarto](https://quarto.org/) +
 [{targets}](https://docs.ropensci.org/targets/) +
 [{renv}](https://rstudio.github.io/renv/) +
-[{xaringan}](https://github.com/yihui/xaringan) = magic! 🔮**
+[{xaringan}](https://github.com/yihui/xaringan) = magic! 🧙‍♂️**
 
 ------------------------------------------------------------------------
 

@@ -18,7 +18,7 @@ withr::with_dir(here::here(), {
 
 # Program Evaluation for Public Service <a href='https://evalsp26.classes.andrewheiss.com/'><img src='files/icon-512.png' align="right" height="139" /></a>
 
-[PMAP 8521 • Spring 2025](https://evalsp26.classes.andrewheiss.com/)  
+[PMAP 8521 • Spring 2026](https://evalsp26.classes.andrewheiss.com/)  
 [Andrew Heiss](https://www.andrewheiss.com/) • Andrew Young School of Policy Studies • Georgia State University
 
 ---
