@@ -11,7 +11,6 @@ save_ical <- function(df, path) {
 # schedule page. Returns a data frame with all rows nested by group to make it
 # easier to display the schedule by group
 build_schedule_for_page <- function(schedule_file) {
-  library(glue)
 
   schedule <- read_csv(schedule_file, show_col_types = FALSE) %>%
     mutate(group = fct_inorder(group)) %>%
@@ -59,8 +58,6 @@ build_schedule_for_page <- function(schedule_file) {
 # Read the schedule CSV file and create a dataset formatted as iCal data that
 # calendar::ic_write() can use
 build_ical <- function(schedule_file, base_url, page_suffix, class_number) {
-  library(glue)
-  library(calendar)
 
   dtstamp <- ic_char_datetime(now("UTC"), zulu = TRUE)
 
