@@ -54,98 +54,45 @@ render_xaringan <- function(slide_path) {
 # Use pagedown to convert xaringan HTML slides to PDF. Return a relative path to
 # the PDF to keep targets happy.
 #
-# Slides for sessions 10 and 14 are huge, so use chromote to convert them
-# outside of this targets pipeline instead
+# Some slides are too large and cause renderthis::to_pdf() to timeout. For these
+# slides (specified in skip_pdf_slides in _targets.R), we skip automatic PDF
+# generation and expect the PDF to already exist (generated manually).
 #
-# But that doesn't work inside renv or targets for whatever reasons, so this has
-# to be done manually from a different non-renv session:
+# Manual PDF generation workaround using decktape via Docker:
+# 1. Serve slides locally (e.g., with VS Code Live Server on port 5500)
+# 2. Run: docker run --rm -t --net=host -v `pwd`:/slides astefanutti/decktape \
+#         http://host.docker.internal:5500/slides/10-slides.html 10-slides.pdf
 #
-# renderthis::to_pdf(
-#   from = "~/Sites/courses/evalsp26/slides/10-slides.html",
-#   to = "~/Sites/courses/evalsp26/slides/10-slides.pdf",
-#   complex_slides = TRUE
-# )
+# Note: complex_slides parameter in renderthis is temporarily broken in early
+# 2025 due to changes in headless Chrome (https://github.com/rstudio/chromote/issues/193)
 
-# BUT WAIT, complex_slides is temporarily broken in early 2025 because of
-# changes in headless Chrome (https://github.com/rstudio/chromote/issues/193)
-
-# A (slow) workaround is to use decktape
-# (https://github.com/astefanutti/decktape) through Docker with this cryptic
-# command (after serving the slides with a live server in VS Code or Positron or
-# whatever)
-
-# docker run --rm -t --net=host -v `pwd`:/slides astefanutti/decktape http://host.docker.internal:5500/05-class.html slides.pdf
-
-xaringan_to_pdf <- function(slide_path) {
+xaringan_to_pdf <- function(slide_path, skip_list = skip_pdf_slides) {
   path_sans_ext <- tools::file_path_sans_ext(slide_path)
+  pdf_path <- paste0(path_sans_ext, ".pdf")
 
-  if (path_sans_ext %in% c("slides/10-slides")) {
-    complex <- FALSE
-  } else {
-    withr::with_dir(here::here(), {
-      renderthis::to_pdf(
-        slide_path,
-        to = paste0(path_sans_ext, ".pdf")
+  # Skip PDF generation for slides in the skip list - assume they already exist
+  if (path_sans_ext %in% skip_list) {
+    if (!file.exists(pdf_path)) {
+      warning(
+        "PDF does not exist for skipped slide: ", path_sans_ext, "\n",
+        "Expected at: ", pdf_path, "\n",
+        "Generate manually with decktape (see comments in tar_slides.R)"
       )
-    })
+    }
+    return(pdf_path)
   }
 
-  paste0(path_sans_ext, ".pdf")
+  # Generate PDF for all other slides
+  # Note: delay parameter only works with complex_slides = TRUE, which is
+  # currently broken due to chromote issues. Keeping it here for when it's fixed.
+  withr::with_dir(here::here(), {
+    renderthis::to_pdf(
+      slide_path,
+      to = pdf_path#,
+      # Uncomment when chromote is fixed:
+      # complex_slides = FALSE
+    )
+  })
+
+  return(pdf_path)
 }
-
-# xaringan_to_pdf <- function(slide_path) {
-#   path_sans_ext <- tools::file_path_sans_ext(slide_path)
-
-#   # if (path_sans_ext == "slides/12-slides") {
-#   #   return(here_rel("slides/12-slides.pdf"))
-#   # }
-
-#   # if (path_sans_ext == "slides/15-slides") {
-#   #   return(here_rel("slides/15-slides.pdf"))
-#   # }
-  
-#   renderthis::to_pdf(
-#     slide_path,
-#     to = paste0(path_sans_ext, ".pdf")
-#   )
-
-#   return(paste0(tools::file_path_sans_ext(slide_path), ".pdf"))
-# }
-
-# xaringan_to_pdf <- function(slide_path) {
-#   path_sans_ext <- tools::file_path_sans_ext(slide_path)
-
-#   # if (path_sans_ext == "slides/03-class") {
-#   #   return(here::here("slides/03-class.pdf"))
-#   # }
-
-#   if (path_sans_ext == "slides/04-class") {
-#     return(here::here("slides/04-class.pdf"))
-#   }
-
-#   if (path_sans_ext == "slides/05-class") {
-#     return(here::here("slides/05-class.pdf"))
-#   }
-
-#   if (path_sans_ext == "slides/06-class") {
-#     return(here::here("slides/06-class.pdf"))
-#   }
-
-#   if (path_sans_ext == "slides/07-class") {
-#     return(here::here("slides/07-class.pdf"))
-#   }
-
-#   if (path_sans_ext %in% c("slides/10-slides",
-#                            "slides/14-slides", 
-#                            "slides/07-slides",
-#                            "slides/08-slides")) {
-#     complex <- FALSE
-#   } else {
-#     renderthis::to_pdf(
-#       slide_path,
-#       to = paste0(path_sans_ext, ".pdf")
-#     )
-#   }
-
-#   return(paste0(tools::file_path_sans_ext(slide_path), ".pdf"))
-# }

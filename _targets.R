@@ -1,11 +1,15 @@
 library(targets)
-# library(crew)
 library(tarchetypes)
 suppressPackageStartupMessages(library(tidyverse))
 
 class_number <- "PMAP 8521"
 base_url <- "https://evalsp26.classes.andrewheiss.com/"
 page_suffix <- ".html"
+
+# Slides that are too large for renderthis::to_pdf() and must be converted
+# manually with decktape. The pipeline will skip PDF generation for these and
+# expect the PDFs to already exist.
+skip_pdf_slides <- c("slides/10-slides")
 
 options(
   tidyverse.quiet = TRUE,
@@ -26,8 +30,7 @@ options(
 tar_option_set(
   packages = c("tidyverse"),
   format = "rds",
-  workspace_on_error = TRUE#,
-  # controller = crew_controller_local(workers = 1)
+  workspace_on_error = TRUE
 )
 
 build_graph <- function() {
