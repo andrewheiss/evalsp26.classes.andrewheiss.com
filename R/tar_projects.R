@@ -41,14 +41,15 @@ make_data_and_zip_projects <- list(
     tar_target(
       target_name,
       {
-        # Make the copying and building targets are dependencies here
-        copy_data
-        build_data
+        # The project_files target already tracks all files in the project folder
+        # (including copied data files), so we just need to depend on that.
+        # When ANY file in the project changes, this zip will rebuild.
+        project_files
 
         # Zip things up
         zip::zip(
-          zipfile = paste0(project, ".zip"),
-          files = project,
+          zipfile = paste0(project_path, ".zip"),
+          files = project_path,
           mode = "cherry-pick"
         )
       },
@@ -56,7 +57,8 @@ make_data_and_zip_projects <- list(
     ),
     values = list(
       target_name = projects$zip_sym,
-      project = projects$sym
+      project_files = projects$sym,      # The tar_files_input target
+      project_path = projects$path       # The actual path to zip
     )
   )
 )
