@@ -56,6 +56,11 @@ $footer-font-size: 0.9rem;
 $link-color: $red;
 $link-hover-color: $yellow;
 
+// Inline code
+$code-bg: $gray-200 !default;
+$code-color: $gray-900 !default;
+
+// Block code
 $monokai-bg: #2e3440;
 
 
@@ -228,6 +233,11 @@ div.sidebar-item-container .active, div.sidebar-item-container .show > .nav-link
   background-color: $red;
 }
 
+// Title area
+#title-block-header .subtitle {
+  font-size: 1.8em;
+}
+
 // Slightly larger buttons
 p a.btn, .buttons span.btn {
   font-size: 1.2rem;
@@ -274,6 +284,13 @@ main {
 
 
 // Code stuff
+// Fix the doubled code block background color in the nested list
+// It was displaying with light gray inside the dark monokai area
+// Related to https://github.com/quarto-dev/quarto-cli/issues/13390
+p code.sourceCode, li code.sourceCode, td code.sourceCode {
+    background-color: inherit;
+}
+
 // Shrink blocks of code
 pre.text, pre.sourceCode, .cell-output pre {
   font-size: 0.7em;
