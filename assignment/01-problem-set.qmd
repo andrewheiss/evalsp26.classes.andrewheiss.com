@@ -1,5 +1,6 @@
 ---
 title: "Problem set 1"
+subtitle: "Introduction to R and the tidyverse"
 date: "2026-01-22"
 ---
 
@@ -7,113 +8,54 @@ date: "2026-01-22"
 knitr::opts_chunk$set(fig.align = "center")
 ```
 
-## Task 1: Introduce yourself to R, RStudio, and the tidyverse
+::: {.callout-important}
 
-1. Go the the example page for this week, ["Welcome to R, RStudio, and the tidyverse"](/example/rstudio-tidyverse.qmd), and work through the different primers and videos in the four parts of the page.
+Before starting this problem set, make sure you complete everything at [the example for this week](/example/rstudio-tidyverse.qmd), especially the Posit Primers.
 
-   It seems like there's a lot on the page, but they're short and go fairly quickly (especially as you get the hang of the syntax). Also, **I have no way of seeing what you do or what you get wrong or right, and that's totally fine!** If you get stuck and want to skip some (or if it gets too easy), go right ahead and skip them!
+:::
 
+## Instructions
 
-## Task 2: Make an RStudio Project
+0. Complete all the primers read through the other materials [at the example for this week](/example/rstudio-tidyverse.qmd).
 
-1. Use either Posit.cloud ([empty project here](https://posit.cloud/spaces/599025/content/9520184)) or RStudio on your computer (preferably RStudio on your computer! [Follow these instructions to get started!](/resource/install.qmd)) to create a new RStudio Project. Refer to the [example page you read in Task 1 for instructions](/example/rstudio-tidyverse.qmd#part-3-rstudio-projects)
+1. Open the project either on your computer ([follow these instructions to get started!](/resource/install.qmd)) or in Posit.cloud
 
-2. Create a folder named "data" in the project folder you just made.
+   - [{{< fa file-archive >}} `01-problem-set.zip`](/projects/01-problem-set.zip): If you're using R on your own computer, download this file, [*unzip it*](/resource/unzipping.qmd), and double click on the file named `01-problem-set.Rproj`
+   - [{{< fa cloud >}} Posit.cloud project](https://posit.cloud/spaces/679548/content/10729158): Use this link if you're using Posit.cloud in your browser
 
-3. Download this CSV file and place it in that folder:
+2. Rename the Quarto file named `your-name_problem-set-1.qmd` to something that matches your name and open it in RStudio.
 
-   - [{{< fa file-csv >}} `cars.csv`](/files/data/package_data/cars.csv)
+3. Complete the tasks given in the Quarto file. You can definitely copy, paste, and adapt from other code in the document—don't try to write everything from scratch!
 
-4. In RStudio, go to "File" > "New File…" > "Quarto Document…" and click "OK" in the dialog without changing anything.
+4. When you're all done, click on the "Render" button at the top of the editing window and create a Typst (pdf), PDF, or Word version of your document. Upload that file to iCollege. **Do not upload a rendered HTML file** (they don't work on iCollege).
 
-5. Delete all the placeholder text in that new file and replace it with this:
-
-   ````
-   ---
-   title: "Problem set 1"
-   author: "Put your name here"
-   format: 
-     html:
-       toc: true
-     pdf:
-       toc: true
-     docx:
-       toc: true
-   ---
-   
-   ```{{r load-libraries-data, warning=FALSE, message=FALSE}}
-   library(tidyverse)
-   
-   cars <- read_csv("data/cars.csv")
-   ```
-   
-   # Learning R
-   
-   Tell me that you worked through the primers and videos and examples at the example page for this week:
-   
-   WRITE SOMETHING HERE LIKE "I did all the primers and had the time of my life!" or whatever.
-   
-   
-   # My first plots
-   
-   Insert a chunk below and use it to create a scatterplot (hint: `geom_point()`) with diplacement (`displ`) on the x-axis, city MPG (`cty`) on the y-axis, and with the points colored by drive (`drv`).
-   
-   PUT CHUNK HERE
-   
-   Insert a chunk below and use it to create a histogram (hint: `geom_histogram()`) with highway MPG (`hwy`) on the x-axis. Do not include anything on the y-axis (`geom_histogram()` will do that automatically for you). Choose an appropriate bin width. If you're brave, facet by drive (`drv`).
-   
-   PUT CHUNK HERE
-   
-   
-   # My first data manipulation
-   
-   Insert a chunk below and use it to calculate the average city MPG (`cty`) by class of car (`class`). This won't be a plot---it'll be a table. Hint: use a combination of `group_by()` and `summarize()`.
-   
-   PUT CHUNK HERE
-   ````
-
-6. Save the Quarto file with some sort of name (**without any spaces!**)
-
-7. Your project folder should look something like this:
-
-```{r project-structure, echo=FALSE, out.width="30%"}
-knitr::include_graphics("/files/img/assignments/project-structure.png", error = FALSE)
-```
-
-
-## Task 3: Work with R
-
-1. Remove the text that says "PUT CHUNK HERE" and insert a new R code chunk. Either type <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>i</kbd> on Windows, or <kbd>⌘</kbd> + <kbd>⌥</kbd> + <kbd>i</kbd> on macOS, or use the "Insert Chunk" menu:
-
-```{r insert-chunk-button, echo=FALSE, out.width="19%"}
-knitr::include_graphics("/files/img/assignments/insert-chunk-button.png", error = FALSE)
-```
-
-2. Follow the instructions for the three chunks of code.
-
-3. Render your document as a PDF or Word file. Use the "Render" menu:
-
-```{r render-button, echo=FALSE, out.width="50%"}
+```{r render-button, echo=FALSE, out.width="50%", indent="   ", fig.align="center"}
 knitr::include_graphics("/files/img/assignments/render-button.png", error = FALSE)
 ```
 
-4. Upload the rendered document to iCollege.
+## Tips
 
-5. `r emoji::emoji("tada")` Party! `r emoji::emoji("tada")`
+:::: {.callout-tip}
+### File organization
 
+You'll be doing this same process for all your future exercises. Each exercise will involve a Quarto file. 
 
-:::{.callout-tip}
+You can either create individual projects for each assignment and mini-project (recommended!):
 
-You'll be doing this same process for all your future problem sets. Each problem set will involve a Quarto file. You can either create a new RStudio Project directory for all your work:
+::: {layout="[39.5,-1,60]"}
 
-```{r single-directory, echo=FALSE, out.width="30%"}
-knitr::include_graphics("/files/img/reference/rproj-one-folder.png", error = FALSE)
-```
+![Individual folders for each project on macOS](/files/img/reference/rproj-multiple-folders-macos.png)
 
-Or you can create individual projects for each assignment and project:
-
-```{r multiple-directories, echo=FALSE, out.width="30%",}
-knitr::include_graphics("/files/img/reference/rproj-multiple-folders.png", error = FALSE)
-```
-
+![Individual folders for each project on Windows](/files/img/reference/rproj-multiple-folders-windows.png)
 :::
+
+Or you can create a new RStudio Project directory for all your work (not recommended!):
+
+::: {layout="[53,-1,39]"}
+
+![One folder for everything on macOS](/files/img/reference/rproj-one-folder-macos.png)
+
+![One folder for everything on Windows](/files/img/reference/rproj-one-folder-windows.png)
+:::
+
+::::

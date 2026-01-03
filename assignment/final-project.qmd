@@ -3,6 +3,15 @@ title: "Final project"
 date: "2026-05-04"
 ---
 
+::: {.callout-warning}
+
+### Assignment not ready yet!
+
+I'm updating this assignment and will post full details and instructions at least six weeks before the deadline.
+
+:::
+
+
 Evaluation research is tricky and costly. If you begin an intervention or launch a study prematurely, you can waste time and money—and potentially lives. 
 
 Even if you have a well designed program with an impeccable logic model and a perfect DAG, you might discover (too late!) that you forgot to collect some critical variables or realize that your identification strategy will not work. 

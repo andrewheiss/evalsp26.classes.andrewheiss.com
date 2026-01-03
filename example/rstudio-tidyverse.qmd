@@ -2,7 +2,7 @@
 title: "R, RStudio, and the tidyverse"
 ---
 
-## Part 1: The basics of R and dplyr
+## Part 1: The basics of R and {dplyr}
 
 For this week's problem set, you need to work through a few of RStudio's introductory primers. You'll do these in your browser and type code and see results there.
 
@@ -36,7 +36,7 @@ The content from these primers comes from the (free and online!) book [*R for Da
 
 The RStudio primers you just worked through are a great introduction to writing and running R code, but you typically won't type code in a browser when you work with R. Instead, you'll use a nicer programming environment like RStudio, which lets you type and save code in scripts, run code from those scripts, and see the output of that code, all in the same program.
 
-To get familiar with RStudio, watch this video (it's from PMAP 8921, but the content still applies here): 
+To get familiar with RStudio, watch this video (it's from my data visualization class, but the content still applies here): 
 
 <div class="ratio ratio-16x9">
 <iframe src="https://www.youtube.com/embed/cnQ-v1UUWyE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -72,25 +72,17 @@ To ensure that the analysis and graphics you make are reproducible, you'll do th
 
 Do the following things: 
 
-1. Watch this video. It's all about R Markdown, which is Quarto's predecessor. The same general principles apply.
-
-<div class="ratio ratio-16x9">
-<iframe src="https://player.vimeo.com/video/178485416?color=428bca" frameborder="0"  allow="autoplay; fullscreen" allowfullscreen></iframe>
-</div>
-
-&nbsp;
-
-2. Skim through the content at these pages. Again, lots of these resources mention R Markdown, which is Quarto's predecessor, but the same principles apply to Quarto
+1. Skim through the content at these pages. Again, lots of these resources mention R Markdown, which is Quarto's predecessor, but the same principles apply to Quarto
 
     - [Using Markdown](/resource/markdown.qmd)
     - [Using Quarto](/resource/quarto.qmd)
     - [How it Works](https://rmarkdown.rstudio.com/lesson-2.html)
     - [Code Chunks](https://rmarkdown.rstudio.com/lesson-3.html)
     - [Inline Code](https://rmarkdown.rstudio.com/lesson-4.html)
-    - [Publish and Share with Quarto](https://rstudio.github.io/cheatsheets/html/quarto.html#publish)
     - [Publish and Share with Quarto cheatsheet](https://rstudio.github.io/cheatsheets/quarto.pdf)
+    - [Publish and Share with Quarto](https://rstudio.github.io/cheatsheets/html/quarto.html#publish)
 
-3. Watch this video (again, it's from PMAP 8921 *and* it's about R Markdown instead of Quarto, but the content works for this class):
+2. Watch this video (again, it's from data visualization *and* it's about R Markdown instead of Quarto, but the content works for this class):
 
     <div class="ratio ratio-16x9">
     <iframe src="https://www.youtube.com/embed/fT5xI1cmE2c" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

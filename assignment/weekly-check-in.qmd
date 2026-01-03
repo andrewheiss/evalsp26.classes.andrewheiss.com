@@ -8,12 +8,48 @@ To encourage engagement with the course content—and to allow me to collect the
 
 These check-ins are **due by noon on the days we have class**. This is so I can look through the responses and start structuring the discussion for the evening's class.
 
-You should answer these two questions each week:
+You should answer these two questions each session:
 
-1. What were the **three (3)** most interesting or exciting things you learned from the session? Why?
-2. What were the **three (3)** muddiest or unclear things from the session this week? What are you still wondering about?
+- What were the **three (3)** most interesting or exciting things you learned from the session? Why?
+
+  1. Thing 1 (and why)
+  2. Thing 2 (and why)
+  3. Thing 3 (and why)
+
+- What were the **three (3)** muddiest or unclear things from the session? What are you still wondering about?
+
+  1. Thing 1 (and why)
+  2. Thing 2 (and why)
+  3. Thing 3 (and why)
 
 You can include more than three interesting or muddiest things, but you must include at least three. There should be six easily identifiable things in each check-in: three exciting things and three questions.
+
+**Each item should be 2–3 sentences long.** Do *not* write just a single word—that will merit a ✓−.
+
+::: {.callout-important}
+### Focus on the readings
+
+**Make sure you focus on the readings and class materials.**
+
+In the past, I've had students (1) write about interesting things that they did that week, like "I saw my nephew" or "there's construction along my street" (REALLY), or (2) narrate their assignments, like "one interesting thing is that I loaded data with `read_csv()`; another interesting thing is that I plotted it with `ggplot()`" (REALLY).
+
+The point of this assignment is to help you reflect on what you're learning.
+:::
+
+::: {.callout-important}
+### Don't overthink these!
+
+**Don't overthink this assignment!** In the past, I've had students panic because they can't find three interesting things that I'd want to see. *I'm not looking for anything specific here.*
+
+As you read and take notes, you'll (hopefully!) think "Huh, that's cool. I didn't know that before!" *That's* what you should be talking about here. There are no right answers!
+
+And don't outsource this assignment to ChatGPT! In the past, I've had some students turn in check-ins that left in text like this (REALLY TRULY):
+
+> Certainly! I can help you think of three things that you found interesting that would prove to the professor that you read the materials…
+
+Like, yikes.
+:::
+
 
 I will grade these check-ins using a check system:
 
