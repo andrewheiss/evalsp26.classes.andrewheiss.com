@@ -17,7 +17,7 @@ You need to show that you made a good faith effort to work each question. I will
 
 - ✔+: (*33 points (110%) in gradebook*) Assignment is 100% completed. Every question was attempted and answered, and most answers are correct. Document is clean and easy to follow. Work is exceptional. I will not assign these often.
 - ✔: (*30 points (100%) in gradebook*) Assignment is 70–99% complete and most answers are correct. **This is the expected level of performance.**
-- ✔−: (*15 points (50%) in gradebook*) Assignment is less than 70% complete and/or most answers are incorrect. This indicates that you need to improve next time. I will hopefully not asisgn these often.
+- ✔−: (*15 points (50%) in gradebook*) Assignment is less than 70% complete and/or most answers are incorrect. This indicates that you need to improve next time. I will hopefully not assign these often.
 
 You may (and should!) work together on the problem sets, but *you must turn in your own answers.* You cannot work in groups of more than **four** people, and you must note who participated in the group in your assignment.
 
@@ -32,14 +32,25 @@ These assignments will be graded using a check system:
 
 - ✔+: (*33 points (110%) in gradebook*) Assignment is 100% completed. Every question was attempted and answered, and most answers are correct. Document is clean and easy to follow. Work is exceptional. I will not assign these often.
 - ✔: (*30 points (100%) in gradebook*) Assignment is 70–99% complete and most answers are correct. **This is the expected level of performance.**
-- ✔−: (*15 points (50%) in gradebook*) Assignment is less than 70% complete and/or most answers are incorrect. This indicates that you need to improve next time. I will hopefully not asisgn these often.
+- ✔−: (*15 points (50%) in gradebook*) Assignment is less than 70% complete and/or most answers are incorrect. This indicates that you need to improve next time. I will hopefully not assign these often.
 
 
 ## Exams
 
-There will be two exams covering (1) program evaluation, design, and causation, and (2) the core statistical tools of program evaluation and causal inference.
+There will be two exams covering (1) program evaluation, research design, and the mechanics of causation, and (2) the core statistical tools of program evaluation and causal inference.
 
-You will take these exams online through iCollege. The exams will have a time limit, but you can use notes and readings and [the Google](https://www.youtube.com/watch?v=AQ45fO1uiOQ). You must take the exams on your own though, and not talk to anyone about them.
+These exams will occur **in-person during class**. They will be done collectively by all of you together.
+
+I used to offer these online on iCollege and they were open book, open notes, and open internet, but LLMs have made that method of exams completely useless. Even if I say that AI use is banned, Google's search AI appears at the top of every search result, so it's impossible to avoid LLM output. I hate it all so much.
+
+The rationale for allowing these exams to be open book/note/internet is that in the real world, you'll consult with other resources when working on statistical things, so you might as well do that here too. The point of these exams is not to trip you up on little definitional things (i.e. "What did the 4th paragraph of the 2nd section of chapter 3 say about controlling for mediators?"), but to give you a chance to think more closely about the class materials and practice working with them in different ways.
+
+This group exam approach is a new idea I'm experimenting with this semester—*you're the first class I've done this with.* It will likely be open note and open book, but not open other-sites-on-the-internet (and definitely not open LLM). 
+
+There are study guides for each of the exams:
+
+- [Exam 1 study guide](/resource/exam1.qmd)
+- [Exam 2 study guide](/resource/exam2.qmd)
 
 
 ## #TidyTuesday
