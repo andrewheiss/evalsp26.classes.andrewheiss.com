@@ -117,7 +117,9 @@ div.sidebar-item-container .active, div.sidebar-item-container .show > .nav-link
 
 .course-title {
   font-size: 3.5rem;
+  border-bottom: 3px solid $gray-200;
   margin-top: 0;
+  padding-bottom: 0.2em;
 }
 
 .course-subtitle {
