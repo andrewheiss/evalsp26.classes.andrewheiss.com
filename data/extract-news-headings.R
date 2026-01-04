@@ -63,6 +63,11 @@ extract_details <- function(post_path) {
   # Get YAML frontmatter
   metadata <- rmarkdown::yaml_front_matter(post_path)
 
+  # If this is a draft, don't process it
+  if (!is.null(metadata$draft) && metadata$draft) {
+    return(NULL)
+  }
+
   # Deal with the title
   title <- metadata$title |> structure(quoted = TRUE)
 
@@ -77,10 +82,21 @@ extract_details <- function(post_path) {
   categories <- metadata$categories |> 
     purrr::map(\(x) structure(x, quoted = TRUE))
 
-  # Convert the path to a URL
-  href <- paste0("/", fs::path_rel(post_path, start = ".")) |>
-    fs::path_ext_set("html") |> 
-    structure(quoted = TRUE)
+  # If this uses quarto-live, use the output-file set there
+  if (!is.null(metadata$format$`live-html`$`output-file`)) {
+    href <- paste0(
+      "/",
+      fs::path_rel(fs::path_dir(post_path), start = "."),
+      "/",
+      metadata$format$`live-html`$`output-file`
+    ) |> 
+      structure(quoted = TRUE)
+  } else {
+    # Otherwise convert the path to a URL
+    href <- paste0("/", fs::path_rel(post_path, start = ".")) |>
+      fs::path_ext_set("html") |> 
+      structure(quoted = TRUE)
+  }
 
   # Convert .qmd to JSON AST
   # This is tricky because Quarto files aren't fully readable by pandoc 
@@ -147,7 +163,9 @@ posts <- fs::dir_ls(here::here("news"), regexp = "\\.qmd$") |>
   purrr::discard(\(x) x == here::here("news/index.qmd"))
 
 # Extract the details from each .qmd file
-posts_details <- purrr::map(posts, extract_details) |> unname()
+posts_details <- purrr::map(posts, extract_details) |> 
+  unname() |> 
+  purrr::discard(\(x) is.null(x))  # Remove drafts
 
 # Sort the posts by date
 posts_details <- posts_details[

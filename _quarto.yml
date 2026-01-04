@@ -28,6 +28,8 @@ website:
   description: "Use modern statistical and data scientific tools to measure causal effects and evaluate public policy"
   site-url: "https://evalsp26.classes.andrewheiss.com"
 
+  draft-mode: unlinked
+
   # announcement:
   #   icon: calendar-check
   #   dismissable: true

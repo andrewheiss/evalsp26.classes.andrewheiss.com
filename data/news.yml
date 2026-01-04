@@ -1,10 +1,4 @@
 # This file is generated with data/extract-news-headings.R; do not edit by hand
 
-- title: "Welcome to class!"
-  categories:
-  - "getting started"
-  date_actual: '1767608040'
-  date: "2026-01-05T10:14:00"
-  href: "/news/2026-01-05_welcome.html"
-  headings: []
+[]
 
