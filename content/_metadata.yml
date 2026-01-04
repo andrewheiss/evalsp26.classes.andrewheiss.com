@@ -6,4 +6,4 @@ date-format: "full"
 format:
   html:
     template-partials:
-      - ../html/title-block.html
+      - ../html/title-metadata.html
