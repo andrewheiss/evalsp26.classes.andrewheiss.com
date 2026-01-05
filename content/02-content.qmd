@@ -20,7 +20,8 @@ slide_details <- tibble::tribble(
 
 ## Readings
 
-- {{< fa book >}} Chapters 3 and 4 in *The Effect* [@Huntington-Klein:2021]
+- {{< fa file-pdf >}} Andrew Heiss, "Statistical Methods in Public Policy Research," chapter for *The Oxford Research Encyclopedia on Public Policy* (2026). [Get the PDF here](/files/heiss-statistics-public-policy.pdf) or [here](https://doi.org/10.31235/osf.io/cwymb_v2) or read [an HTML version here](https://stats.andrewheiss.com/snoopy-spring/). [@Heiss:2025]
+- {{< fa book >}} **Skim** chapters 3 and 4 in *The Effect* [@Huntington-Klein:2021]
 
 
 ## Recommended readings
