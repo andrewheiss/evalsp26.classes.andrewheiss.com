@@ -1,5 +1,55 @@
 # This file is generated with data/extract-news-headings.R; do not edit by hand
 
+- title: "Why do you use ✓s for grades?"
+  categories:
+  - "FAQs"
+  date_actual: '1768488180'
+  date: "2026-01-15T14:43:00"
+  href: "/news/2026-01-15_faqs_grading.html"
+  headings: []
+- title: "LLM FAQs"
+  categories:
+  - "FAQs"
+  date_actual: '1768487700'
+  date: "2026-01-15T14:35:00"
+  href: "/news/2026-01-15_faqs_llms-learning.html"
+  headings:
+  - id: "will-r-ever-be-fully-replaced-by-ai"
+    text: "Will R ever be fully replaced by AI?"
+  - id: "will-you-incorporate-llms-and-ai-prompting-into-the-course-in-the-future"
+    text: "Will you incorporate LLMs and AI prompting into the course in the future?"
+  - id: "why-wont-you-incorporate-llms-and-ai-prompting-into-the-course"
+    text: "Why won’t you incorporate LLMs and AI prompting into the course?"
+- title: "The 30-minute rule and how to ask for help"
+  categories:
+  - "advice"
+  date_actual: '1768211820'
+  date: "2026-01-12T09:57:00"
+  href: "/news/2026-01-12_reaching-out-when-stuck.html"
+  headings:
+  - id: "the-30-minute-rule"
+    text: "The 30-minute rule"
+  - id: "dont-suffer-in-silence"
+    text: "Don’t suffer in silence!"
+  - id: "use-discord-in-public"
+    text: "Use Discord in public"
+  - id: "help-us-help-you"
+    text: "Help us help you"
+  - id: "high-resolution-questions"
+    text: "High resolution questions"
+  - id: "unanswered-questions"
+    text: "Unanswered questions"
+  - id: "discord-question-etiquette"
+    text: "Discord question etiquette"
+  - id: "student-appointments"
+    text: "Student appointments"
+- title: "First week of class!"
+  categories:
+  - "getting started"
+  date_actual: '1768211040'
+  date: "2026-01-12T09:44:00"
+  href: "/news/2026-01-12_first-day-of-class.html"
+  headings: []
 - title: "Building community"
   categories:
   - "advice"

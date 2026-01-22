@@ -1,0 +1,393 @@
+---
+title: "Regression"
+subtitle: "Problem Set 2 --- PMAP 8521, Spring 2026"
+author: "YOUR NAME HERE"  # Replace with your actual name
+date: "DATE GOES HERE"  # Replace with the date
+date-format: "long"
+format:
+  html:
+    toc: true
+  typst:
+    toc: true
+  pdf:
+    toc: true
+  docx:
+    toc: true
+---
+
+# Task 1: Penguins
+
+## Data description
+
+Between 2007 and 2009, researchers collected data on penguins in three islands in the Palmer Archipelago in Antarctica: Biscoe, Dream, and Torgersen. The `penguins` dataset has data for 342 penguins from 3 different species: Chinstrap, Gentoo, and Adélie. It includes the following variables ([see this for an illustration of the different bill-related variables](https://allisonhorst.github.io/palmerpenguins/#bill-dimensions)):
+
+- `species`: The penguin's species (Chinstrap, Gentoo, and Adélie)
+- `island`: The island where the penguin lives (Biscoe, Dream, and Torgersen)
+- `bill_len`: The length of the penguin's bill, in millimeters (distance from the penguin's face to the tip of the bill)
+- `bill_dep`: The depth of the penguin's bill, in millimeters (height of the bill; distance from the bottom of the bill to the top of the bill)
+- `flipper_len`: The length of the penguin's flippers, in millimeters
+- `body_mass`: The weight of the penguin, in grams
+- `sex`: The sex of the penguin
+- `year`: The year the observation was made
+
+```{r}
+#| label: load-libraries-data
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(parameters)
+library(performance)
+library(marginaleffects)
+library(modelsummary)
+
+# Make the display() function create {tinytable} tables
+options(easystats_display_format = "tt")
+
+# Load the data
+penguins <- read_csv("data/penguins.csv") |> 
+  drop_na(sex)
+```
+
+## Exploratory analysis
+
+### Part 1
+
+@fig-penguin-weight-depth shows some initial trends about the relationship between penguin weight and bill depth.
+
+```{r}
+#| label: fig-penguin-weight-depth
+#| fig-cap: Penguin bill depths and weights
+
+ggplot(data = penguins, aes(x = bill_dep, y = body_mass)) +
+  geom_point()
+```
+
+**Interpret @fig-penguin-weight-depth.** What does this show?
+
+Do that here.
+
+
+### Part 2
+
+Run the code chunk below to see a plot.
+
+```{r}
+#| label: recreate-me-penguin-weight-depth-colors
+#| message: false
+#| echo: false
+
+knitr::include_graphics("images/recreate-me-penguin-weight-depth-colors-1.png")
+```
+
+Use `ggplot()` in the chunk below to re-create the plot above. Add some sort of useful caption to the figure using the `fig-cap` chunk option like the plot in part 1.
+
+```{r}
+#| label: fig-penguin-weight-depth-colors
+
+# Do stuff here
+```
+
+**Interpret @fig-penguin-weight-depth-colors.** What does this show now?
+
+Do that here.
+
+
+### Part 3
+
+Run the code chunk below to see a plot.
+
+```{r}
+#| label: recreate-me-penguin-weight-depth-lines
+#| message: false
+#| echo: false
+
+knitr::include_graphics("images/recreate-me-penguin-weight-depth-lines-1.png")
+```
+
+Use `geom_smooth()`, `geom_point()`, and `ggplot()` in the chunk below to re-create the plot above. (*Hint*: include `method = "lm"` somewhere.) Add some sort of useful caption to the figure using the `fig-cap` chunk option.
+
+```{r}
+#| label: fig-penguin-weight-depth-lines
+
+# Do stuff here
+```
+
+**Interpret @fig-penguin-weight-depth-lines.** What does this show? 
+
+Do that here.
+
+
+### Part 4
+
+Use the chunk below to make a new version of @fig-penguin-weight-depth-lines that *also* includes a single line for all the points in addition one line per species. Add a helpful caption using the `fig-cap` chunk option.
+
+```{r}
+#| label: fig-penguin-weight-depth-one-line
+
+# Do stuff here
+```
+
+**Interpret @fig-penguin-weight-depth-one-line.** What does this show now? How does the slope of this single line differ from the slopes of the species specific lines? ***Why??*** Which plot is more useful?
+
+Do that here.
+
+
+### Part 5
+
+Use the chunk below to look at the relationship between flipper length and body mass across different islands. Do the following:
+
+- Put `flipper_len` on the x-axis, `body_mass` on the y-axis, and color by `species`
+- Facet by `island`
+- Add a helpful caption using the `fig-cap` chunk option
+
+```{r}
+#| label: fig-penguin-weight-length-island
+
+# Do stuff here
+```
+
+**Interpret @fig-penguin-weight-length-island.** What do we learn about penguins now?
+
+Do that here.
+
+
+## Models
+
+### Quick mini lesson about regression with R
+
+Here's a simple regression model that looks at the relationship between penguin bill depth and penguin weight and species:
+
+```{r}
+#| label: model-example
+
+example_model <- lm(
+  body_mass ~ bill_dep + species,
+  data = penguins
+)
+```
+
+::: {.callout-note title="Formula syntax"}
+
+If you're familiar with Stata, R's `lm(body_mass ~ bill_dep + species)` is the same as this:
+
+```stata
+reg body_mass bill_dep species
+```
+
+R makes the outcome and explanatory variables more explicit by putting them on either side of the `~`:
+
+```r
+lm(
+  body_mass ~ bill_dep + species,
+  data = penguins
+)
+```
+
+I like to read this as "body mass *is explained by* bill depth and species".
+
+:::
+
+One common way to look the details of R models is to feed the object name to `summary()`, like `summary(example_model)`. Go ahead and run that in your console. 
+
+**I don't like doing this** though because it creates a huge wall of text that creates gross looking Quarto documents. It's too much detail and it's hard to work with.
+
+Instead, you can use `model_parameters()` from the {parameters} package to see the values for the coefficients:
+
+```{r}
+#| label: show-example-parameters
+
+model_parameters(example_model)
+```
+
+And you can use `model_performance()` from the {performance} package to see the values for different model diagnostics, like $R^2$. It returns a lot of extra details---if you want just the $R^2$, you can use `r2()`:
+
+```{r}
+#| label: show-example-performance
+
+model_performance(example_model)
+r2(example_model)
+```
+
+If you want prettier tables in rendered documents, you can feed the results of `model_parameters()` (and `model_performance()`) into `display()`, like @tbl-example-model:
+
+```{r}
+#| label: tbl-example-model
+#| tbl-cap: Nice model results
+
+model_parameters(example_model) |>
+  display()
+```
+
+Finally, policy reports and academic papers often include regression models in side-by-side tables, with one column per model. This makes it easy to compare coefficients and other details across different model specifications.
+
+The `modelsummary()` function from the {modelsummary} package makes this easy. [Check out its documentation here.](https://modelsummary.com/). @tbl-modelsummary-basic shows a basic example with one model:
+
+```{r}
+#| label: tbl-modelsummary-basic
+#| tbl-cap: Basic table
+
+modelsummary(
+  list(example_model)
+)
+```
+
+You can customize these tables a lot (again, [see the documentation](https://modelsummary.com/vignettes/modelsummary.html)). Like, here in @tbl-modelsummary-example we can rename the coefficients, change the column names, and control which goodness-of-fit statistics (GOF) appear in the bottom half:
+
+```{r}
+#| label: tbl-modelsummary-example
+#| tbl-cap: Example table with `modelsummary()`
+
+modelsummary(
+  list("Example model" = example_model),
+  coef_rename = c(
+    "bill_dep" = "Bill depth (mm)",
+    "speciesChinstrap" = "Species (Chinstrap)",
+    "speciesGentoo" = "Species (Gentoo)"
+  ),
+  gof_map = c("nobs", "r.squared", "adj.r.squared", "F")
+)
+```
+
+
+### Part 1: Predicting body mass with bill depth
+
+Use `lm()`, `model_parameters()`, and `r2()` to create a model object named `model_depth_weight` that recreates these results (*hint*: your model formula should look like `body_mass ~ bill_dep`):
+
+```r
+model_parameters(model_depth_weight)
+#> Parameter   | Coefficient |     SE |             95% CI | t(331) |      p
+#> -------------------------------------------------------------------------
+#> (Intercept) |     7519.98 | 342.33 | [6846.57, 8193.39] |  21.97 | < .001
+#> bill dep    |     -193.01 |  19.81 | [-231.98, -154.03] |  -9.74 | < .001
+
+r2(model_depth_weight)
+#> # R2 for Linear Regression
+#>        R2: 0.223
+#>   adj. R2: 0.220
+```
+
+```{r}
+#| label: recreation-model-depth-weight
+
+# Do stuff here
+```
+
+**Interpret these results.** What happens as bills get taller? Is the association statistically significant? How confident are you about these results? (Hint: look at the $R^2$)
+
+Do that here.
+
+
+### Part 2: Predicting weight with bill depth and flipper length
+
+Create a model that predicts weight with bill depth and flipper length (i.e. `body_mass ~ bill_dep + flipper_len`) and look at the results.
+
+```{r}
+#| label: model-weight-depth-flipper
+
+# Do stuff here
+```
+
+**Interpret these results.** Did the size of the bill depth coefficient change after controlling for flipper length? Why or why not? What happened to the $R^2$?
+
+Do that here.
+
+
+### Part 3: Predicting weight with bill depth, flipper length, and species
+
+Create a model that predicts weight with bill depth, flipper length, and species and look at the results.
+
+```{r}
+#| label: model-weight-depth-flipper-species
+
+# Do stuff here
+```
+
+**Interpret these results.** What do the species coefficients mean? What's different about the bill depth coefficient change after controlling for both flipper length and species? Which bill depth coefficient do you think is correct: the one from the models without species, or the one from the model with species? Why? (*Hint*: look back at @fig-penguin-weight-depth-lines.)
+
+Do that here.
+
+
+### Part 4: All models at the same time
+
+Use `modelsummary()` to display all the penguin models together in one side-by-side table and give it a useful caption.
+
+```{r}
+#| label: tbl-all-penguin-models
+#| tbl-cap: Penguin model results
+
+# Do that here
+#
+# You'll do something like this:
+# modelsummary(
+#   list(model_depth_weight, some_other_model, yet_another_model, ...)
+# )
+```
+
+
+# Task 2: WNBA stats
+
+### Your goal
+
+In this task, you'll use regression to explore the relationship between the total number of minutes a WNBA player played and their average points, their age, whether they're a starter, and the number of games they played in 2019.
+
+**This is your chance to play around and explore.**
+
+### Data description
+
+This data comes from <https://www.basketball-reference.com/wnba/players/> and contains information on WNBA basketball players from the 2019 season. The data was originally collected for the book [*Bayes Rules! An Introduction to Applied Bayesian Modeling*](https://www.bayesrulesbook.com/) and was included in the [{bayesrules} package](https://bayes-rules.github.io/bayesrules/docs/index.html) as `basketball`.
+
+There are 33 columns, and [they're documented here](https://bayes-rules.github.io/bayesrules/docs/reference/basketball.html)---make sure you consult that page!
+
+For this exercise, you'll likely want to focus on these these columns (but you're free to use any others if you want!):
+
+| Variable        | Definition                                                        |
+|:----------------|:------------------------------------------------------------------|
+| `total_minutes` | Total number of minutes played throughout the season              |
+| `games_played`  | Number of games played throughout the season                      |
+| `starter`       | True if player started in more than half of the games they played |
+| `avg_points`    | Average number of points scored per game                          |
+| `age`           | Player age                                                        |
+
+The code below loads the data.
+
+```{r}
+#| label: load-wnba-data
+#| warning: false
+#| message: false
+
+wnba <- read_csv("data/wnba.csv")
+```
+
+### Part 1: Exploratory data analysis
+
+It's always a good idea to get a feel for the data before making any models.
+
+Create at least 3 plots to visualize different individual variables (e.g. with histograms and density plots, etc.) and the relationship between total minutes and (1) games played, (2) average points. You'll probably want to color and/or facet by things like `starter`.
+
+Describe what you discover in 1--2 short paragraphs.
+
+Insert however many chunks you need + write about them here.
+
+
+### Part 2: Models
+
+Create four regression models that predict or explain the total number of minutes played. Use these different specifications:
+
+1. Average points alone (i.e. `total_minutes ~ avg_points`)
+2. Average points and starter status (i.e. `total_minutes ~ avg_points + starter`)
+3. Average points, starter status, and games played
+4. Some other combination of things in the `wnba` data that makes theoretic sense
+
+Put these four models in one side-by-side regression table. For fun, try to make it clean and polished, with nicer coefficient names, more specific goodness-of-fit statistics, an informative caption, a cross-referenceable label, and so on.
+
+Insert however many chunks you need + write about them here.
+
+
+### Part 3: Interpretation
+
+Interpret the findings from your plots and your table. Which factors explain the total number of minutes played? How well do these models fit the data? How useful are they? Are there any results that change as you change model specifications? What can we ultimately learn from these results?
+
+Do this in 1--3 paragraphs.
+
+Write about the results here.
