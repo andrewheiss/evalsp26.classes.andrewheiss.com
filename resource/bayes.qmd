@@ -4,6 +4,19 @@ format:
   html:
     code-tools: true
     code-fold: show
+    include-in-header:
+      - text: |
+          <style>
+          .tinytable code {
+              font-family: var(--bs-font-monospace);
+          }
+
+          .tinytable .katex,
+          .tinytable .MathJax,
+          .tinytable mjx-container {
+              font-family: MJXZERO, MJXTEX !important;
+          }
+          </style>
 ---
 
 ```{r setup, include=FALSE}
@@ -307,20 +320,20 @@ ggplot(weekend_draws, aes(x = b_WeekendTRUE)) +
 So, we've seen two different philosophies for quantifying uncertainty with confidence intervals and credible intervals. Here's a general overview of the two approaches and how you can interpret them:
 
 ```{r summary-table, echo=FALSE, warning=FALSE, message=FALSE}
-library(kableExtra)
+library(tinytable)
 
 tribble(
   ~` `, ~Frequentism, ~Bayesianism,
-  "Approach", "\\(P(\\text{Data} \\mid \\theta)\\)", "\\(P(\\theta \\mid \\text{Data})\\)",
-  "", "\\(\\theta\\) is a fixed single value; data is variable and can be repeatedly sampled", "\\(\\theta\\) is variable and has uncertainty; data is fixed (you only have one sample)",
-  "How to do it in R", "<code>lm(...)</code>", "<code>library(brms)</code><br><code>brm(...)</code>",
+  "Approach", "$P(\\text{Data} \\mid \\theta)$", "$P(\\theta \\mid \\text{Data})$",
+  "", "$\\theta$ is a fixed single value; data is variable and can be repeatedly sampled", "$\\theta$ is variable and has uncertainty; data is fixed (you only have one sample)",
+  "How to do it in R", "`lm(...)`", "`library(brms)`<br>`brm(...)`",
   "Name", "Confidence interval", "Credible interval (or posterior interval)",
   "Intuition", "Probability of the range", "Probability of the actual value",
-  "Interpretation template", "There's a 95% probability that this range contains the true value of \\(\\theta\\)", "There's a 95% probability that the true value of \\(\\theta\\) falls in this range.",
+  "Interpretation template", "There's a 95% probability that this range contains the true value of $\\theta$", "There's a 95% probability that the true value of $\\theta$ falls in this range.",
   "", "Few people naturally think like this", "People <em>do</em> naturally think like this"
 ) |> 
-  kbl(escape = FALSE) |> 
-  kable_styling(full_width = FALSE, position = "center")
+  tt(align = "l") |> 
+  format_tt(markdown = TRUE)
 ```
 
 ## Two ways of making decisions with posterior distributions

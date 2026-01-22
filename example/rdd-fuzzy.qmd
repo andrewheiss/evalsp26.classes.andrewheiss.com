@@ -8,7 +8,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.asp = 0.618, fig.align = "center",
 set.seed(1234)
 options("digits" = 2, "width" = 150)
 options(dplyr.summarise.inform = FALSE)
-options("modelsummary_factory_default" = "kableExtra")
+options("modelsummary_factory_default" = "tinytable")
 ```
 
 ## Program background
@@ -29,18 +29,18 @@ library(parameters)
 library(rdrobust)
 library(estimatr)
 library(modelsummary)
-library(kableExtra)
+library(tinytable)
 
 tutoring <- read_csv(here::here("files", "data", "generated_data", "tutoring_program_fuzzy.csv"))
 ```
 
-```{r eval=FALSE}
+```{.r}
 library(tidyverse)  # ggplot(), mutate(), and friends
 library(parameters) # Extract model parameters to data frames
 library(rdrobust)  # For robust nonparametric regression discontinuity
 library(estimatr)  # Run 2SLS models in one step with iv_robust()
 library(modelsummary)  # Create side-by-side regression tables
-library(kableExtra)  # Fancy table formatting
+library(tinytable) # Add fancier formatting to tables
 
 tutoring <- read_csv("data/tutoring_program_fuzzy.csv")
 ```
@@ -217,7 +217,7 @@ modelsummary(list("No instrument (wrong)" = model_sans_instrument,
              gof_omit = "IC|Log|Adj|p\\.value|statistic|se_type",
              stars = TRUE) |>
   # Add a background color to row 5
-  row_spec(5, background = "#F5ABEA")
+  style_tt(i = 5, background = "#F5ABEA")
 ```
 
 We can (and should!) [do all the other things that we talked about in the regression discontinuity example](/example/rdd.qmd#parametric-estimation), like modifying the bandwidth, adding polynomial terms, and so forth to see how robust the finding is. But we won't do any of that here.

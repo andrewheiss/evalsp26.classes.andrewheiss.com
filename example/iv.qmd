@@ -8,7 +8,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.asp = 0.618, fig.align = "center",
 set.seed(1234)
 options("digits" = 2, "width" = 150)
 options(dplyr.summarise.inform = FALSE)
-options("modelsummary_factory_default" = "kableExtra")
+options("modelsummary_factory_default" = "tinytable")
 options(marginaleffects_print_style = "data.frame")
 ```
 
@@ -58,7 +58,7 @@ library(parameters)  # Extract model parameters to data frames
 library(performance) # Extract model details to data frames
 library(marginaleffects) # Easier model predictions
 library(modelsummary)  # Create side-by-side regression tables
-library(kableExtra)  # Add fancier formatting to tables
+library(tinytable)  # Add fancier formatting to tables
 library(estimatr)  # Run 2SLS models in one step with iv_robust()
 ```
 
@@ -67,7 +67,7 @@ library(estimatr)  # Run 2SLS models in one step with iv_robust()
 
 First let's use some fake data to see if education causes additional wages.
 
-```{r load-fake-data-fake, eval=FALSE}
+```{.r}
 ed_fake <- read_csv("data/father_education.csv")
 ```
 
@@ -235,8 +235,8 @@ modelsummary(list("Forbidden" = model_forbidden, "OLS" = model_naive,
                   "2SLS (by hand)" = second_stage, "2SLS (automatic)" = model_2sls),
              gof_omit = "IC|Log|Adj|p\\.value|statistic|se_type",
              stars = TRUE) |>
-  # Add a background color to rows 3 and 7
-  row_spec(c(3, 7), background = "#F5ABEA")
+  # Add a background color to rows 3-4 and 7-8
+  style_tt(i = c(3:4, 7:8), background = "#F5ABEA")
 ```
 
 Note how the coefficients for `educ_hat` and `educ` in the 2SLS models are close to the coefficient for `educ` in the forbidden model that accounts for ability. That's the magic of instrumental variables!
@@ -248,7 +248,7 @@ This data comes from the `wage2` dataset in the {wooldridge} R package (and it's
 
 > M. Blackburn and D. Neumark (1992), "Unobserved Ability, Efficiency Wages, and Interindustry Wage Differentials," *Quarterly Journal of Economics* 107, 1421-1436. <https://doi.org/10.3386/w3857>
 
-```{r eval=FALSE}
+```{.r}
 wage2 <- read_csv("data/wage2.csv")
 ```
 
@@ -384,7 +384,7 @@ modelsummary(list("OLS" = model_naive, "2SLS (by hand)" = second_stage,
              gof_omit = "IC|Log|Adj|p\\.value|statistic|se_type",
              stars = TRUE) |>
   # Add a background color to rows 3 and 5
-  row_spec(c(3, 5), background = "#F5ABEA")
+  style_tt(i = c(3, 5), background = "#F5ABEA")
 ```
 
 The 2SLS effect is roughly twice as large and is arguably more accurate, since it has removed the endogeneity from education. An extra year of school leads to an extra \$111.56 dollars a month in income (in 1980 dollars).
@@ -546,8 +546,8 @@ For fun, we can look at the results side-by-side:
 modelsummary(list("Naive OLS" = model_naive, "2SLS" = model_2sls),
              gof_omit = "IC|Log|Adj|p\\.value|statistic|se_type",
              stars = TRUE) |>
-  # Add a background color to row 3
-  row_spec(3, background = "#F5ABEA")
+  # Add a background color to rows 3-4
+  style_tt(i = 3:4, background = "#F5ABEA")
 ```
 
 ### Extra diagnostics

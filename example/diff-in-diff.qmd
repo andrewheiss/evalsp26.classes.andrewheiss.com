@@ -8,7 +8,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.asp = 0.618, fig.align = "center",
 set.seed(1234)
 options("digits" = 2, "width" = 150)
 options(dplyr.summarise.inform = FALSE)
-options("modelsummary_factory_default" = "kableExtra")
+options("modelsummary_factory_default" = "tinytable")
 ```
 
 ## Video walk-through
@@ -62,9 +62,10 @@ library(tidyverse)  # ggplot(), mutate(), and friends
 library(parameters)  # Extract model parameters to data frames
 library(scales)  # Format numbers with functions like comma(), percent(), and dollar()
 library(modelsummary)  # Create side-by-side regression tables
+library(tinytable)  # Add fancier formatting to tables
 ```
 
-```{r load-data-fake, eval=FALSE}
+```{.r}
 # Load the data.
 # It'd be a good idea to click on the "injury_raw" object in the Environment
 # panel in RStudio to see what the data looks like after you load it
@@ -320,7 +321,7 @@ After controlling for a host of demographic controls, the diff-in-diff estimate 
 
 We can put the model coefficients side-by-side to compare the value for `highearn:after_1980` as we change the model.
 
-```{r all-models-together-fake, eval=FALSE}
+```{.r}
 modelsummary(list("Simple" = model_small, "Full" = model_big))
 ```
 
@@ -330,6 +331,5 @@ gm <- modelsummary::gof_map |>
 
 modelsummary(list("Simple" = model_small, "Full" = model_big),
              gof_map = gm, stars = TRUE) |>
-  kableExtra::row_spec(7, background = "#F6D645") |>
-  kableExtra::row_spec(36, extra_css = "border-bottom: 1px solid")
+  style_tt(i = 7:8, background = "#F6D645")
 ```

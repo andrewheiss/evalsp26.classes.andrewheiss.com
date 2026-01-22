@@ -8,7 +8,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.asp = 0.618, fig.align = "center",
 set.seed(1234)
 options("digits" = 2, "width" = 150)
 options(dplyr.summarise.inform = FALSE)
-options("modelsummary_factory_default" = "kableExtra")
+options("modelsummary_factory_default" = "tinytable")
 ```
 
 ## Video walk-through
@@ -63,13 +63,14 @@ library(parameters)  # Extract model parameters to data frames
 library(rdrobust)  # For robust nonparametric regression discontinuity
 library(rddensity)  # For nonparametric regression discontinuity density tests
 library(modelsummary)  # Create side-by-side regression tables
+library(tinytable)  # Add fancier formatting to tables
 ```
 
 ```{r load-data-real, include=FALSE}
 tutoring <- read_csv(here::here("files", "data", "generated_data", "tutoring_program.csv"))
 ```
 
-```{r load-data-fake, eval=FALSE}
+```{.r}
 # Load the data.
 # It'd be a good idea to click on the "tutoring" object in the Environment
 # panel in RStudio to see what the data looks like after you load it
@@ -124,7 +125,7 @@ Here it doesn't look like there's a jump around the cutoff—there's a tiny visi
 
 First we use `rddensity()` to do the actual statistical test. You need to feed it two things: the running variable and the cutoff.
 
-```{r check-running-discontinuity-mcrary-fake, eval=FALSE}
+```{.r}
 # Notice this tutoring$entrance_exam syntax. This is one way for R to access
 # columns in data frames---it means "use the entrance_exam column in the
 # tutoring data frame". The general syntax for it is data_frame$column_name
@@ -232,7 +233,7 @@ model_parameters(model_bw_5)
 
 We can compare all these models simultaneously with `modelsummary()`:
 
-```{r all-models-fake, eval=FALSE}
+```{.r}
 modelsummary(list("Full data" = model_simple,
                   "Bandwidth = 10" = model_bw_10,
                   "Bandwidth = 5" = model_bw_5))
@@ -246,8 +247,7 @@ modelsummary(list("Full data" = model_simple,
                   "Bandwidth = 10" = model_bw_10,
                   "Bandwidth = 5" = model_bw_5),
              gof_map = gm, stars = TRUE) |>
-  kableExtra::row_spec(5, background = "#F6D645") |>
-  kableExtra::row_spec(6, extra_css = "border-bottom: 1px solid")
+  style_tt(i = 5, background = "#F6D645")
 ```
 
 The effect of `tutoring` differs a lot across these different models, from 9.1 to 10.8. Which one is right? I don't know. Definitely not the full data one.
@@ -311,7 +311,7 @@ Notice that the points here aren't actually the observations in the dataset. The
 :::{.callout-note}
 **Side note**: `rdplot()` uses the same plotting system as `ggplot()`, so you can add layers like `labs()` or `geom_point()` or anything else, which is cool, but getting to that underlying `ggplot()` object is weird. To do it, store the results of `rdplot` as an object, like `asdf`, then use `asdf$rdplot` to access the plot:
 
-```{r eval=FALSE}
+```{.r}
 asdf <- rdplot(...)
 asdf$rdplot +
   labs(x = "Running variable", y = "Outcome variable")

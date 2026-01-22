@@ -8,7 +8,7 @@ knitr::opts_chunk$set(fig.width = 6, fig.asp = 0.618, fig.align = "center",
 set.seed(1234)
 options("digits" = 2, "width" = 150)
 options(dplyr.summarise.inform = FALSE)
-options("modelsummary_factory_default" = "kableExtra")
+options("modelsummary_factory_default" = "tinytable")
 options(marginaleffects_print_style = "data.frame")
 ```
 
@@ -74,6 +74,7 @@ library(dagitty)  # Do DAG logic with R
 library(parameters)  # Extract model parameters to data frames
 library(MatchIt)  # Match things
 library(modelsummary)  # Make side-by-side regression tables
+library(tinytable)  # Add fancier formatting to tables)
 library(marginaleffects)  # Easier model predictions
 
 set.seed(1234)   # Make all random draws reproducible
@@ -432,7 +433,7 @@ All done! We just used observational data to estimate causal effects. Causation 
 
 Let's compare all the ATEs that we just calculated:
 
-```{r all-models-together-fake, eval=FALSE}
+```{.r}
 modelsummary(list("Naive" = model_wrong,
                   "Matched" = model_matched, "Matched + weights" = model_matched_wts,
                   "IPW" = model_ipw, "IPW truncated at 8" = model_ipw_truncated))
@@ -446,8 +447,7 @@ modelsummary(list("Naive" = model_wrong,
                   "Matched" = model_matched, "Matched + weights" = model_matched_wts,
                   "IPW" = model_ipw, "IPW truncated at 8" = model_ipw_truncated),
              gof_map = gm, stars = TRUE) |>
-  kableExtra::row_spec(3, background = "#F6D645") |>
-  kableExtra::row_spec(4, extra_css = "border-bottom: 1px solid")
+  style_tt(i = 3:4, background = "#F6D645")
 ```
 
 Which one is right? In this case, because this is fake simulated data where I built in a 10 point effect, we can see which of these models gets the closest: here, the non-truncated IPW model wins. But that won't always be the case. Both matching and IPW work well for closing backdoors and adjusting for confounders. In real life, you won't know the true value, so try multiple ways.
@@ -643,7 +643,7 @@ $$
 
 Or in code:
 
-```{r rubin-se-example, eval=FALSE}
+```{.r}
 sqrt(mean(errors^2) + var(estimates))
 ```
 

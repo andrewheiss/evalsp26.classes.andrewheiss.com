@@ -1,5 +1,20 @@
 ---
 title: "Generating random numbers"
+format:
+  html:
+    include-in-header: 
+      - text: |
+          <style>
+          .tinytable code {
+              font-family: var(--bs-font-monospace);
+          }
+
+          .tinytable .katex,
+          .tinytable .MathJax,
+          .tinytable mjx-container {
+              font-family: MJXZERO, MJXTEX !important;
+          }
+          </style>
 ---
 
 ```{r setup, include=FALSE}
@@ -669,18 +684,19 @@ Rescaling things is really helpful when building in effects and interacting colu
 Phew. We covered a lot here, and we barely scratched the surface of all the distributions that exist. Here's a helpful summary of the main distributions you should care about:
 
 ```{r summary-table, echo=FALSE, warning=FALSE, message=FALSE}
-library(kableExtra)
+library(tinytable)
 
 tribble(
   ~Distribution, ~Description, ~Situations, ~Parameters, ~Code,
-  "Uniform", "Numbers between a minimum and maximum; everything equally likely", "ID numbers, age", "<code>min</code>, <code>max</code>", "<code>sample()</code> or <code>runif()</code>",
-  "Normal", "Numbers bunched up around an average with a surrounding spread; numbers closer to average more likely", "Income, education, most types of numbers that have some sort of central tendency", "<code>mean</code>, <code>sd</code>", "<code>rnorm()</code>",
-  "Truncated normal", "Normal distribution + constraints on minimum and/or maximum values", "Anything with a normal distribution", "<code>mean</code>, <code>sd</code>, <code>a</code> (minimum), <code>b</code> (maximum)", "<code>truncnorm::rtruncnorm()</code>",
-  "Beta", "Numbers constrained between 0 and 1", "Anything with percents; anything on a 0–1(00) scale; anything, really, if you use <code>rescale()</code> to rescale it", "<code>shape1</code> ($\\alpha$), <code>shape2</code> ($\\beta$) ($\\frac{\\alpha}{\\alpha + \\beta}$)", "<code>rbeta()</code>",
-  "Binomial", "Binary variables", "Treatment/control, yes/no, true/false, 0/1", "<code>size</code>, <code>prob</code>", "<code>sample(..., prob = 0.5)</code> or <code>rbinom()</code>",
-  "Poisson", "Whole numbers that represent counts of things", "Number of kids, number of cities lived in, arrival times", "<code>lambda</code>", "<code>rpois()</code>"
+  "Uniform", "Numbers between a minimum and maximum; everything equally likely", "ID numbers, age", "`min`, `max`", "`sample()` or `runif()`",
+  "Normal", "Numbers bunched up around an average with a surrounding spread; numbers closer to average more likely", "Income, education, most types of numbers that have some sort of central tendency", "`mean`, `sd`", "`rnorm()`",
+  "Truncated normal", "Normal distribution + constraints on minimum and/or maximum values", "Anything with a normal distribution", "`mean`, `sd`, `a` (minimum), `b` (maximum)", "`truncnorm::rtruncnorm()`",
+  "Beta", "Numbers constrained between 0 and 1", "Anything with percents; anything on a 0–1(00) scale; anything, really, if you use `rescale()` to rescale it", "`shape1` ($\\alpha$), `shape2` ($\\beta$) ($\\frac{\\alpha}{\\alpha + \\beta}$)", "`rbeta()`",
+  "Binomial", "Binary variables", "Treatment/control, yes/no, true/false, 0/1", "`size`, `prob`", "`sample(..., prob = 0.5)` or `rbinom()`",
+  "Poisson", "Whole numbers that represent counts of things", "Number of kids, number of cities lived in, arrival times", "`lambda`", "`rpois()`"
 ) |>
-  kbl(escape = FALSE, align = "l")
+  tt(align = "l") |> 
+  format_tt(markdown = TRUE)
 ```
 
 
