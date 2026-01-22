@@ -1,0 +1,25 @@
+---
+title: "First week of class!"
+date: "2026-01-12T09:44"
+categories: [getting started]
+---
+
+Hi everyone!
+
+Today's the first day of classes! Exciting!
+
+Here are a bunch of quick reminders/announcements:
+
+- If you haven't yet, please visit the class website at <https://evalsp26.classes.andrewheiss.com/> (you're already here!). This is where all the class materials live and it's the official source of dates and all other class information. I only use iCollege for collecting your assignments, posting answer keys, and distributing some copyrighted readings (since it's password protected). Because it's not part of iCollege, you'll be able to reference it even after you graduate and lose access to GSU resources. You can even share it with others—it's just a website! (In the past I've had students spend like an hour downloading all the content from the class website so they can keep it; don't worry about that though—it'll all stay there indefinitely!)
+
+- [As noted in the syllabus](/syllabus.qmd#course-structure), we're using a flipped classroom this semester. What this means in practice is that you'll do all the readings *and* watch asynchronous lecture videos **before** class meets on Thursdays. 
+
+  Our in-person time will **not** involve lectures. Instead, it'll be a more hands-on lab for working with R and answering the questions that come up from doing the readings and watching the lectures. That's the point of the [weekly check-in assignment](/assignment/weekly-check-in.qmd)—the only way this in-person time will be effective is if you do the readings + videos and ask questions in the weekly check-in.
+
+- The videos and readings [for the first day of class are live and ready](/content/01-content.qmd). If possible, please watch them (and do the readings) before class on Thursday so that we can start with the lab-like in-person time and get a good solid introduction to R and RStudio + answer the questions you have from the first session's materials.
+
+- Ideally, please try to submit the first weekly check-in on iCollege by tomorrow too so that we can have some good Q&A time during our in-person time. [BUT no worries if not!](https://www.huffingtonpost.co.uk/entry/no-worries-if-not-psychology_uk_60fff90be4b0d017f838bf1a) **The first weekly check-in isn't actually due until next week.** If you don't have time to get through the materials before the first day, that's totally fine—you can do it later and there's no late penalty or anything for the first week. But if you can, let's get started!
+
+- [As you'll read here](/syllabus.qmd#r-and-rstudio), we're using R and RStudio in this class. You can use a neat service called Posit.cloud to get started (join the class workspace using the link posted on iCollege), but eventually you'll want to have R and RStudio on your computer. [Follow the instructions here](/resource/install.qmd) to do that
+
+- If you haven't already, **join the class Discord server** using the link posted on iCollege. This is the best and fastest place to get help and talk to me and your classmates during the semester. I’ll also post general tips and tricks and advice there, so check it regularly.

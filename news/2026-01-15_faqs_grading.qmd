@@ -1,0 +1,35 @@
+---
+title: "Why do you use ✓s for grades?"
+date: "2026-01-15T14:43"
+categories: [FAQs]
+---
+
+Many of you are really nervous about getting the exact right answers on your problem sets. You're used to more standard grading practices where you lose points for minor errors and whatnot.
+
+I've never liked this system of grading and have always tried to avoid it. I believe that curiosity is essential to learning. Paranoia over missing a decimal point in an answer kills curiosity.
+
+There's a scene in season 1 of *Ted Lasso* where Ted cites a [made-up](https://www.snopes.com/fact-check/be-curious-not-judgmental-walt-whitman/) quote by Walt Whitman ([see timestamp 2:15 here](https://youtu.be/5x0PzUoJS-U?si=YSJvAoKo9UXx96I-&t=135)):
+
+> Be curious, not judgmental.
+
+Despite the fact that Walt Whitman never said this, I really like this sentiment, and I think it 100% applies to learning. 
+
+[One of the objectives of this class](/syllabus.qmd#course-objectives) is "Become curious and confident in consuming and producing evaluations"—from even before Ted Lasso was a thing. I want you to embrace curiosity when learning this R and evaluation stuff. I don't want to spend all my time judging every little error, and I don't want you to live in fear of judgment.
+
+I have a few strategies for encouraging judgment-free curiosity in this class:
+
+1. **Less informative grading**: Researchers who study pedagogy (i.e. teaching methods) have long found evidence that less informative grading improves student motivation. In 2024 two economists published a paper that found national-level evidence for this idea based a change in national policy on grading systems in Sweden [@CollinsLundstedt:2024]. Sweden had long used a four-level grading system in its public school system: fail, pass, pass with distinction, and pass with special distinction. In the 2012/2013 academic year, though, they switched to an American-style A–F system. Nationally, student performance dropped significantly—graduation rates dropped, grades dropped, and motivation dropped. 
+
+   Granular grading systems (A, A−, B+, B, etc.) actually hurt student motivation because lots of effort is spent trying to move up the scale (i.e. thinking "If I can just get two more questions right on this assignment, I'll go from a B+ to an A−"). 
+   
+   Less informative systems actually *increase* motivation because you're not worried about exact point totals and can instead have space to play around, make mistakes, and be curious.
+
+   Hence the ✓+, ✓, and ✓− system I use. 
+
+   I'm not grading your coding ability, I'm not checking each line of code to make sure it produces some exact final figure, and I'm not looking for perfect. Also note that a ✓ does not require 100% completion—you will sometimes get stuck with weird errors that you can't solve, or the demands of pandemic living might occasionally become overwhelming. I'm looking for good faith effort, that's all. Try hard, do good work, and you'll get a ✓.
+
+   I reserve ✓−s for when the effort is bare minimum or noticeably not completed (e.g., the code is copied/pasted from somewhere on the internet and doesn't run; your weekly check-in has just a couple words for each point; you only turn in one page of the assignment; etc.). I'll sometimes use intermediate ✓s like ✓−+ when work isn't *quite* fully ✓− and not *quite* fully ✓.
+
+2. **Exciting and muddy things**: Your weekly check-ins let you tell me what new and exciting things you're learning, and they let me know where you're getting stuck so I can get things unstuck. These don't need to be written formally with citations or anything—use these to tell me the cool things you're finding. This is space for judgment-free curiosity!
+
+3. **#TidyTuesday**: The whole point of the [#TidyTuesday](/assignment/tidy-tuesday.qmd) assignment is to let you do *something* neat with R. It's entirely self directed. Make something cool.

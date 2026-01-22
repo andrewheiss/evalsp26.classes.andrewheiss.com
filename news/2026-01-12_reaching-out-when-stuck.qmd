@@ -1,0 +1,208 @@
+---
+title: "The 30-minute rule and how to ask for help"
+date: "2026-01-12T09:57"
+categories: [advice]
+---
+
+When working through the examples or exercises, you will get stuck. It's inevitable.
+
+**You absolutely can (and should) reach out when stuck.** I'm super responsive on Discord and e-mail. If you ask a question on the `#help-me` channel in Discord, others can help too. No question is too tricky or embarrassing, I promise. Computers are extraordinarily literal and tiny typos will often mess you up for a long time—I've lost countless time because of missing commas and misspelled words (curse you `lenght()`). 
+
+This class is different from most of your other past classes. In many classes, you can work through the readings and materials without ever interacting with your classmates or professor—you can just follow the class schedule, get the assignments done, and finish it all.
+
+While you can theoretically do that here (and some students to), **I do not recommend it**. [As I talk about here, building a class community is crucial for success in this course.](/news/2026-01-05_building-community.qmd)
+
+You can (and should!) ask questions when you get stuck. Post them on Discord for everyone to see. Don't feel bad about asking me or anyone else for help!
+
+
+### The 30-minute rule
+
+I’m a big believer in the 30-minute rule: 
+
+::: {.callout-tip}
+#### The 30-minute rule
+
+If you're stuck on an issue for more than 30 minutes, **stop**, take a break, and ask for help somewhere.
+:::
+
+There are a few easy guidelines to remember when asking for help:
+
+
+### Don't suffer in silence!
+
+*Do not suffer in silence*. When you're stuck, reach out. Do not wallow in your stuck-ness.
+
+I've had past students tell me that's like the one thing they'll remember from my classes—do not suffer in silence. I mean it, and I'll keep saying it throughout the semester (because often in your past courses and degrees, you've been discouraged from reaching out or from building communities or whatever—that is *not* the case here).
+
+
+### Use Discord in public
+
+Lots of you have been emailing me or sending me private messages on Discord for assistance, and that's great and I'm happy to respond like that. However, one way to help build a stronger community for this class is to ask questions in public in the `#help-me` channel instead. There are a couple reasons for this:
+
+1. **It reduces duplication**: Throughout the semester, many of you will have almost identical questions, and I'll often copy/paste screenshots and identical answers between different private conversations asking for help. Having those questions and answers in `#help-me` instead will let you get answers to common questions faster, and it makes life easier for everyone!
+
+2. **It allows *you* to help**: Some of you have R experience already, and even if you don't, as the summer goes on, you'll get more comfortable with it and will start being able to answer your classmates' questions. You might have just fixed a similar issue in a past exercise, or you might be able to spot a typo in their code, or you might otherwise know how to help. Step in and help! Discord is for building a community, not just for getting assistance from me.
+
+You might feel apprehensive about asking in public. Don't worry: I can assure you that there are no dumb R questions. If you have a question about something, someone else does too!
+
+
+### Help us help you
+
+Ask questions with as complete information as possible. Do not just post a photo from your phone and say something like "help?" or "my code isn't working" and that's it—provide more background (it's hard to read your computer's mind). 
+
+Explain specifically what you're trying to do and provide code when possible. You can actually format R code on Discord if you include it between triple backticks like this (press shift + enter to add a line break in a Discord message):
+
+````default
+```
+ggplot(blah) + geom_point()
+```
+````
+
+If you add "r" after the first set of triple backticks it will add R-based syntax highlighting too (you can use other languages like "python" or "sql" or whatever too, but you don't need to worry about that for this class):
+
+````default
+```r
+ggplot(blah) + geom_point()
+```
+````
+
+You can also take screenshots to *supplement* your question (use ⌘+shift+4 on macOS to save a screenshot to your Desktop, or ⌘+⌥+shift+4 to save a screenshot directly to the clipboard; use Windows+shift+S on Windows to save a screenshot directly to the clipboard). **Do not send a screenshot as your entire question though** (it's very tempting to just post a picture of an error and hope that someone can fix it)—provide context. Screenshots are helpful, but code/text is better—it's harder for people to get the code out of a screenshot in Discord and into RStudio on their computer to troubleshoot, since you can't copy/paste from an image.
+
+Try making your question a **repr**oducible **ex**ample (or reprex). You'll learn more about reprexes in session 8, but it's an incredibly important skill to have. [See here for some resources about it](/content/08-content.qmd#reproducible-examples)
+
+
+### High resolution questions
+
+Relatedly, embrace [high resolution writing](https://chriscoyier.net/2022/12/28/watch-out-for-low-resolution-writing/) (vs. low resolution writing), when asking questions, so that your messages contain a lot of detail and context.
+
+For instance, here's an example of **low resolution** question-asking:
+
+:::: {.callout-note icon=false}
+#### `#help-me`
+
+**Person A:** I'm stuck on Problem Set X
+
+**Person B:** Ok cool—what's the problem you're having?
+
+::: {.text-center}
+*(10 minutes later…)*
+:::
+
+**Person A:** My code isn't running
+
+**Person B:** What does your code look like?
+
+::: {.text-center}
+*(10 minutes later…)*
+:::
+
+**Person A:** It's giving me an error
+
+**Person A:** ggplot() + geom_point()
+
+**Person B:** What is the error? What do you have in your code before that one line?
+
+::: {.text-center}
+*(20 minutes later…)*
+:::
+
+**Person A:** [*Phone photo of part of the screen*]
+
+**Person B:** It might be an issue with X or Y, but it's hard to see…
+
+::: {.text-center}
+*(10 minutes later…)*
+:::
+
+**Person A:** [*Phone photo of a different part of the screen*]
+
+::: {.text-center}
+(*…and so on until the issue is figured out*)
+:::
+::::
+
+Phew. That process takes forever and is incredibly slow.
+
+Here's a **high resolution** version of the same situation:
+
+::: {.callout-note icon=false}
+#### `#help-me`
+
+**Person A:** I'm stuck on Exercise X. For some reason, my code isn't running and it's giving me an error that says `Error in ggplot(): could not find function "ggplot"`. It happens after I run this code:
+
+```r
+ggplot(data = mpg, aes(x = hwy, y = displ)) + 
+  geom_point()
+```
+
+Earlier in the document I have this code: `library(tidyverse)`, but when I run that, I get this error: `Error in library(): there is no package called tidyverse’`. 
+
+Does anyone know what might be going on?
+
+**Person B:** Ah cool, that's an easy fix! That just means that you don't have the tidyverse library installed on your computer. You can fix it by either using the Packages panel in RStudio to install it, or run this in your console:
+
+```r
+install.packages("tidyverse")
+```
+
+↑ That should fix things
+
+::: {.text-center}
+*(10 minutes later…)*
+:::
+
+**Person A:** That worked—thanks!
+:::
+
+That second example is much longer than just saying "my code isn't working", but it gets an answer *significantly* faster because it contains complete details to help someone else help.
+
+**Embrace high resolution writing.**
+
+
+### Unanswered questions
+
+Stuff like this happens all the time on websites where people ask for help (and in Discord):
+
+::: {.callout-note icon=false}
+#### `#help`
+
+**Person A:** I'm stuck with this issue and can't get X to work
+
+::: {.text-center}
+*(10 minutes later…)*
+:::
+
+**Person A:** Oh wait, never mind, I fixed it!
+
+::: {.text-center}
+*(Person A disappears…)*
+:::
+:::
+
+If you ask a question and then figure out the answer yourself, **let us know how you did it!** It's likely that other people have similar questions and issues, and seeing solved-but-unexplained questions is sad:
+
+![[xkcd #979: "Wisdom of the Ancients"](https://xkcd.com/979/)](img/wisdom_of_the_ancients.png)
+
+
+### Discord question etiquette
+
+The `#help-me` channel on Discord is a little different from the other channels. It's more like a forum, where questions have titles and all responses appear in question-specific threads. Try to follow a few general guidelines there:
+
+1. **Use informative titles**: Don't create a post called "Help!" or "Homework question" or "Stuck!" or things like that. Similar to the idea of [high-resolution question asking](#high-resolution-questions), try to make your title more informative, like "Can't change color in plot in exercise 3" or something like that.
+2. **Keep conversations on topic**: You *absolutely should* look at other peoples' questions to see how they're answered—and you can answer and participate in them too! This is another reason for informative titles—it'll be hard for other people to browse through past questions if they're all called "Help!". If you have a different question or topic, make a new post—don't ask it in an unrelated question.
+3. **Close the question if it's been answered**: Similar to the idea of [unanswered questions](#unanswered-questions), if your question has been answered, it's generally good practice to say so in the post. Like, add a comment like "Thanks! That fixed it!" or something—or even add a ✅ emoji reaction. That'll signal to me that I can close the post. The post will still be there in `#help-me`, but it won't be up at the top with active questions.
+
+
+### Student appointments
+
+You can meet with me for [student hours](/syllabus.qmd#student-hours) by signing up for an appointment [at my scheduling page](https://scheduler.zoom.us/andrewheiss). The link is also accessible at the [top of the syllabus page](/syllabus.qmd) and on [the main homepage](/) of the class site.
+
+The scheduling page connects to my personal and work calendars and should only show times when I'm available. If you sign up for an online appointment, you'll receive an e-mail with a special Zoom link that you can use for the meeting.
+
+**Make sure the e-mail you use is correct**—if you don't get a confirmation e-mail with the meeting details, it's likely that there was a typo in your e-mail address.
+
+If you need to change or cancel the appointment, you can do that using a link in the confirmation e-mail.
+
+On rare occasions, I will cancel an appointment from my end. This only happens if I forget to put a work or personal appointment on my calendar, so Zoom thinks I'm free when I'm really not.
+
+If I cancel an appointment with you, **don't worry**. I don't hate you or anything. I'm not trying to avoid you. I most likely had some accidental or unforeseen scheduling conflict. In my cancellation note, I'll say something like "Oh no! I'm so sorry! Can you sign up for a different time please?!". Do that :)
