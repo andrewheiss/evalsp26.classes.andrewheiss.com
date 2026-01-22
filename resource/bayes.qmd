@@ -39,7 +39,7 @@ library(tidyverse)
 library(parameters)
 
 model_ols <- lm(hwy ~ displ + drv, data = mpg)
-model_parameters(model_ols, conf.int = TRUE)
+model_parameters(model_ols)
 ```
 
 Here's that same model using the {brms} package, with default priors. Note how the code is basically the same:
