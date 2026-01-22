@@ -51,7 +51,8 @@ The data contains 6 variables:
 ```{r load-libraries, message=FALSE, warning=FALSE}
 # First we load the libraries and data
 library(tidyverse)     # This lets you create plots with ggplot, manipulate data, etc.
-library(broom)         # This lets you convert regression models into nice tables
+library(parameters)    # This lets you extract model parameters into nice tables
+library(performance)   # This lets you extract model diagnostics into nice tables
 library(modelsummary)  # This lets you combine multiple regression models into a single table
 ```
 
@@ -154,7 +155,7 @@ $$
 model_sat_gpa <- lm(gpa_fy ~ sat_total, data = sat_gpa)
 
 # Look at the model results and include confidence intervals for the coefficients
-tidy(model_sat_gpa, conf.int = TRUE)
+model_parameters(model_sat_gpa, digits = 3)
 ```
 
 Here's what these coefficients mean:
@@ -165,7 +166,7 @@ Here's what these coefficients mean:
 We can look at the summary table of the regression to check the $R^2$:
 
 ```{r model-sat-gpa-details}
-glance(model_sat_gpa)
+model_performance(model_sat_gpa)
 ```
 
 The $R^2$ here is 0.212, which means that SAT scores explain 21% of the variation in freshman GPA. It's not a fantastic model, but it explains some stuff.
@@ -181,7 +182,7 @@ $$
 ```{r model-sat-math-verbal}
 model_sat_gpa_types <- lm(gpa_fy ~ sat_verbal + sat_math, data = sat_gpa)
 
-tidy(model_sat_gpa_types, conf.int = TRUE)
+model_parameters(model_sat_gpa_types, digits = 3)
 ```
 
 Again, the intercept is meaningless since no student has a zero on both the verbal and the math test. The slope for `sat_verbal` (or $\beta_1$) is 0.025, so a one percentile point increase in the verbal SAT is associated with a 0.025 point increase in GPA, on average, controlling for math scores. Meanwhile, a one percentile point increase in the math SAT ($\beta_2$) is associated with a 0.022 point increase in GPA, on average, controlling for verbal scores. These are essentially the same, so at first glance, it doesn't seem like the type of test has substantial bearing on college GPAs.
@@ -189,7 +190,7 @@ Again, the intercept is meaningless since no student has a zero on both the verb
 The adjusted $R^2$ (which we need to look at because we're using more than one explanatory variable) is 0.211, which means that this model explains 21% of the variation in college GPA. Like before, this isn't great, but it tells us a little bit about the importance of SAT scores.
 
 ```{r model-sat-math-verbal-gpa-details}
-glance(model_sat_gpa_types)
+model_performance(model_sat_gpa_types)
 ```
 
 #### Do high school GPAs predict freshman GPAs?
@@ -203,7 +204,7 @@ $$
 ```{r model-hs-college-gpa}
 model_sat_gpa_hs <- lm(gpa_fy ~ gpa_hs, data = sat_gpa)
 
-tidy(model_sat_gpa_hs)
+model_parameters(model_sat_gpa_hs, digits = 3)
 ```
 
 The intercept here ($\beta_0$) is 0.091, which means that a student with a high school GPA of zero would have a predicted freshman GPA of 0.091, on average. This is nonsensical, so we can ignore it. The slope for `gpa_hs` ($\beta_1$), on the other hand, is helpful. For every 1 point increase in GPA (i.e. moving from 2.0 to 3.0, or 3.0 to 4.0), there's an associated increase in college GPA of 0.743 points, on average.
@@ -211,7 +212,7 @@ The intercept here ($\beta_0$) is 0.091, which means that a student with a high 
 The $R^2$ value is 0.295, which means that nearly 30% of the variation in college GPA can be explained by high school GPA. Neat.
 
 ```{r model-hs-college-gpa-details}
-glance(model_sat_gpa_hs)
+model_performance(model_sat_gpa_hs)
 ```
 
 #### College GPA ~ SAT + sex
@@ -225,7 +226,7 @@ $$
 ```{r model-sat-sex}
 model_sat_sex <- lm(gpa_fy ~ sat_total + sex, data = sat_gpa)
 
-tidy(model_sat_sex, conf.int = TRUE)
+model_parameters(model_sat_sex, digits = 3)
 ```
 
 Here, stuff gets interesting. The intercept ($\beta_0$) is once again nonsensical—females with a 0 score on their SAT would have a -0.027 college GPA on average. There's a positive effect with our $\beta_1$ (or `sat_total`), since controlling for sex, a one percentile point increase in SAT scores is associated with a 0.026 point increase in freshman GPA, on average. If we control for SAT scores, males see an average drop of 0.274 points ($\beta_2$) in their college GPAs.
@@ -233,7 +234,7 @@ Here, stuff gets interesting. The intercept ($\beta_0$) is once again nonsensica
 The combination of these two variables, however, doesn't boost the model's explanatory power that much. The adjusted $R^2$ (which we must look at because we're using more than one explanatory variable) is 0.243, meaning that the model explains a little over 24% of the variation in college GPAs.
 
 ```{r model-sat-sex-details}
-glance(model_sat_sex)
+model_performance(model_sat_sex)
 ```
 
 #### College GPA ~ SAT + high school GPA + sex
@@ -247,7 +248,7 @@ $$
 ```{r model-sat-hs-sex}
 model_sat_hs_sex <- lm(gpa_fy ~ sat_total + gpa_hs + sex, data = sat_gpa)
 
-tidy(model_sat_hs_sex, conf.int = TRUE)
+model_parameters(model_sat_hs_sex, digits = 3)
 ```
 
 We can say the following things about these results:
@@ -260,7 +261,7 @@ We can say the following things about these results:
 As always, the adjusted $R^2$ shows us how well the model fits overall (again, we have to look at the adjusted $R^2$ because we have more than one explanatory variable). In this case, the model explains 36.5% of the variation in college GPA, which is higher than any of the previous models (but not phenomenal, in the end).
 
 ```{r model-sat-hs-sex-details}
-glance(model_sat_hs_sex)
+model_performance(model_sat_hs_sex)
 ```
 
 #### Which model best predicts freshman GPA? How do you know?
@@ -271,6 +272,13 @@ As you've learned in previous stats classes, adjusted $R^2$ generally shows the 
 # The modelsummary() function takes a bunch of different regression models and
 # puts them in a neat side-by-side table. In a normal report or analysis, you'd
 # include all of these once instead of going one by one like we did above.
-modelsummary(list(model_sat_gpa, model_sat_gpa_types, model_sat_gpa_hs,
-                  model_sat_sex, model_sat_hs_sex))
+modelsummary(
+  list(
+    model_sat_gpa,
+    model_sat_gpa_types,
+    model_sat_gpa_hs,
+    model_sat_sex,
+    model_sat_hs_sex
+  )
+)
 ```
