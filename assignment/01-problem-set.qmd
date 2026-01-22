@@ -1,7 +1,7 @@
 ---
 title: "Problem set 1"
 subtitle: "Introduction to R and the tidyverse"
-date: "2026-01-22"
+date: "2026-01-23"
 ---
 
 ```{r setup, include=FALSE}
@@ -21,9 +21,9 @@ Before starting this problem set, make sure you complete everything at [the exam
 1. Open the project either on your computer ([follow these instructions to get started!](/resource/install.qmd)) or in Posit.cloud
 
    - [{{< fa file-archive >}} `01-problem-set.zip`](/projects/01-problem-set.zip): If you're using R on your own computer, download this file, [*unzip it*](/resource/unzipping.qmd), and double click on the file named `01-problem-set.Rproj`
-   - [{{< fa cloud >}} Posit.cloud project](https://posit.cloud/spaces/679548/content/10729158): Use this link if you're using Posit.cloud in your browser
+   - [{{< fa cloud >}} Posit.cloud project](https://posit.cloud/spaces/737332/content/11719990): Use this link if you're using Posit.cloud in your browser
 
-2. Rename the Quarto file named `your-name_problem-set-1.qmd` to something that matches your name and open it in RStudio.
+2. Rename the Quarto file named `your-name_01-problem-set.qmd` to something that matches your name and open it in RStudio.
 
 3. Complete the tasks given in the Quarto file. You can definitely copy, paste, and adapt from other code in the document—don't try to write everything from scratch!
 
@@ -59,3 +59,26 @@ Or you can create a new RStudio Project directory for all your work (not recomme
 :::
 
 ::::
+
+::: {.callout-tip}
+### Running chunks
+
+Remember that you can run an entire chunk by clicking on the green play arrow in the top right corner of the chunk. You can also run lines of code line-by-line if you place your cursor on some R code and press <kbd>⌘</kbd> + <kbd>enter</kbd> (for macOS users) or <kbd>ctrl</kbd> + <kbd>enter</kbd> (for Windows users).
+
+Make sure you run each chunk sequentially. If you run a chunk in the middle of the document without running previous ones, it might not work, since previous chunks might do things that later chunks depend on.
+:::
+
+::: {.callout-tip}
+### Inserting chunks
+
+You'll need to insert some of your own code chunks. Rather than typing them by hand (that's tedious!), use the "Insert" button at the top of the editing window, or press  <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>I</kbd> on macOS, or <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>I</kbd> on Windows.
+
+```{r}
+#| label: insert-chunk-button
+#| echo: false
+#| out-width: 19%
+#| fig-align: center
+knitr::include_graphics("/files/img/assignments/insert-chunk-button.png", error = FALSE)
+```
+
+:::

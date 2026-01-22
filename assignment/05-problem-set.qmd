@@ -1,7 +1,7 @@
 ---
 title: "Problem set 5"
 subtitle: "Difference-in-differences again"
-date: "2026-03-26"
+date: "2026-03-27"
 ---
 
 ::: {.callout-warning}
