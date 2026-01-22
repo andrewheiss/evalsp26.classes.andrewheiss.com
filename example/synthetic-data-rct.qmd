@@ -27,7 +27,7 @@ options(dplyr.summarise.inform = FALSE)
 #| message: false
 
 library(tidyverse)
-library(broom)
+library(parameters)
 library(scales)
 library(ggdag)
 ```
@@ -141,7 +141,7 @@ ggplot(rct_data, aes(x = income, y = health)) +
   geom_point() +
   geom_smooth(method = "lm")
 
-lm(health ~ income, data = rct_data) |> tidy()
+lm(health ~ income, data = rct_data) |> model_parameters()
 ```
 
 6. **Try it out!**
@@ -155,7 +155,7 @@ lm(health ~ income, data = rct_data) |> tidy()
 
 # Correct RCT-based ATE
 model_rct <- lm(malaria_risk ~ net, data = rct_data)
-tidy(model_rct)
+model_parameters(model_rct)
 ```
 
    Just for fun, if we control for health and income, we'll get basically the same effect, since they don't actualy confound the relationship and don't really explain anything useful.
@@ -165,7 +165,7 @@ tidy(model_rct)
 
 # Controlling for stuff even though we don't need to
 model_rct_controls <- lm(malaria_risk  ~ net + health + income, data = rct_data)
-tidy(model_rct_controls)
+model_parameters(model_rct_controls)
 ```
 
 7. **Save the data.**

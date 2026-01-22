@@ -14,7 +14,9 @@ library(tidyverse)   # ggplot(), mutate(), and friends
 library(ggdag)       # Make DAGs
 library(dagitty)     # Do DAG logic with R
 library(haven)       # Load data from Stata files
-library(broom)       # Convert models to data frames
+library(parameters)  # Extract model parameters to data frames
+library(performance) # Extract model details to data frames
+library(marginaleffects)  # Easier model predictions
 library(patchwork)   # Combine ggplot plots
 
 set.seed(1234)   # Make all random draws reproducible
@@ -259,7 +261,7 @@ Based on our `math_averages` table, there's a 4ish point difference in averages.
 
 ```{r math-diff-naive}
 model_math_naive <- lm(math12 ~ catholic_f, data = school_data)
-tidy(model_math_naive)
+model_parameters(model_math_naive)
 ```
 
 The Catholic school "effect" is 3.89. This is **most definitely not a causal effect at all**—we haven't taken care of any of the confounders!—but we'll work with this for now just for illustration.
@@ -330,7 +332,7 @@ ggplot(school_data_scaled, aes(x = math12_z, fill = catholic_f)) +
              aes(xintercept = avg_z, color = catholic_f))
 
 model_math_naive_z <- lm(math12_z ~ catholic_f, data = school_data_scaled)
-tidy(model_math_naive_z)
+model_parameters(model_math_naive_z)
 ```
 
 This is the same plot that we saw earlier! The only difference is the x-axis—it now ranges between -2ish and 2ish instead of 30 and 70, since all we really did was transform and scale down the original test scores. They're centered around 0 and are measured in standard deviations now, but deep down inside they're still just the original test scores. The group averages are also measured in standard deviations now too (and we can rescale them back up if we want, too):
@@ -369,10 +371,10 @@ malaria_regular | malaria_scaled
 
 ```{r net-naive-models}
 model_net_naive <- lm(malaria_risk ~ net, data = nets_scaled)
-tidy(model_net_naive)
+model_parameters(model_net_naive)
 
 model_net_naive_z <- lm(malaria_risk_z ~ net, data = nets_scaled)
-tidy(model_net_naive_z)
+model_parameters(model_net_naive_z)
 ```
 
 The distributions are identical except for the x-axis, and the difference in means is the same too, just measured slightly differently. The average for net users is 16.3 risk points lower than non-net users, or 1.06 standard deviations lower.
@@ -393,7 +395,7 @@ $$d = \frac{\overbrace{\bar{x}_2 - \bar{x}_1}^{\substack{\text{Difference in} \\
 There are general rules of thumb for interpreting these values:
 
 ```{r cohens-d-table, echo=FALSE, warning=FALSE, message=FALSE}
-library(kableExtra)
+library(tinytable)
 
 tribble(
   ~`Effect size`, ~`<em>d</em>`,
@@ -404,28 +406,27 @@ tribble(
   "Very large", 1.20,
   "Huge", 2.0,
 ) |> 
-  kbl(escape = FALSE) |> 
-  kable_styling(full_width = FALSE, position = "center")
+  tt()
 ```
 
 Based on this table, our (incorrect) Catholic school effect of 0.367 standard deviations is actually somewhere between a small and medium effect.
 
 :::{.callout-warning}
-**QUICK IMPORTANT CAVEAT**: Technically for mathy reasons, Cohen's *d* is [not exactly comparable](https://www.researchgate.net/post/How_can_I_calculate_an_effect_size_cohens_d_preferably_from_a_linear_random_effects_model_beta) to just looking at the number of standard deviations between the averages, but it's a good way of thinking about effect sizes. If you want to be official about it, one way to get Cohen's *d* from regression output is to divide the coefficient (which is like $\bar{x}_2 - \bar{x}_1$ in the formula) by the residual standard error of the model (which is like $s$ in the formula). You can get these from `tidy()` and `glance()`:
+**QUICK IMPORTANT CAVEAT**: Technically for mathy reasons, Cohen's *d* is [not exactly comparable](https://www.researchgate.net/post/How_can_I_calculate_an_effect_size_cohens_d_preferably_from_a_linear_random_effects_model_beta) to just looking at the number of standard deviations between the averages, but it's a good way of thinking about effect sizes. If you want to be official about it, one way to get Cohen's *d* from regression output is to divide the coefficient (which is like $\bar{x}_2 - \bar{x}_1$ in the formula) by the residual standard error of the model (which is like $s$ in the formula). You can get these from `model_parameters()` and `model_performance()`:
 :::
 
 ```{r cohens-d-from-regression}
-tidy(model_math_naive)
-glance(model_math_naive)  # We want sigma here
+model_parameters(model_math_naive)
+model_performance(model_math_naive)  # We want sigma here
 3.89 / 9.43
 
 # Or more programmatically without handwritten numbers
-catholic_coef <- tidy(model_math_naive) |> filter(term == "catholic_fCatholic") |> pull(estimate)
-catholic_sigma <- glance(model_math_naive) |> pull(sigma) 
+catholic_coef <- model_parameters(model_math_naive) |> filter(Parameter == "catholic_fCatholic") |> pull(Coefficient)
+catholic_sigma <- model_performance(model_math_naive) |> pull(Sigma) 
 catholic_coef / catholic_sigma
 
-net_coef <- tidy(model_net_naive) |> filter(term == "netTRUE") |> pull(estimate)
-net_sigma <- glance(model_net_naive) |> pull(sigma) 
+net_coef <- model_parameters(model_net_naive) |> filter(Parameter == "netTRUE") |> pull(Coefficient)
+net_sigma <- model_performance(model_net_naive) |> pull(Sigma) 
 net_coef / net_sigma
 ```
 
@@ -446,9 +447,9 @@ One last bit of background before we get to the actual sensitivity analysis. Rem
 For instance, our naive Catholic schools model explains just 1.6% of the variation in math scores, and our mosquito net model explains 26.5% of the variation in malaria risk.
 
 ```{r naive-r2}
-glance(model_math_naive)
+model_performance(model_math_naive)
 
-glance(model_net_naive)
+model_performance(model_net_naive)
 ```
 
 Adding more variables to these models will increase the amount of variation explained by the model. For instance, let's control for some stuff in the malaria risk model:
@@ -456,7 +457,7 @@ Adding more variables to these models will increase the amount of variation expl
 ```{r nets-more-controls}
 model_some_controls <- lm(malaria_risk ~ net + income + health,
                           data = nets)
-glance(model_some_controls)
+model_performance(model_some_controls)
 ```
 
 By controlling for income and health, we now explain 81.5% of the variation in malaria risk. That's a pretty big jump in $R^2$. Where'd it come from? Which of those new variables explained that additional variation?
@@ -492,8 +493,8 @@ model_net_treatment <- glm(net ~ income + temperature + health,
                            family = binomial(link = "logit"))
 
 # Propensity scores and inverse probability of treatment weights (IPTW)
-net_iptw <- augment(model_net_treatment, nets, type.predict = "response") |>
-  rename(propensity = .fitted) |> 
+net_iptw <- predictions(model_net_treatment, nets) |> 
+  rename(propensity = estimate) |> 
   mutate(iptw = (net_num / propensity) + ((1 - net_num) / (1 - propensity)))
 
 # Outcome model
@@ -501,14 +502,14 @@ model_net_ate <- lm(malaria_risk ~ net,
                     data = net_iptw,
                     weights = iptw)
 
-tidy(model_net_ate, conf.int = TRUE)
+model_parameters(model_net_ate)
 
-glance(model_net_ate)
+model_performance(model_net_ate)
 ```
 
 After closing all known backdoors between treatment and outcome, the average treatment effect of using a mosquito net is a 10.1-point reduction in malaria risk. 
 
-We can convert this to a standardized mean difference (or Cohen's *d* effect size) by dividing the coefficient by the residual standard error (or `sigma` in the results of `glance()`):
+We can convert this to a standardized mean difference (or Cohen's *d* effect size) by dividing the coefficient by the residual standard error (or `Sigma` in the results of `model_performance()`):
 
 ```{r ate-net-z}
 -10.1 / 19.5
@@ -568,9 +569,8 @@ model_school_treatment <- glm(catholic ~ I(inc8^2) + (inc8*math8) + fhowfar +
                               family = binomial(link = "logit"))
 
 # Propensity scores and inverse probability of treatment weights (IPTW)
-school_iptw <- augment(model_school_treatment, school_data, 
-                       type.predict = "response") |>
-  rename(propensity = .fitted) |> 
+school_iptw <- predictions(model_school_treatment, school_data) |>
+  rename(propensity = estimate) |> 
   mutate(iptw = (catholic / propensity) + ((1 - catholic) / (1 - propensity)))
 
 # Outcome model
@@ -578,14 +578,14 @@ model_school_ate <- lm(math12 ~ catholic,
                        data = school_iptw,
                        weights = iptw)
 
-tidy(model_school_ate, conf.int = TRUE)
+model_parameters(model_school_ate)
 
-glance(model_school_ate)
+model_performance(model_school_ate)
 ```
 
 After closing all known backdoors between treatment and outcome (we hope!), the average treatment effect of attending a Catholic school is a 1.47-point increase in 12th grade math scores. 
 
-We can convert this to a standardized mean difference (or Cohen's *d* effect size) by dividing the coefficient by the residual standard error (or `sigma` in the results of `glance()`):
+We can convert this to a standardized mean difference (or Cohen's *d* effect size) by dividing the coefficient by the residual standard error (or `Sigma` in the results of `model_performance()`):
 
 ```{r ate-school-z}
 1.47 / 13.1
@@ -703,16 +703,16 @@ Let's try it out!
 
 ### Fake mosquito net program
 
-To calculate different tipping points, we need to specify the confidence intervals of our causal effect. The easiest way to do that is to use `tidy(..., conf.int = TRUE)` and then filter those results so that we're just looking at our causal effect (the upper bound of the confidence interval for `netTRUE` in this case). We can then feed those results to `tip_coef()`, which handles the sensitivity analysis for us.
+To calculate different tipping points, we need to specify the confidence intervals of our causal effect. The easiest way to do that is to use `model_parameters()` and then filter those results so that we're just looking at our causal effect (the upper bound of the confidence interval for `netTRUE` in this case). We can then feed those results to `tip_coef()`, which handles the sensitivity analysis for us.
 
 For instance, let's pretend that there's an unmeasured confounder that has an standardized effect on the outcome of 5. For every one unit increase in this Z, malaria risk would increase by 5 points. If that was the case, how much of a difference in net usage would there be across this Z?
 
 ```{r tipr-net-outcome-5}
 library(tipr)
 
-tidy(model_net_ate, conf.int = TRUE) |> 
-  filter(term == "netTRUE") |> 
-  pull(conf.high) |> 
+model_parameters(model_net_ate) |> 
+  filter(Parameter == "netTRUE") |> 
+  pull(CI_high) |> 
   tip_coef(confounder_outcome_effect = 5)
 ```
 
@@ -740,9 +740,9 @@ We'd also need to assume that that disparity in net usage would need to be cause
 If you don't want to think about standardized mean differences, you can think about hypothetical βs instead. Let's say you pretend that there's a 0.5 SMD difference across treated and untreated values in your unknown confounder. How big would the β need to be in a regression of `lm(malaria_risk ~ Z)`?
 
 ```{r tipr-smd-0-5}
-tidy(model_net_ate, conf.int = TRUE) |> 
-  filter(term == "netTRUE") |> 
-  pull(conf.high) |>
+model_parameters(model_net_ate) |> 
+  filter(Parameter == "netTRUE") |> 
+  pull(CI_high) |>
   tip_coef(exposure_confounder_effect = 0.5)
 ```
 
@@ -753,7 +753,7 @@ How big are the other βs in our model? We can't really tell since our outcome m
 ```{r temporary-outcome-association-model-net}
 lm(malaria_risk ~ net + income + temperature + health,
    data = net_iptw) |> 
-  tidy()
+  model_parameters()
 ```
 
 None of those are really close at all. The net effect is huge at 10.4, but the others are all tiny—temperature comes the closest with 1.01, but that's pretty far from 17.7. If you can think of some sort of confounder (or lots of confounders) that could be associated with the outcome at 17.7, tipping is plausible. Here, it's not. (Again, this all assumes a 0.5 SD difference between treated and untreated people in this unknown confounder Z.)
@@ -761,9 +761,9 @@ None of those are really close at all. The net effect is huge at 10.4, but the o
 These two numbers—the standardized mean difference and the outcome association—are directly related. Look at this graph, for instance:
 
 ```{r tipr-combinations-net, fig.width=6, fig.height=4.5}
-plot_stuff <- tidy(model_net_ate, conf.int = TRUE) |> 
-  filter(term == "netTRUE") |> 
-  pull(conf.high) |>
+plot_stuff <- model_parameters(model_net_ate) |> 
+  filter(Parameter == "netTRUE") |> 
+  pull(CI_high) |>
   tip_coef(exposure_confounder_effect = seq(0.05, 3, by = 0.05), verbose = FALSE)
 
 ggplot(plot_stuff, aes(x = exposure_confounder_effect, 
@@ -778,9 +778,9 @@ As the standardized mean difference (i.e. the difference between net users and n
 So far this all assumes that we have a single unmeasured confounder. That's not super plausible. If we specify both a hypothetical SMD and a hypothetical outcome association, we can calculate how many similarly-sized confounders would need to exist to tip the results. For instance, let's say we're worried that there are a bunch of confounders with a small level of association with the outcome, like -0.3 (that's like twice the size of the `health` coefficient from the model above), and we assume that each of these confounders has a treated vs. untreated SMD of 0.5. How many of these confounders would need to exist in order to break our results?
 
 ```{r tipr-n-confounders-net}
-tidy(model_net_ate, conf.int = TRUE) |> 
-  filter(term == "netTRUE") |> 
-  pull(conf.high) |>
+model_parameters(model_net_ate) |> 
+  filter(Parameter == "netTRUE") |> 
+  pull(CI_high) |>
   tip_coef(exposure_confounder_effect = 0.5, 
            confounder_outcome_effect = -0.3)
 ```
@@ -798,15 +798,15 @@ Let's try using {tipr} with our Catholic schools ATE. To get a sense of how big 
 lm(math12 ~ catholic + I(inc8^2) + (inc8*math8) + fhowfar + 
      mhowfar + fight8 + nohw8 + disrupt8 + riskdrop8,
    data = school_iptw) |> 
-  tidy()
+  model_parameters()
 ```
 
 Those are all fairly small βs. The largest ones apart from the intercept and our treatment variable are `nohw8` at -1.25 and `math8` at 0.815. What if we had an unmeasured confounder that was twice the size of `math8` at 1.6 (i.e. a 1-unit change in this mystery variable leads to a 1.6-point change in test scores)?
 
 ```{r tipr-school-outcome-1-6}
-tidy(model_school_ate, conf.int = TRUE) |> 
-  filter(term == "catholic") |> 
-  pull(conf.low) |>
+model_parameters(model_school_ate) |> 
+  filter(Parameter == "catholic") |> 
+  pull(CI_low) |>
   tip_coef(exposure_confounder_effect = 1.6)
 ```
 
@@ -815,9 +815,9 @@ If that were the case, we'd need to see an SMD of 0.617 in the unknown variable 
 What if we think that 1.6 might be too high for a coefficient and we bump it down to 0.8, like 8th grade math scores?
 
 ```{r tipr-school-outcome-0-8}
-tidy(model_school_ate, conf.int = TRUE) |> 
-  filter(term == "catholic") |> 
-  pull(conf.low) |>
+model_parameters(model_school_ate) |> 
+  filter(Parameter == "catholic") |> 
+  pull(CI_low) |>
   tip_coef(exposure_confounder_effect = 0.8)
 ```
 
@@ -826,9 +826,9 @@ The SMD would need to be higher, but not super high. Assuming a unknown variable
 We can also solve for different values of the outcome association β. For instance, if we assume an SMD of 0.5 (half a standard deviation), how big would the β need to be in a regression of `lm(math12 ~ Z)`?
 
 ```{r tipr-school-smd-0-5}
-tidy(model_school_ate, conf.int = TRUE) |> 
-  filter(term == "catholic") |> 
-  pull(conf.low) |>
+model_parameters(model_school_ate) |> 
+  filter(Parameter == "catholic") |> 
+  pull(CI_low) |>
   tip_coef(confounder_outcome_effect = 0.5)
 ```
 
@@ -837,9 +837,9 @@ Yikes. We'd only need a β of 1.98. Again, that's larger than any of our existin
 Here are all the combinations of SMD and outcome association that would tip our ATE:
 
 ```{r tipr-combinations-school, fig.width=6, fig.height=4.5}
-plot_stuff <- tidy(model_school_ate, conf.int = TRUE) |> 
-  filter(term == "catholic") |> 
-  pull(conf.low) |>
+plot_stuff <- model_parameters(model_school_ate) |> 
+  filter(Parameter == "catholic") |> 
+  pull(CI_low) |>
   tip_coef(confounder_outcome_effect = seq(0.05, 3, by = 0.05), verbose = FALSE)
 
 ggplot(plot_stuff, aes(x = exposure_confounder_effect, 
@@ -854,9 +854,9 @@ At the extreme, if there's absolutely no difference between treated and untreate
 Again, this is all just with one unmeasured confounder. What if there are a bunch of confounders, all with an SMD of 0.3 and little βs like 0.4?
 
 ```{r tipr-n-confounders-school}
-tidy(model_school_ate, conf.int = TRUE) |> 
-  filter(term == "catholic") |> 
-  pull(conf.low) |>
+model_parameters(model_school_ate) |> 
+  filter(Parameter == "catholic") |> 
+  pull(CI_low) |>
   tip_coef(exposure_confounder_effect = 0.3, 
            confounder_outcome_effect = 0.4)
 ```
@@ -911,7 +911,7 @@ library(rsq)
 model_net_controls <- lm(malaria_risk ~ net_num + income + temperature + health,
                          data = net_iptw)
 
-tidy(model_net_controls)
+model_parameters(model_net_controls)
 
 rsq.partial(model_net_controls)
 ```
@@ -972,7 +972,7 @@ model_school_controls <- lm(math12 ~ catholic + I(inc8^2) + (inc8*math8) + fhowf
                               mhowfar + fight8 + nohw8 + disrupt8 + riskdrop8,
                             data = school_iptw)
 
-tidy(model_school_controls)
+model_parameters(model_school_controls)
 
 # These will show up with scientific notation like 7.0e-03, so we can round them
 rsq.partial(model_school_controls)

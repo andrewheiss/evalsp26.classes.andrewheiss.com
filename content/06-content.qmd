@@ -62,15 +62,15 @@ Here are all the materials we'll use in class:
   ```r
   library(tidyverse)
   library(readxl)
-  library(broom)
+  library(parameters)
   
   tutoring_data <- read_excel("tutoring_cate.xlsx", sheet = "raw_data")
   
   model_naive <- lm(outcome ~ program, data = tutoring_data)
-  tidy(model_naive)
+  model_parameters(model_naive)
   
   model_adjusted <- lm(outcome ~ program + low_grade, data = tutoring_data)
-  tidy(model_adjusted)
+  model_parameters(model_adjusted)
   ```
 
 ### Art → Life expectancy DAG we made together

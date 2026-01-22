@@ -27,7 +27,7 @@ options(dplyr.summarise.inform = FALSE)
 #| message: false
 
 library(tidyverse)
-library(broom)
+library(parameters)
 library(scales)
 library(ggdag)
 ```
@@ -179,7 +179,7 @@ ggplot(iv_data, aes(x = as.factor(net), y = malaria_risk, color = as.factor(net)
 #| indent: "   "
 
 model_forbidden <- lm(malaria_risk ~ net + risk_factors, data = iv_data)
-tidy(model_forbidden)
+model_parameters(model_forbidden)
 ```
 
    Since we can't actually use that column, we'll use distance to town hall as an instrument. We should run this set of models:
@@ -199,7 +199,7 @@ tidy(model_forbidden)
 library(estimatr)
 
 model_iv <- iv_robust(malaria_risk ~ net | distance, data = iv_data)
-tidy(model_iv)
+model_parameters(model_iv)
 ```
 
    …and it's relatively close, I guess, at −8.2. Getting instrumental variables to find exact causal effects is tricky, but I'm fine with this for simulated data.

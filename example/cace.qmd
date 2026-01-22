@@ -41,7 +41,7 @@ First let's load the data and reorder some of the categories:
 
 ```{r include=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
-library(broom)
+library(parameters)
 library(estimatr)
 
 bed_nets <- read_csv(here::here("files", "data", "generated_data", 
@@ -56,7 +56,7 @@ bed_nets_time_machine <- read_csv(here::here("files", "data", "generated_data",
 
 ```{r eval=FALSE}
 library(tidyverse)  # ggplot(), mutate(), and friends
-library(broom)  # Convert models to data frames
+library(parameters) # Extract model parameters to data frames
 library(estimatr)  # Run 2SLS models in one step with iv_robust()
 
 bed_nets <- read_csv("data/bed_nets_observed.csv") |>
@@ -148,11 +148,11 @@ The ITT is easy to find with a simple OLS model:
 ```{r}
 itt_model <- lm(health ~ treatment, data = bed_nets)
 
-tidy(itt_model)
+model_parameters(itt_model)
 
-ITT <- tidy(itt_model) |>
-  filter(term == "treatmentTreatment") |>
-  pull(estimate)
+ITT <- model_parameters(itt_model) |>
+  filter(Parameter == "treatmentTreatment") |>
+  pull(Coefficient)
 ```
 
 The ITT here is ≈6—being assigned treatment increases average health status by 5.99 health points.
@@ -209,7 +209,7 @@ Here's a 2SLS regression with assignment to treatment as the instrument:
 
 ```{r}
 model_2sls <- iv_robust(health ~ bed_net | treatment, data = bed_nets)
-tidy(model_2sls)
+model_parameters(model_2sls)
 ```
 
 The coefficient for `bed_net` is identical to the CACE that we found manually! Instrumental variables are helpful for isolated program effects to only compliers when you're dealing with noncompliance.

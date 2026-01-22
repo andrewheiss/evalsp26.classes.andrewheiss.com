@@ -27,7 +27,7 @@ options(dplyr.summarise.inform = FALSE)
 #| message: false
 
 library(tidyverse)
-library(broom)
+library(parameters)
 library(scales)
 library(ggdag)
 ```
@@ -190,7 +190,7 @@ ggplot(plot_data, aes(x = year, y = mean_risk, color = city)) +
 ```{r}
 #| indent: "   "
 model_did <- lm(malaria_risk ~ city + after + city * after, data = did_data)
-tidy(model_did)
+model_parameters(model_did)
 ```
 
    It works! Being in City B is associated with a 5-point higher risk on average; being after 2017 is associated with a 7.5-point lower risk on average, and being in City B after 2017 causes risk to drop by −10. The number isn't exactly −10 here, since we rescaled the `malaria_risk` column a little, but still, it's close. It'd probably be a good idea to build in some more noise and noncompliance, since the p-values are really really tiny here, but this is good enough for now.
@@ -211,13 +211,13 @@ plot_data <- did_data |>
   )
 
 # Extract parts of the model results for adding annotations
-model_results <- tidy(model_did)
-before_treatment <- filter(model_results, term == "(Intercept)")$estimate +
-  filter(model_results, term == "cityCity B")$estimate
-diff_diff <- filter(model_results, term == "cityCity B:afterTRUE")$estimate
+model_results <- model_parameters(model_did)
+before_treatment <- filter(model_results, Parameter == "(Intercept)")$Coefficient +
+  filter(model_results, Parameter == "cityCity B")$Coefficient
+diff_diff <- filter(model_results, Parameter == "cityCity B:afterTRUE")$Coefficient
 after_treatment <- before_treatment +
   diff_diff +
-  filter(model_results, term == "afterTRUE")$estimate
+  filter(model_results, Parameter == "afterTRUE")$Coefficient
 
 ggplot(plot_data, aes(x = after, y = mean_risk, color = city, group = city)) +
   geom_pointrange(aes(ymin = lower, ymax = upper)) +

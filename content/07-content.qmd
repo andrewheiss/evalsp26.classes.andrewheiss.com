@@ -73,7 +73,7 @@ oregon_clean <- oregon |>
   mutate(outcome_num = ifelse(owe_medical_12 == "Owe Money", 1, 0))
 
 model_rct <- lm(outcome_num ~ treatment_num, data = oregon_clean)
-tidy(model_rct, conf.int = TRUE)
+model_parameters(model_rct)
 ```
 
 Other helpful resources:

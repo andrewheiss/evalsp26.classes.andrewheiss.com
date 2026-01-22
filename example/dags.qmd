@@ -311,7 +311,7 @@ cor(mosquito_nets$income, mosquito_nets$resistance)
 ```{r indent="  "}
 lm(malaria_risk ~ household + health + income + net + temperature,
    data = mosquito_nets) |>
-  broom::tidy()
+  parameters::model_parameters()
 ```
 
 We can check all the other conditional independencies to see if the DAG captures the reality of the full system of factors that influence mosquito net use and malaria risk. If there are substantial and significant correlations between nodes that should be independent, there is likely an issue with the specification of the DAG. Return to the theory of how the phenomena are generated and refine the DAG more.

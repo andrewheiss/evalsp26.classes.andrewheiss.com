@@ -25,7 +25,7 @@ If you want to follow along, download this dataset and put it in a folder named 
 
 ```{r include=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
-library(broom)
+library(parameters)
 library(rdrobust)
 library(estimatr)
 library(modelsummary)
@@ -36,7 +36,7 @@ tutoring <- read_csv(here::here("files", "data", "generated_data", "tutoring_pro
 
 ```{r eval=FALSE}
 library(tidyverse)  # ggplot(), mutate(), and friends
-library(broom)  # Convert models to data frames
+library(parameters) # Extract model parameters to data frames
 library(rdrobust)  # For robust nonparametric regression discontinuity
 library(estimatr)  # Run 2SLS models in one step with iv_robust()
 library(modelsummary)  # Create side-by-side regression tables
@@ -177,7 +177,7 @@ model_sans_instrument <- lm(exit_exam ~ entrance_centered + tutoring,
                             data = filter(tutoring_centered,
                                           entrance_centered >= -10 &
                                             entrance_centered <= 10))
-tidy(model_sans_instrument)
+model_parameters(model_sans_instrument)
 ```
 
 Here, the coefficient for `tutoringTRUE` shows the size of the jump, which is 11.5. This means that participating in the tutoring program *causes* an increase of 11.5 points on the final exam for people in the bandwidth.
@@ -198,7 +198,7 @@ model_fuzzy <- iv_robust(
   exit_exam ~ entrance_centered + tutoring | entrance_centered + below_cutoff,
   data = filter(tutoring_centered, entrance_centered >= -10 & entrance_centered <= 10)
 )
-tidy(model_fuzzy)
+model_parameters(model_fuzzy)
 ```
 
 Based on this model, using `below_cutoff` as an instrument, we can see that the coefficient for `tutoringTRUE` is different now! It's 9.74, which means that the tutoring program *causes* an average increase of 9.74 points on the final exam **for compliers in the bandwidth**.

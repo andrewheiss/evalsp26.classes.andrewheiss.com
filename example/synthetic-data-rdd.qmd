@@ -27,7 +27,7 @@ options(dplyr.summarise.inform = FALSE)
 #| message: false
 
 library(tidyverse)
-library(broom)
+library(parameters)
 library(scales)
 library(ggdag)
 ```
@@ -223,7 +223,7 @@ model_sharp <- lm(
   malaria_risk_sharp ~ income_centered + net_sharp,
   data = filter(rdd_data, income_centered >= -50 & income_centered <= 50)
 )
-tidy(model_sharp)
+model_parameters(model_sharp)
 ```
 
    There's an effect! For people in the bandwidth, the local average treatment effect of nets is a 10.6 point reduction in malaria risk.
@@ -271,7 +271,7 @@ model_fuzzy <- iv_robust(
   malaria_risk_fuzzy ~ income_centered + net_fuzzy | income_centered + below_cutoff,
   data = filter(rdd_data, income_centered >= -50 & income_centered <= 50)
 )
-tidy(model_fuzzy)
+model_parameters(model_fuzzy)
 ```
 
    The effect is slightly larger now (−11.2), but that's because we are looking at a doubly local ATE: compliers in the bandwidth. But still, it's close to −10, so that's good. And we could probably get it closer if we did other mathy shenanigans like adding squared and cubed terms or using nonparametric estimation with `rdrobust()` in the {rdrobust} package.

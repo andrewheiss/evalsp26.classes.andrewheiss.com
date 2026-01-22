@@ -59,7 +59,7 @@ First, let's download the dataset (if you haven't already), put in a folder name
 
 ```{r load-libraries, message=FALSE, warning=FALSE}
 library(tidyverse)  # ggplot(), mutate(), and friends
-library(broom)  # Convert models to data frames
+library(parameters)  # Extract model parameters to data frames
 library(scales)  # Format numbers with functions like comma(), percent(), and dollar()
 library(modelsummary)  # Create side-by-side regression tables
 ```
@@ -272,7 +272,7 @@ The $\delta$ coefficient is the effect we care about in the end---that's the dif
 ```{r model-small}
 model_small <- lm(log_duration ~ highearn + after_1980 + highearn * after_1980,
                   data = injury)
-tidy(model_small)
+model_parameters(model_small)
 ```
 
 The coefficient for `highearn:after_1980` is the same as what we found by hand, as it should be! It is statistically significant, so we can be fairly confident that it is not 0.
@@ -305,12 +305,12 @@ injury_fixed <- injury |>
 model_big <- lm(log_duration ~ highearn + after_1980 + highearn * after_1980 +
                   male + married + age + hosp + indust + injtype + lprewage,
                 data = injury_fixed)
-tidy(model_big)
+model_parameters(model_big)
 
 # Extract just the diff-in-diff estimate
-diff_diff_controls <- tidy(model_big) |>
-  filter(term == "highearn:after_1980") |>
-  pull(estimate)
+diff_diff_controls <- model_parameters(model_big) |>
+  filter(Parameter == "highearn:after_1980") |>
+  pull(Coefficient)
 ```
 
 After controlling for a host of demographic controls, the diff-in-diff estimate is smaller (`r round(diff_diff_controls, 3)`), indicating that the policy caused a `r percent(diff_diff_controls)` increase in the duration of weeks unemployed following a workplace injury. It is smaller because the other independent variables now explain some of the variation in `log_duration`.

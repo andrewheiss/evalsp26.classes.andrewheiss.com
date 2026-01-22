@@ -27,7 +27,7 @@ options(dplyr.summarise.inform = FALSE)
 #| message: false
 
 library(tidyverse)
-library(broom)
+library(parameters)
 library(scales)
 library(ggdag)
 library(patchwork)
@@ -165,7 +165,7 @@ ggplot(net_data, aes(x = income, y = health)) +
   geom_point() +
   geom_smooth(method = "lm")
 
-lm(health ~ income, data = net_data) |> tidy()
+lm(health ~ income, data = net_data) |> model_parameters()
 ```
 
    It looks like richer and healthier people are more likely to use nets:
@@ -193,7 +193,7 @@ net_income + net_health
 #| indent: "   "
 
 glm(net ~ income + health, family = binomial(link = "logit"), data = net_data) |>
-  tidy(exponentiate = TRUE)
+  model_parameters(exponentiate = TRUE)
 ```
 
 6. **Try it out!**
@@ -207,7 +207,7 @@ glm(net ~ income + health, family = binomial(link = "logit"), data = net_data) |
 
 # Wrong correlation-is-not-causation effect
 model_net_naive <- lm(malaria_risk ~ net, data = net_data)
-tidy(model_net_naive)
+model_parameters(model_net_naive)
 ```
 
    If we control for the confounders, we get the 10 point ATE. It works!
@@ -217,7 +217,7 @@ tidy(model_net_naive)
 
 # Correctly adjusted ATE effect
 model_net_ate <- lm(malaria_risk ~ net + health + income, data = net_data)
-tidy(model_net_ate)
+model_parameters(model_net_ate)
 ```
 
 7. **Save the data.**

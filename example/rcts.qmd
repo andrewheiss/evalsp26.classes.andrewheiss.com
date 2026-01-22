@@ -19,8 +19,8 @@ If you want to follow along with this example, you can download the data below:
 ```{r load-libraries, message=FALSE, warning=FALSE}
 library(tidyverse)  # ggplot(), mutate(), and friends
 library(ggdag)  # Make DAGs
-library(scales)  # Format numbers with functions like comma(), percent(), and dollar()
-library(broom)  # Convert models to data frames
+library(scales)  # Format numbers with functions like label_comma(), label_percent(), and label_dollar()
+library(parameters)  # Extract model parameters to data frames
 library(patchwork)  # Combine ggplots into single composite plots
 
 set.seed(1234)   # Make all random draws reproducible
@@ -198,10 +198,10 @@ Finding that difference required some manual math, so as a shortcut, you run a r
 
 ```{r program-diffs-regression}
 model_rct <- lm(post_income ~ program, data = village_randomized)
-tidy(model_rct)
+model_parameters(model_rct)
 ```
 
-Based on your RCT, you conclude that the program causes an average increase of `r tidy(model_rct) |> filter(term == "programProgram") |> pull(estimate) |> dollar()` in income.
+Based on your RCT, you conclude that the program causes an average increase of `r model_parameters(model_rct) |> filter(Parameter == "programProgram") |> pull(Coefficient) |> dollar()` in income.
 
 ```{r rct-finding}
 ggplot(village_randomized, aes(x = program, y = post_income, color = program)) +

@@ -9,6 +9,7 @@ set.seed(1234)
 options("digits" = 2, "width" = 150)
 options(dplyr.summarise.inform = FALSE)
 options("modelsummary_factory_default" = "kableExtra")
+options(marginaleffects_print_style = "data.frame")
 ```
 
 ## Video walk-through
@@ -53,7 +54,9 @@ Make sure you load all these libraries before getting started:
 
 ```{r load-libraries, message=FALSE, warning=FALSE}
 library(tidyverse)  # ggplot(), mutate(), and friends
-library(broom)  # Convert models to data frames
+library(parameters)  # Extract model parameters to data frames
+library(performance) # Extract model details to data frames
+library(marginaleffects) # Easier model predictions
 library(modelsummary)  # Create side-by-side regression tables
 library(kableExtra)  # Add fancier formatting to tables
 library(estimatr)  # Run 2SLS models in one step with iv_robust()
@@ -87,14 +90,14 @@ If we could actually measure ability, we could estimate this model, which closes
 
 ```{r}
 model_forbidden <- lm(wage ~ educ + ability, data = ed_fake)
-tidy(model_forbidden)
+model_parameters(model_forbidden)
 ```
 
 However, in real life we don't have `ability`, so we're stuck with a naive model:
 
 ```{r}
 model_naive <- lm(wage ~ educ, data = ed_fake)
-tidy(model_naive)
+model_parameters(model_naive)
 ```
 
 The naive model overestimates the effect of education on wages (12.2 vs. 9.24) because of omitted variable bias. Education suffers from endogeneity---there are things in the model (like ability, hidden in the error term) that are correlated with it. Any estimate we calculate will be wrong and biased because of selection effects or omitted variable bias (all different names for endogeneity).
@@ -119,8 +122,8 @@ ggplot(ed_fake, aes(x = fathereduc, y = educ)) +
   geom_smooth(method = "lm")
 
 check_relevance <- lm(educ ~ fathereduc, data = ed_fake)
-tidy(check_relevance)
-glance(check_relevance)
+model_parameters(check_relevance)
+lmtest::waldtest(check_relevance)
 ```
 
 This looks pretty good! The F-statistic is definitely above 10 (it's 7,136!), and there's a significant relationship between the instrument and policy. I'd say that this is relevant.
@@ -163,20 +166,18 @@ Now we can do two-stage least squares (2SLS) regression and use the instrument t
 first_stage <- lm(educ ~ fathereduc, data = ed_fake)
 ```
 
-Now we want to add a column of predicted education to our original dataset. The easiest way to do that is with the `augment_columns()` function from the {broom} library, which plugs values from a dataset into a model to generate predictions:
+Now we want to add a column of predicted education to our original dataset. The easiest way to do that is with the `predictions()` function from the {marginaleffects} library, which plugs values from a dataset into a model to generate predictions:
 
 ```{r}
-ed_fake_with_prediction <- augment_columns(first_stage, ed_fake)
+ed_fake_with_prediction <- predictions(first_stage, ed_fake)
 head(ed_fake_with_prediction)
 ```
 
-Note a couple of these new columns. `.fitted` is the fitted/predicted value of education, and it's the version of education with endogeneity arguably removed. `.resid` shows how far off the prediction is from `educ`. The other columns don't matter so much.
-
-Instead of dealing with weird names like `.fitted`, I like to rename the fitted variable to something more understandable after I use `augment_columns`:
+Instead of dealing with names like `estimate`, I like to rename the fitted variable to something more understandable after I use `predictions()`:
 
 ```{r}
-ed_fake_with_prediction <- augment_columns(first_stage, ed_fake) |>
-  rename(educ_hat = .fitted)
+ed_fake_with_prediction <- predictions(first_stage, ed_fake) |>
+  rename(educ_hat = estimate)
 
 head(ed_fake_with_prediction)
 ```
@@ -185,7 +186,7 @@ We can now use the new `educ_hat` variable in our second stage model:
 
 ```{r}
 second_stage <- lm(wage ~ educ_hat, data = ed_fake_with_prediction)
-tidy(second_stage)
+model_parameters(second_stage)
 ```
 
 The estimate for `educ_hat` is arguably more accurate now because we've used the instrument to remove the endogenous part of education and should only have the exogenous part.
@@ -216,7 +217,7 @@ I typically like using `iv_robust()`, so we'll do that here. Instead of running 
 ```{r}
 model_2sls <- iv_robust(wage ~ educ | fathereduc,
                         data = ed_fake)
-tidy(model_2sls)
+model_parameters(model_2sls)
 ```
 
 The coefficient for `educ` here is the same as `educ_hat` from the manual 2SLS model, but here we found it in one line of code! Also, the model's standard errors and diagnostics are all correct now.
@@ -278,7 +279,7 @@ We want to again estimate the effect of education on wages, but this time we'll 
 
 ```{r}
 model_naive <- lm(wage ~ education, data = ed_real)
-tidy(model_naive)
+model_parameters(model_naive)
 ```
 
 This is wrong though! Education is endogenous to unmeasured things in the model (like ability, which lives in the error term). We can isolate the exogenous part of education with an instrument.
@@ -311,8 +312,8 @@ ggplot(ed_real_long, aes(x = instrument_value, y = education)) +
 ```{r}
 model_check_instruments <- lm(education ~ education_dad + education_mom,
                               data = ed_real)
-tidy(model_check_instruments)
-glance(model_check_instruments)
+model_parameters(model_check_instruments)
+lmtest::waldtest(model_check_instruments)
 ```
 
 There's a clear relationship between both of the instruments and education, and the coefficients for each are significant. The F-statistic for the model is 83, which is higher than 10, which might be a good sign of a strong instrument. However, it's less than 104, which, [according to this paper](https://arxiv.org/abs/2010.05058), is a better threshold for F statistics. So maybe it's not so relevant in the end. Who knows.
@@ -344,11 +345,11 @@ Assuming that parental education is a good instrument, we can use it to remove t
 first_stage <- lm(education ~ education_dad + education_mom, data = ed_real)
 ```
 
-We can then extract the predicted education and add it to our main dataset, renaming the `.fitted` variable to something more useful along the way:
+We can then extract the predicted education and add it to our main dataset, renaming the `estimate` variable to something more useful along the way:
 
 ```{r}
-ed_real_with_predicted <- augment_columns(first_stage, ed_real) |>
-  rename(education_hat = .fitted)
+ed_real_with_predicted <- predictions(first_stage, ed_real) |>
+  rename(education_hat = estimate)
 ```
 
 Finally, we can use predicted education to estimate the exogenous effect of education on wages:
@@ -356,7 +357,7 @@ Finally, we can use predicted education to estimate the exogenous effect of educ
 ```{r}
 second_stage <- lm(wage ~ education_hat,
                    data = ed_real_with_predicted)
-tidy(second_stage)
+model_parameters(second_stage)
 ```
 
 The coefficient for `education_hat` here should arguably be our actual effect!
@@ -368,7 +369,7 @@ Again, in real life, you won't want to do all that. It's tedious and your standa
 ```{r}
 model_2sls <- iv_robust(wage ~ education | education_dad + education_mom,
                         data = ed_real)
-tidy(model_2sls)
+model_parameters(model_2sls)
 ```
 
 The coefficient for `education` is the same that we found in the manual 2SLS process, but now the errors are correct.
@@ -394,7 +395,7 @@ The F-statistic in the first stage was 83.3, which is bigger than 10, but not hu
 
 We *can*, however, do a couple other tests for instrument strength. First, if you include the `diagnostics = TRUE` argument when running `iv_robust()`, you can get a few extra diagnostic statistics. (See [the "Details" section in the documentation for `iv_robust`](https://www.rdocumentation.org/packages/estimatr/versions/0.26.0/topics/iv_robust#l_details) for more details about what these are.)
 
-Let's re-run the 2SLS model with `iv_robust` with diagnostics on. To see diagnostic details, you can't use `tidy()` (since that just shows the coefficients), so you have to use `summary()`:
+Let's re-run the 2SLS model with `iv_robust` with diagnostics on. To see diagnostic details, you can't use `model_parameters()` (since that just shows the coefficients), so you have to use `summary()`:
 
 ```{r}
 model_2sls <- iv_robust(wage ~ education | education_dad + education_mom,
@@ -500,8 +501,8 @@ There should be a strong relationship between the instrument (distance to colleg
 ```{r}
 first_stage <- lm(educ ~ nearc4 + smsa66 + exper + expersq + black + south66,
                   data = card)
-tidy(first_stage)
-glance(first_stage)
+model_parameters(first_stage)
+lmtest::waldtest(first_stage)
 ```
 
 Based on this first stage model, `nearc4` has a significant relationship to `educ`, and the model's joint F statistic is 449, which is definitely bigger than both 10 and 104. Good. We'll call it relevant.
@@ -522,7 +523,7 @@ Assuming distance to education is a valid instrument (sure), we can use it in a 
 model_2sls <- iv_robust(lwage ~ educ + smsa66 + exper + expersq + black + south66 |
                           nearc4 + smsa66 + exper + expersq + black + south66,
                         data = card, diagnostics = TRUE)
-tidy(model_2sls)
+model_parameters(model_2sls, digits = 3)
 ```
 
 Cool cool. Based on the coefficient for `educ`, a year of education *causes* a 15.7% increase in annual wages, on average.
@@ -532,7 +533,7 @@ Is that an improvement over a naive model where we don't account for any of the 
 ```{r}
 model_naive <- lm(lwage ~ educ + smsa66 + exper + expersq + black + south66,
                   data = card)
-tidy(model_naive)
+model_parameters(model_naive, digits = 3)
 ```
 
 Yep! Without removing endogeneity from education, an additional year of education is only associated with a 7.6% increase in annual wages, on average.

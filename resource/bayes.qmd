@@ -36,10 +36,10 @@ In practice, the R code for Bayesian models should be very familiar. For instanc
 
 ```{r freq-model, message=FALSE, warning=FALSE}
 library(tidyverse)
-library(broom)
+library(parameters)
 
 model_ols <- lm(hwy ~ displ + drv, data = mpg)
-tidy(model_ols, conf.int = TRUE)
+model_parameters(model_ols, conf.int = TRUE)
 ```
 
 Here's that same model using the {brms} package, with default priors. Note how the code is basically the same:
@@ -47,7 +47,6 @@ Here's that same model using the {brms} package, with default priors. Note how t
 ```{r bayes-libraries, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(brms)         # For Bayesian regression with brm()
-library(broom.mixed)  # For tidy() and glance() with brms-based models
 library(tidybayes)    # For extracting posterior draws
 ```
 
@@ -57,7 +56,7 @@ model_bayes <- brm(hwy ~ displ + drv, data = mpg)
 ```
 
 ```{r show-bayes-results, warning=FALSE}
-tidy(model_bayes)
+model_parameters(model_bayes)
 ```
 
 In Bayes land, you get a distribution of plausible values given the data (or what is called the "posterior distribution"), and you can visualize this posterior distribution:
@@ -111,7 +110,7 @@ Here's an example with some data from *The Effect* on restaurant inspections in 
 
 ```{r load-restaurant-data, warning=FALSE, message=FALSE}
 library(tidyverse)
-library(broom)
+library(parameters)
 library(gghalves)
 
 inspections <- read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/causaldata/restaurant_inspections.csv")
@@ -136,17 +135,17 @@ We can look at a basic difference in means based on weekend status:
 ```{r basic-diff-means}
 model_naive <- lm(inspection_score ~ Weekend, 
                   data = inspections)
-tidy(model_naive, conf.int = TRUE)
+model_parameters(model_naive)
 ```
 
-Here, weekend scores are 2.1 points higher than weekday scores, on average (that's our estimate, or $\hat{\theta}$. We have a confidence interval of 1.2–2.9. We *cannot* say that we're 95% confident that the weekend score boost (or $\theta$) is between 1.2 and 2.9. What we *can* say is that we're 95% confident that the range 1.2–2.9 captures the true population parameter $\theta$. If we took a bunch of different samples of inspection scores and calculated the average weekend vs. weekday score in each of those samples, 95% of those confidence intervals should capture the true $\theta$. Importantly, we still have no idea what the actual $\theta$ is, but we're pretty sure that our confidence interval net has captured it.
+Here, weekend scores are 2.1 points higher than weekday scores, on average (that's our estimate, or $\hat{\theta}$). We have a confidence interval of 1.2–2.9. We *cannot* say that we're 95% confident that the weekend score boost (or $\theta$) is between 1.2 and 2.9. What we *can* say is that we're 95% confident that the range 1.2–2.9 captures the true population parameter $\theta$. If we took a bunch of different samples of inspection scores and calculated the average weekend vs. weekday score in each of those samples, 95% of those confidence intervals should capture the true $\theta$. Importantly, we still have no idea what the actual $\theta$ is, but we're pretty sure that our confidence interval net has captured it.
 
 This estimate is probably wrong, since there are other factors that confound the weekend → score relationship. Maybe the health department only conducts weekend inspections in places with lots of branches, or maybe they did more weekend inspections in certain years. We can adjust/control for these in the model:
 
 ```{r adjusted-diff-means}
 model_adjusted <- lm(inspection_score ~ Weekend + NumberofLocations + Year, 
                      data = inspections)
-tidy(model_adjusted, conf.int = TRUE)
+model_parameters(model_adjusted)
 ```
 
 Our weekend estimate shrunk a little and is now 1.43, with a confidence interval of 0.6–2.3. Again, think of this as a net—we're 95% sure that the true $\theta$ is in that net somewhere. $\theta$ could be 0.7, it could be 1.4, it could be 2.2—who knows. All we know is that our net most likely picked it up.
@@ -155,13 +154,13 @@ For fun, let's plot both these weekend estimates and their confidence intervals:
 
 ```{r plot-freq-results}
 # Save just the weekend coefficient from both models
-freq_results_naive <- tidy(model_naive, conf.int = TRUE) |> 
+freq_results_naive <- model_parameters(model_naive) |> 
   mutate(model = "Naive model") |> 
-  filter(term == "WeekendTRUE")
+  filter(Parameter == "WeekendTRUE")
 
-freq_results_full <- tidy(model_adjusted, conf.int = TRUE) |> 
+freq_results_full <- model_parameters(model_adjusted) |> 
   mutate(model = "Full model") |> 
-  filter(term == "WeekendTRUE")
+  filter(Parameter == "WeekendTRUE")
 
 # Put these coefficients in a single dataset and plot them
 freq_results <- bind_rows(freq_results_naive, freq_results_full) |> 
@@ -169,8 +168,8 @@ freq_results <- bind_rows(freq_results_naive, freq_results_full) |>
   # alphabetical order
   mutate(model = fct_inorder(model))
 
-ggplot(freq_results, aes(x = estimate, y = model, color = model)) +
-  geom_pointrange(aes(xmin = conf.low, xmax = conf.high)) +
+ggplot(freq_results, aes(x = Coefficient, y = model, color = model)) +
+  geom_pointrange(aes(xmin = CI_low, xmax = CI_high)) +
   guides(color = "none")
 ```
 
@@ -230,7 +229,6 @@ Here's how to officially do Bayesian analysis with {brms} and incorporate prior 
 
 ```{r load-bayes-stuff, warning=FALSE, message=FALSE}
 library(brms)         # For Bayesian regression with brm()
-library(broom.mixed)  # For tidy() and glance() with brms-based models
 library(tidybayes)    # For extracting posterior draws
 library(ggdist)       # For making pretty posterior plots
 ```
@@ -262,20 +260,20 @@ model_bayes <- brm(bf(inspection_score ~ Weekend + NumberofLocations + Year),
 Phew. That took a while to run, but it ran! Now we can check the results:
 
 ```{r warning=FALSE}
-tidy(model_bayes, conf.int = TRUE)
+model_parameters(model_bayes)
 ```
 
 ```{r warning=FALSE, include=FALSE}
-results <- tidy(model_bayes, conf.int = TRUE) |> 
-  filter(effect == "fixed") |> 
-  mutate(across(c(estimate, conf.low, conf.high), 
+results <- model_parameters(model_bayes) |> 
+  filter(Component == "conditional") |> 
+  mutate(across(c(Median, CI_low, CI_high), 
                 list(nice = ~as.character(round(., 2))))) |> 
-  split(~ term)
+  split(~ Parameter)
 ```
 
-Our estimate for the weekend boost, or $\hat{\theta}$, is `r results$WeekendTRUE$estimate_nice`, which is basically the same as the frequentist estimate we found before. We have an interval too, but it's not a confidence interval—it's a credible interval. Instead of telling us about the range of the confidence interval net, this credible interval tells us the probability that $\hat{\theta}$ falls in that range. It's essentially the probability of the actual value, not the probability of the range. Based on this, there's a 95% chance that—given the data we have—the weekend score boost ($\hat{\theta}$) is between `r results$WeekendTRUE$conf.low_nice` and `r results$WeekendTRUE$conf.high_nice`.
+Our estimate for the weekend boost, or $\hat{\theta}$, is `r results$b_WeekendTRUE$Median_nice`, which is basically the same as the frequentist estimate we found before. We have an interval too, but it's not a confidence interval—it's a credible interval. Instead of telling us about the range of the confidence interval net, this credible interval tells us the probability that $\hat{\theta}$ falls in that range. It's essentially the probability of the actual value, not the probability of the range. Based on this, there's a 95% chance that—given the data we have—the weekend score boost ($\hat{\theta}$) is between `r results$b_WeekendTRUE$CI_low_nice` and `r results$b_WeekendTRUE$CI_high_nice`.
 
-We can visualize this posterior distribution to see more information than we could with our frequentist estimate. Remember, our simulation estimated thousands of possible coefficients for `WeekendTRUE`, and each of them are equally likely. The value that we see in `tidy()` is the median of all these simulated coefficients, or draws. We can see a few of them here:
+We can visualize this posterior distribution to see more information than we could with our frequentist estimate. Remember, our simulation estimated thousands of possible coefficients for `WeekendTRUE`, and each of them are equally likely. The value that we see in `model_parameters()` is the median of all these simulated coefficients, or draws. We can see a few of them here:
 
 ```{r}
 model_bayes |>
@@ -294,9 +292,9 @@ ggplot(weekend_draws, aes(x = b_WeekendTRUE)) +
   labs(caption = "Point shows median value;\nthick black bar shows 66% credible interval;\nthin black bar shows 95% credible interval")
 ```
 
-The weekend point boost $\hat{\theta}$ is mostly clustered around 1–2, and 95% of those draws are between `r results$WeekendTRUE$conf.low_nice` and `r results$WeekendTRUE$conf.high_nice`. We're thus 95% sure that the actual weekend point boost is between `r results$WeekendTRUE$conf.low_nice` and `r results$WeekendTRUE$conf.high_nice` with a median of `r results$WeekendTRUE$estimate_nice`. 
+The weekend point boost $\hat{\theta}$ is mostly clustered around 1–2, and 95% of those draws are between `r results$b_WeekendTRUE$CI_low_nice` and `r results$b_WeekendTRUE$CI_high_nice`. We're thus 95% sure that the actual weekend point boost is between `r results$b_WeekendTRUE$CI_low_nice` and `r results$b_WeekendTRUE$CI_high_nice` with a median of `r results$b_WeekendTRUE$Median_nice`. 
 
-We can also look at this distribution a slightly different way by collapsing all those posterior draws into 100 possible values. Each of these dots is equally likely, and the true value of $\theta$ could be any of them, but again, most are clustered around `r results$WeekendTRUE$estimate_nice`:
+We can also look at this distribution a slightly different way by collapsing all those posterior draws into 100 possible values. Each of these dots is equally likely, and the true value of $\theta$ could be any of them, but again, most are clustered around `r results$b_WeekendTRUE$Median_nice`:
 
 ```{r weekend-posterior-dots}
 ggplot(weekend_draws, aes(x = b_WeekendTRUE)) +
@@ -337,20 +335,32 @@ One question we can answer with Bayesian results is "How certain are we that thi
 
 To figure this out, we can calculate something called the ["probability of direction,"](https://easystats.github.io/bayestestR/articles/probability_of_direction.html) or the proportion of posterior draws that are above (or below) some arbitrary number. For instance, what's the probability that the weekend boost is positive (or greater than 0)?
 
+We can do this manually with the posterior:
+
 ```{r}
 # Find the proportion of posterior draws that are bigger than 0
 weekend_draws |> 
   summarize(prop_greater_0 = sum(b_WeekendTRUE > 0) / n())
 ```
 
+Or, conveniently, it's already included in the output from `model_parameters` as `pd`:
+
+```{r}
+model_parameters(model_bayes)
+```
+
 Whoa. 99.9% of the posterior draws for the weekend boost are greater than 0, meaning that there's a 99.9% chance that the coefficient is positive, given the data we have. 
 
-The neat thing about the probability of direction is that we can choose whatever value we want as the threshold. Let's say the state health director wants to know if weekend scores are higher than weekday scores, but she's fine with just a little boost (weekends are nice! inspectors are happier!). Pretend that she thinks an average difference of 1 or lower isn't a big concern, but seeing a difference greater than 1 is a signal that weekend inspectors are maybe being too lenient. We can use 1 as our threshold instead:
+The neat thing about the probability of direction is that we can choose whatever value we want as the threshold. Let's say the state health director wants to know if weekend scores are higher than weekday scores, but she's fine with just a little boost (weekends are nice! inspectors are happier!). Pretend that she thinks an average difference of 1 or lower isn't a big concern, but seeing a difference greater than 1 is a signal that weekend inspectors are maybe being too lenient. We can use 1 as our threshold instead, either with the full data frame of the posterior draws, or with `null = 1` in `model_parameters()`:
 
 ```{r}
 # Find the proportion of posterior draws that are bigger than 1
 weekend_draws |> 
   summarize(prop_greater_0 = sum(b_WeekendTRUE > 1) / n())
+```
+
+```{r}
+model_parameters(model_bayes, null = 1)
 ```
 
 Based on this, 84% of the draws are higher than 1, so there's an 84% chance that the actual $\theta$ is greater than 1. Notice how there's no discussion of significance here—no alpha thresholds, no stars, no null worlds. We just have a probability that $\hat{\theta}$ is above 1. We can even visualize it. Everything to the right of that vertical line at 1 is "significant" (but not significant with null worlds and stars).
@@ -378,7 +388,13 @@ For this example, let's pretend that the health director tells you that any effe
 ```{r}
 # Find the proportion of posterior draws that are bigger than 0.5 or less than -0.5
 weekend_draws |> 
-  summarize(prop_outside_rope = 1 - sum(b_WeekendTRUE >= -0.5 & b_WeekendTRUE <= 0.5) / n())
+  summarize(prop_outside_rope = sum(b_WeekendTRUE >= -0.5 & b_WeekendTRUE <= 0.5) / n())
+```
+
+We can also do this automatically with `model_parameters()`, though by default it only shows the proportion *in* the ROPE, unless you also add `complement = TRUE`:
+
+```{r}
+model_parameters(model_bayes, test = "rope", complement = TRUE)
 ```
 
 ```{r plot-rope}

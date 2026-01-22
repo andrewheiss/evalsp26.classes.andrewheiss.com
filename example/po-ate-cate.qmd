@@ -12,7 +12,7 @@ options(dplyr.summarise.inform = FALSE)
 
 ```{r libraries, warning=FALSE, message=FALSE}
 library(tidyverse)     # ggplot, dplyr, and friends
-library(broom)         # Convert models to data frames
+library(parameters)    # Extract model parameters to data frames
 library(scales)        # This makes it easy to format numbers with dollar(), comma(), etc.
 library(ggdag)         # Draw causal diagrams with R
 library(modelsummary)  # Fancy regression tables
@@ -172,7 +172,7 @@ model_earnings <- lm(earnings ~ private + group_A, data = schools_small)
 ```
 
 ```{r}
-tidy(model_earnings)
+model_parameters(model_earnings)
 ```
 
 There are three important numbers here. The intercept (or $\alpha$ in *Mastering 'Metrics*, or $\beta_0$) is \$40,000. This represents the earnings for someone with all the switches and sliders in the model set to 0 or turned off—in this case, someone who went to a public school in group B.

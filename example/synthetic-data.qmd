@@ -16,7 +16,7 @@ Generating random variables is fairly easy: choose some sort of distributional s
 
 ```{r libraries, warning=FALSE, message=FALSE}
 library(tidyverse)
-library(broom)
+library(parameters)
 library(patchwork)
 library(scales)
 library(ggdag)
@@ -56,7 +56,7 @@ We have a neat dataset now, so let's run a regression. Is eating more cookies or
 
 ```{r}
 model_happiness1 <- lm(happiness ~ cookies + color_blue, data = happiness_simple)
-tidy(model_happiness1)
+model_parameters(model_happiness1)
 ```
 
 Not really. The coefficients for both `cookies` and `color_blueBlue` are basically 0 and not statistically significant. That makes sense since the three columns are completely independent of each other. If there were any significant effects, that'd be strange and solely because of random chance.
@@ -102,7 +102,7 @@ Now that we have a new `happiness_modified` column we can run a model using it a
 
 ```{r}
 model_happiness2 <- lm(happiness_modified ~ cookies + color_blue, data = happiness_with_effect)
-tidy(model_happiness2)
+model_parameters(model_happiness2)
 ```
 
 Whoa! Look at those coefficients! They're exactly what we tried to build in! The baseline happiness (intercept) is ≈7, eating one cookie is associated with a ≈0.25 increase in happiness, and liking blue is associated with a ≈0.75 increase in happiness.
@@ -141,7 +141,7 @@ Everything is back in the 3–10 range now. However, the rescaling also rescaled
 
 ```{r}
 model_happiness3 <- lm(happiness_rescaled ~ cookies + color_blue, data = happiness_with_effect)
-tidy(model_happiness3)
+model_parameters(model_happiness3)
 ```
 
 Now the baseline happiness is 6.3, the cookies effect is 0.2, and the blue effect is 0.63. These effects shrunk because we shrunk the data back down to have a maximum of 10.
@@ -172,7 +172,7 @@ happiness_real_effect <- tibble(
   mutate(happiness = rescale(happiness_effect, to = c(3, 10)))
 
 model_does_this_work_yet <- lm(happiness ~ cookies + color_blue, data = happiness_real_effect)
-tidy(model_does_this_work_yet)
+model_parameters(model_does_this_work_yet)
 ```
 
 There's nothing magical about the 0.31 and 0.91 numbers I used here; I just kept changing those to different things until the regression coefficients ended up at ≈0.25 and ≈0.75. Also, I gave up on trying to make the baseline happiness 7. It's possible to do—you'd just need to also shift the underlying Beta distribution up (like `shape1 = 9, shape2 = 2` or something). But then you'd also need to change the coefficients more. You'll end up with 3 moving parts and it can get complicated, so I don't worry too much about it, since what we care about the most here is the effect of cookies and favorite color, not baseline levels of happiness.
@@ -260,7 +260,7 @@ Notice now that people who like blue eat partial cookies, as expected. We can ve
 
 ```{r}
 lm(cookies ~ color_blue, data = happiness_cookies_blue) |>
-  tidy()
+  model_parameters()
 ```
 
 Yep. Liking blue is associated with 0.46 more cookies on average (it's not quite 0.5, but that's because of randomness).
@@ -269,7 +269,7 @@ Now let's do some neat DAG magic. Let's say we're interested in the causal effec
 
 ```{r}
 model_happiness_naive <- lm(happiness ~ cookies, data = happiness_cookies_blue)
-tidy(model_happiness_naive)
+model_parameters(model_happiness_naive)
 ```
 
 Based on this, eating a cookie causes you to have 0.325 more happiness points. But that's wrong! Liking the color blue is a confounder and opens a path between cookies and happiness. You can see the confounding both in the DAG (since blue points to both the cookie node and the happiness node) and in the math (liking blue boosts happiness + liking blue boosts cookie consumption, which boosts happiness).
@@ -278,7 +278,7 @@ To fix this confounding, we need to statistically adjust for liking blue and clo
 
 ```{r}
 model_happiness_ate <- lm(happiness ~ cookies + color_blue, data = happiness_cookies_blue)
-tidy(model_happiness_ate)
+model_parameters(model_happiness_ate)
 ```
 
 After adjusting for backdoor confounding, eating one additional cookie *causes* a 0.249 point increase in happiness. This is the effect we originally built into the data!
@@ -356,7 +356,7 @@ Now let's look at the cookie effect in this noisier data:
 
 ```{r}
 model_noisier <- lm(happiness ~ cookies + color_blue, data = happiness_cookies_noisier)
-tidy(model_noisier)
+model_parameters(model_noisier)
 ```
 
 The effect is a little smaller now because of the extra noise, so we'd need to mess with the 0.31 and 0.91 coefficients more to get those numbers back up to 0.25 and 0.75.
@@ -433,7 +433,7 @@ We can confirm the effect with a model:
 
 ```{r}
 lm(y ~ x, data = temp_data) |>
-  tidy()
+  model_parameters()
 ```
 
 ### Visualizing a binary variable and a continuous variable
@@ -457,7 +457,7 @@ temp_data <- tibble(
 We can check the numbers with a model:
 
 ```{r}
-lm(outcome ~ treatment, data = temp_data) |> tidy()
+lm(outcome ~ treatment, data = temp_data) |> model_parameters()
 ```
 
 Here's what that looks like as a histogram:

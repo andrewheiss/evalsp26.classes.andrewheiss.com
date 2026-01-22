@@ -85,7 +85,7 @@ youtube_list(slide_details, playlist_id)
 
 ```r
 library(tidyverse)
-library(broom)
+library(parameters)
 
 n_people <- 5003
 
@@ -157,7 +157,7 @@ ggplot(real_data, aes(x = cookies, y = happiness)) +
   geom_smooth(method = "lm")
 
 model_thing <- lm(happiness ~ cookies + time_of_day + like_blue, data = real_data)
-tidy(model_thing)
+model_parameters(model_thing)
 ```
 
 ::::

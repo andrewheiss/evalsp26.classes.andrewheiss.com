@@ -59,7 +59,7 @@ First, let's download the dataset (if you haven't already), put in a folder name
 
 ```{r load-libraries, message=FALSE, warning=FALSE}
 library(tidyverse)  # ggplot(), mutate(), and friends
-library(broom)  # Convert models to data frames
+library(parameters)  # Extract model parameters to data frames
 library(rdrobust)  # For robust nonparametric regression discontinuity
 library(rddensity)  # For nonparametric regression discontinuity density tests
 library(modelsummary)  # Create side-by-side regression tables
@@ -201,7 +201,7 @@ tutoring_centered <- tutoring |>
 
 model_simple <- lm(exit_exam ~ entrance_centered + tutoring,
                    data = tutoring_centered)
-tidy(model_simple)
+model_parameters(model_simple)
 ```
 
 Here's what these coefficients mean:
@@ -221,13 +221,13 @@ model_bw_10 <- lm(exit_exam ~ entrance_centered + tutoring,
                   data = filter(tutoring_centered,
                                 entrance_centered >= -10 &
                                   entrance_centered <= 10))
-tidy(model_bw_10)
+model_parameters(model_bw_10)
 
 model_bw_5 <- lm(exit_exam ~ entrance_centered + tutoring,
                   data = filter(tutoring_centered,
                                 entrance_centered >= -5 &
                                   entrance_centered <= 5))
-tidy(model_bw_5)
+model_parameters(model_bw_5)
 ```
 
 We can compare all these models simultaneously with `modelsummary()`:
