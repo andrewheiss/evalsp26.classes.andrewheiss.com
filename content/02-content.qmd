@@ -72,7 +72,7 @@ Reading in grad school:
 
 RStudio labs:
 
-- [Posit.cloud project](https://datavizsp26.classes.andrewheiss.com/assignment/02-exercise.html)
+- [Posit.cloud project](https://posit.cloud/spaces/737332/content/11718275)
 - [Project `.zip` file](/projects/01-class.zip)
 - [Lab slides 1: Markdown and universal writing](/slides/01-class_01_markdown-writing.html) ([PDF](/slides/01-class_01_markdown-writing.pdf))
 - [Lab slides 2: Getting started with R and RStudio](/slides/01-class_02-getting-started.html) ([PDF](/slides/01-class_02-getting-started.pdf))
@@ -80,6 +80,55 @@ RStudio labs:
 - [Lab slides 4: Visualize data with ggplot2](/slides/01-class_04_visualize-data.html) ([PDF](/slides/01-class_04_visualize-data.pdf))
 - [Lab slides 5: Transform data with dplyr](/slides/01-class_05_transform-data.html) ([PDF](/slides/01-class_05_transform-data.pdf))
 
+
+Regression example code from class:
+
+```{r}
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(parameters) # For extracting model coefficients
+library(performance) # For extracting model details like R²
+library(marginaleffects) # For working with models after they've been fit
+
+penguins <- penguins |> drop_na(sex)
+
+# Flipper length only (a slider)
+model1 <- lm(body_mass ~ flipper_len, data = penguins)
+model_parameters(model1)
+model_performance(model1)
+
+ggplot(penguins, aes(x = flipper_len, y = body_mass)) + 
+  geom_point() +
+  geom_smooth(method = "lm")
+
+
+# Species only (a switch)
+model2 <- lm(body_mass ~ species, data = penguins)
+model_parameters(model2)
+model_performance(model2)
+
+model2 |> 
+  avg_predictions(variables = "species") |> 
+  ggplot(aes(x = species, y = estimate, color = species)) + 
+  geom_pointrange(aes(ymin = conf.low, ymax = conf.high))
+
+# Make Gentoo the reference case by moving its level/category to the front
+model2_different_reference <- lm(
+  body_mass ~ species,
+  data = penguins |> mutate(species = fct_relevel(species, "Gentoo"))
+)
+model_parameters(model2_different_reference)
+
+
+# Both flipper length and species (slider and switch)
+model3 <- lm(body_mass ~ flipper_len + species, data = penguins)
+model_parameters(model3)
+model_performance(model3)
+
+plot_predictions(model3, condition = c("flipper_len", "species"))
+```
 
 ```{verbatim include=FALSE}
 Playlist: https://www.youtube.com/playlist?list=PLS6tnpTr39sERjvBbJGr9mpqvtiLVPzd4
