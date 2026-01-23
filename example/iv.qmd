@@ -123,7 +123,7 @@ ggplot(ed_fake, aes(x = fathereduc, y = educ)) +
 
 check_relevance <- lm(educ ~ fathereduc, data = ed_fake)
 model_parameters(check_relevance)
-lmtest::waldtest(check_relevance)
+modelsummary::get_gof(check_relevance)
 ```
 
 This looks pretty good! The F-statistic is definitely above 10 (it's 7,136!), and there's a significant relationship between the instrument and policy. I'd say that this is relevant.
@@ -313,7 +313,7 @@ ggplot(ed_real_long, aes(x = instrument_value, y = education)) +
 model_check_instruments <- lm(education ~ education_dad + education_mom,
                               data = ed_real)
 model_parameters(model_check_instruments)
-lmtest::waldtest(model_check_instruments)
+modelsummary::get_gof(model_check_instruments)
 ```
 
 There's a clear relationship between both of the instruments and education, and the coefficients for each are significant. The F-statistic for the model is 83, which is higher than 10, which might be a good sign of a strong instrument. However, it's less than 104, which, [according to this paper](https://arxiv.org/abs/2010.05058), is a better threshold for F statistics. So maybe it's not so relevant in the end. Who knows.
@@ -502,7 +502,7 @@ There should be a strong relationship between the instrument (distance to colleg
 first_stage <- lm(educ ~ nearc4 + smsa66 + exper + expersq + black + south66,
                   data = card)
 model_parameters(first_stage)
-lmtest::waldtest(first_stage)
+modelsummary::get_gof(first_stage)
 ```
 
 Based on this first stage model, `nearc4` has a significant relationship to `educ`, and the model's joint F statistic is 449, which is definitely bigger than both 10 and 104. Good. We'll call it relevant.
