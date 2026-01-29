@@ -3715,10 +3715,10 @@
       "Maintainer": "Kelly Bodwin <kelly@bodwin.us>",
       "RemoteType": "github",
       "RemoteHost": "api.github.com",
-      "RemoteUsername": "r-for-educators",
+      "RemoteUsername": "andrewheiss",
       "RemoteRepo": "flair",
       "RemoteRef": "master",
-      "RemoteSha": "5658aae1257bf5d57ef03dfcb2fcde35236b10ae"
+      "RemoteSha": "97fcf8a617155bbd44f0dcd343b6673b46a5ac5d"
     },
     "flexmix": {
       "Package": "flexmix",
