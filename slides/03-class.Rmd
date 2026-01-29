@@ -1,0 +1,316 @@
+---
+title: "Class 3: {dplyr} and logic models"
+author: "Andrew Heiss"
+date: "2026-01-29"
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    chakra: "libs/remark-latest.min.js"
+    css: ["default", "css/ath-slides.css", "css/ath-inferno-fonts.css", "css/animate.css"]
+    seal: false
+    anchor_sections: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.retina = 3, fig.align = "center")
+```
+
+```{r packages-data, include=FALSE}
+library(tidyverse)
+library(ggdag)
+library(modelsummary)
+```
+
+```{r xaringanExtra, echo=FALSE}
+xaringanExtra::use_xaringan_extra(c("tile_view"))
+```
+
+class: center middle main-title section-title-3
+
+# In-person<br>session 3
+
+.class-info[
+
+**January 30, 2025**
+
+.light[PMAP 8521: Program evaluation<br>
+Andrew Young School of Policy Studies
+]
+
+]
+
+---
+
+name: outline
+class: title title-inv-8
+
+# Plan for today
+
+.box-5.medium[Regression and Quarto FAQs]
+
+--
+
+.box-4.medium[{ggplot2} and {dplyr}]
+
+--
+
+.box-1.medium[Logic models and evaluation]
+
+---
+
+layout: false
+name: regression-faqs
+class: center middle section-title section-title-5 animated fadeIn
+
+# Regression and Quarto FAQs
+
+---
+
+layout: true
+class: middle
+
+---
+
+.box-5.large[Class website<br>announcements]
+
+---
+
+.box-5.large[Chunk labels, captions,<br> and cross references]
+
+---
+
+.box-5.large[Why does OLS minimize<br>squared errors?]
+
+---
+
+.box-5.medium[How do you know what to control for?]
+
+--
+
+.box-5.medium[How do you know<br>how many things to control for?]
+
+--
+
+.box-5.medium[Which coefficients do you interpret?]
+
+--
+
+.box-5.medium[What's the difference<br>between R² and p-values?]
+
+---
+
+.center[
+<figure>
+  <img src="img/02-class/prediction-vs-estimation.jpg" alt="R2 estimation vs prediction" title="R2 estimation vs prediction" width="100%">
+</figure>
+]
+
+---
+
+.box-5.large[Side-by-side regression tables]
+
+---
+
+```{r echo=FALSE, warning=FALSE, results="asis"}
+model1 <- lm(body_mass ~ bill_len, data = penguins)
+model2 <- lm(body_mass ~ flipper_len, data = penguins)
+model3 <- lm(body_mass ~ bill_len + flipper_len, data = penguins)
+model4 <- lm(body_mass ~ bill_len + flipper_len + sex, data = penguins)
+
+modelsummary(list(model1, model2, model3, model4),
+             stars = TRUE,
+             output = "gt")
+```
+
+---
+
+class: middle
+
+.box-5.large[See full documentation and<br>examples for `modelsummary()` [here](https://vincentarelbundock.github.io/modelsummary/articles/modelsummary.html)]
+
+---
+
+class: middle
+
+.box-5.large[Make nicer tables [with {tinytable}](https://vincentarelbundock.github.io/tinytable/)]
+
+---
+
+layout: false
+name: regression
+class: center middle section-title section-title-4 animated fadeIn
+
+# {ggplot2} and {dplyr}
+
+---
+
+layout: false
+name: logic-models
+class: center middle section-title section-title-1 animated fadeIn
+
+# Logic models<br>and evaluation
+
+---
+
+layout: true
+class: middle
+
+---
+
+---
+
+.box-1.medium[Do people really have the<br>job title "program evaluator"?] 
+
+???
+
+<https://www.eval.org/>
+
+--
+
+.box-1.medium[How much does this evaluation stuff cost?] 
+
+--
+
+.box-1.medium[Can you do scaled-down versions<br>of these evaluations?]
+
+---
+
+.box-1.medium[Isn't it best to always<br>have an articulated theory?] 
+
+.box-1.medium[Should implicit theory and articulated theory<br>be the same thing in most cases?]
+
+---
+
+.box-1.medium[What if a program exists already<br>and doesn't have a logic model?] 
+
+---
+
+.box-1.medium[Why would a program aim for final outcomes<br>that can't be measured?]
+
+---
+
+.box-1.medium[What should you do if you find that your<br>theory of change (or logic model in general)<br>is wrong in the middle of the program?<br>Is it ethical to stop or readjust?]
+
+---
+
+.box-1.medium[How does regression<br>relate to impact evaluation?]
+
+---
+
+.box-1.medium[Are logic models<br>and DAGs<br>the same thing?]
+
+---
+
+.box-1.medium[Logic models are<br>*managerial* tools]
+
+.box-1.medium[DAGs are<br>*statistical* tools]
+
+---
+
+.box-1.large[Inputs vs. Activities vs.<br>Outputs vs. Outcomes]
+
+---
+
+.box-1.large[Impact theory vs. logic model]
+
+---
+
+layout: false
+class: title title-1
+
+# Impact theory
+
+.box-inv-1[Ensure that the theory linking activities to the outcomes is sound!]
+
+.center[
+<figure>
+  <img src="img/03/psd-impact-theory-arrow.png" alt="PSD impact theory" title="PSD impact theory" width="100%">
+</figure>
+]
+
+---
+
+.center[
+<figure>
+  <img src="img/01/psd-logic-model.png" alt="PSD logic model" title="PSD logic model" width="70%">
+</figure>
+]
+
+---
+
+layout: false
+class: title title-1
+
+# MPA/MPP at GSU
+
+.pull-left[
+<figure>
+  <img src="img/03/mpp-mission@4x.png" alt="MPP mission" title="MPP mission" width="130%">
+</figure>
+]
+
+.pull-right[
+<figure>
+  <img src="img/03/mpa-mission@4x.png" alt="MPA mission" title="MPA mission" width="100%">
+</figure>
+]
+
+???
+
+Inputs:
+
+- Students
+- Curriculum
+- Money (grants, tuition)
+- AYSPS itself
+- Faculty, staff
+- Technology (iCollege, PAWS)
+- Infrastructure
+- Transportation
+- State regulations
+- National accreditation standards
+- Faculty research
+
+Activities:
+
+- Classes
+- Group work
+- Exams
+- Internships
+- Job fairs
+- Commencement
+- Studying
+- Tutoring
+- Office hours
+- Advising
+- Attendance
+
+Outputs:
+
+- Assignments and projects
+- Grades
+- Degree
+- Jobs
+- Awards
+- Network
+- Debt
+
+Outcomes:
+
+- Leadership
+- AYS national ranking
+- Public service motivation
+- Critical thinking
+- Efficient workforce
+- Income
+- Better society
