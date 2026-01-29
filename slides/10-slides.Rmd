@@ -23,6 +23,8 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
                       fig.retina = 3, fig.align = "center")
+
+options(crayon.enabled = FALSE)
 ```
 
 ```{r packages-data, include=FALSE}
