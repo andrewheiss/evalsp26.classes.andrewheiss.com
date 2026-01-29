@@ -1,5 +1,7 @@
 ---
 title: Citations and bibliography
+toc: true
+fig-align: center
 ---
 
 You can access [a shared group Zotero library of all the non-web-based class reading references](https://www.zotero.org/groups/evalsp26) and link it to your Zotero account to easily cite the course materials. 
@@ -10,3 +12,165 @@ Alternatively, you can download a BibTeX file of all the references. You can ope
 <a class="btn btn-danger" target="_blank" href="https://www.zotero.org/groups/evalsp26">{{< ai zotero color=white >}}&emsp;Zotero group library</a> &ensp;
 <a class="btn btn-danger" target="_blank" href="/files/bib/readings.bib" role="button">{{< fa book >}}&emsp;BibTeX file</a>
 </p>
+
+---
+
+You can use these references in your Quarto documents directly in RStudio! You need to set up a few things first, but then it's straightforward to get automatic citations in your documents. You can also see [the official Quarto documentation for citations](https://quarto.org/docs/authoring/citations.html) in general and the [RStudio documentation](https://rstudio.github.io/visual-markdown-editing/citations.html) (and [this blog post](https://posit.co/blog/rstudio-1-4-preview-citations/)) for working with citations in RStudio.
+
+## Initial set up
+
+Before RStudio can look at and use your Zotero library, you need to do two things first. **You only need to do this setup once.**
+
+### 1. Install the Better BibTeX Zotero extension
+
+When you cite things with Quarto, you need to reference entry citation keys, or citekeys. Zotero doesn't support or make these automatically, but you can install the [Better BibTeX for Zotero extension](https://retorque.re/zotero-better-bibtex/) to add citekey support to your library.
+
+[**Follow the instructions here to do that**](https://retorque.re/zotero-better-bibtex/). Here's an illustrated version:
+
+1. Download the [latest release](https://github.com/retorquere/zotero-better-bibtex/releases/latest) to your computer by right-clicking on the `zotero-better-bibtex-VERSION.xpi` file at GitHub and choosing "Save as." **Don't double-click on it or try opening it after downloading it—you don't need to.**
+
+   ![Download XPI from GitHub](img/citations/xpi-download.png){width="70%"}
+
+2. In Zotero, go to Tools > Plugins and select the "Plugins" page.
+
+3. Click on the gear icon in the top-right corner and choose "Install Plugin From File":
+
+   ![Install plugin from XPI file](img/citations/xpi-install.png)
+
+4. Choose the `.xpi` file that you downloaded.
+
+5. Better BibTeX should now appear in your plugin list:
+
+   ![Plugin is installed now](img/citations/xpi-installed.png)
+
+Once it's installed, you should see a "Citation key" field in each of your Zotero entries. Use that when citing things in your Quarto document.
+
+![Citation key field in Zotero](img/citations/zotero-citekey.png){width="40%"}
+
+::: {.callout-note}
+#### Other settings
+
+If you want, you can go to Zotero's settings and change all sorts of settings for Better BibTeX, like the template it uses for generating citekeys, or auto-exporting collections as .bib files. You can also just leave all the default settings.
+:::
+
+### 2. Tell RStudio about Zotero
+
+Next, we need to tell RStudio that (1) Zotero exists and that (2) it should look at both your main local library and the shared class group.
+
+1. In RStudio, go to Tools > Global Options > R Markdown > Citations.
+
+2. Set "Use libraries" to "Selected Libraries" and make sure "My Library" is checked (that's your stuff that you add on your own), and that [the group library that you've joined from here](/resource/citations.qmd) is checked.
+
+3. Make sure "Better BibTeX for citation keys and BibTeX export" is checked too.
+
+![Citation settings in RStudio](img/citations/rstudio-citation-settings.png){width="70%"}
+
+## Inserting citations
+
+Now that everything is set up, you can insert citation keys and automatically generate citations and bibliographies.
+
+### Citation insertion menu
+
+The easiest way to do this is with RStudio's built-in citation insertion menu.
+
+1. Switch your document to the Visual editor mode.
+
+   ![Toggle between Source and Visual mode](img/citations/visual-mode.png){.border}
+
+2. Make sure Zotero is open on your computer.
+
+3. Go to Insert > Citation.
+
+   ![Insert citation menu](img/citations/insert-citation.png){.border}
+
+4. If you want to cite something from your main library, choose "My Library" under "Zotero" in the sidebar. If you want to cite something from the class group library, choose that in the sidebar.
+
+   ![Zotero libraries available to RStudio](img/citations/libraries-in-citation-dialog.png)
+
+5. Scroll or search through the citations in the list until you find the thing you want to cite. Select it and you'll see something like `@citationkey` (here `@Cairo:2016`) appear in the bottom. That's what the dialog will insert in your document when you click on "Insert".
+
+   ![Citation key to be inserted in the document](img/citations/citekey-in-citation-dialog.png)
+
+You should see a few new things:
+
+- In your Files panel, you'll see a new file named `references.bib`. This contains the reference details for the item you selected. Every time you insert a new citation in your document, it'll automatically get added to that file. You can open it if you want to see what it looks like---you don't ever have to edit this by hand or anything, so don't worry about it.
+
+  ![Newly-created references file](img/citations/references-bib.png){width="70%" .border}
+
+- In your document metadata, you'll see a new setting like `bibliography: references.bib`. This is how your document knows where to look for citations.
+
+  ![New bibliography entry in the document metadata](img/citations/references-yaml.png){.border}
+
+- In the document, you should see a citation key wherever your cursor was.
+
+  ![Citation key inserted in the Quarto document](img/citations/citekey-qmd.png){.border}
+
+Follow the same process for adding other citations later.
+
+### Do this without the menu
+
+Once your document is tied to a bibliography file, you actually don't have to use the insert citation menu! If you type `@` and start typing a citekey, RStudio should open a little popup menu of matching citations:
+
+![Automatic citation key dropdown menu](img/citations/citekey-dropdown.png)
+
+**This is actually what I normally do.** I don't like using the menu and will instead just type `@whatever-the-citekey-is`, either by using that popup menu, or by looking at the "Citation key" field in Zotero.
+
+## Viewing rendered citations
+
+Once the citation key is inserted, you can hover over it in your .qmd file and see a preview of it:
+
+![Preview the reference when hovering](img/citations/citekey-preview.png){.border}
+
+More importantly, when you render the document to HTML, PDF, Word, or whatever format you're using, you'll have the correct citation *and* an automatic list of references:
+
+![Fully rendered citations and references](img/citations/rendered-html.png){width="60%" .border}
+
+## Citation syntax
+
+[Check the documentation for full details of how to do this](https://quarto.org/docs/authoring/citations.html). Essentially, you use `@citationkey` either inside square brackets (`[]`) or outside of them, depending on how you're using the reference in your text:
+
++----------------------------------------------------+-------------------------------------------------+
+| Type...                                            | ...to get...                                    |
++====================================================+=================================================+
+| ``` default                                        | Causal inference is neat (Rohrer 2018;          |
+| Causal inference is neat [@Rohrer:2018;            | Angrist and Pischke 2015).                      |
+| @AngristPischke:2015].                             |                                                 |
+| ```                                                |                                                 |
++----------------------------------------------------+-------------------------------------------------+
+| ``` default                                        | Causal inference is neat (see Rohrer 2018, 34;  |
+| Causal inference is neat [see @Rohrer:2018, p. 34; | also Angrist and Pischke 2015, chap. 1).        |
+| also @AngristPischke:2015, chapter 1].             |                                                 |
+| ```                                                |                                                 |
++----------------------------------------------------+-------------------------------------------------+
+| ``` default                                        | Angrist and Pischke say causal inference is     |
+| Angrist and Pischke say causal inference is neat   | neat (2015; see also Rohrer 2018).              |
+| [-@AngristPischke:2015; see also @Rohrer:2018].    |                                                 |
+| ```                                                |                                                 |
++----------------------------------------------------+-------------------------------------------------+
+| ``` default                                        | Angrist and Pischke (2015, chap. 1) say causal  |
+| @AngristPischke:2015 [chapter 1] say causal        | inference is neat, and Rohrer (2018) agrees.    |
+| inference is neat, and @Rohrer:2018 agrees.        |                                                 |
+| ```                                                |                                                 |
++----------------------------------------------------+-------------------------------------------------+
+
+: {tbl-colwidths="[50,50]"}
+
+
+## Changing citation styles
+
+By default, Quarto uses the [Chicago Manual of Style](https://chicagomanualofstyle.org/) author-date format, but you can choose from 2,000+ [at this repository](https://www.zotero.org/styles). Download the CSL file you want to use, put it in your project folder, and add an entry to the YAML metadata:
+
+```yaml
+---
+title: "Adding citations from Zotero in Quarto"
+bibliography: references.bib
+csl: apa.csl
+---
+```
+
+Some of the most common CSLs are:
+    
+- [Chicago author-date](https://www.zotero.org/styles?q=id:chicago-author-date)
+- [Chicago note-bibliography](https://www.zotero.org/styles?q=id:chicago-notes-bibliography)
+- [APA 7th edition](https://www.zotero.org/styles?q=id:apa)
+- [MLA 9th edition](https://www.zotero.org/styles?q=id:modern-language-association)

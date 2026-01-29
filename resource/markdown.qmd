@@ -323,7 +323,7 @@ You can include a special section at the top of a Markdown document that contain
 ```yaml
 ---
 title: Title of your document
-date: "January 16, 2025"
+date: "January 15, 2026"
 author: "Your name"
 ---
 ```
@@ -356,33 +356,32 @@ One of the most powerful features of Markdown + pandoc is the ability to automat
    ```yaml
    ---
    title: Title of your document
-   date: "January 16, 2025"
+   date: "January 15, 2026"
    author: "Your name"
    bibliography: name_of_file.bib
    ---
    ```
 
-2. Choose a citation style based on a CSL file. The default is Chicago author-date, but you can choose from 2,000+ [at this repository](https://github.com/citation-style-language/styles). Download the CSL file, put it in your project folder, and add an entry to the YAML metadata (or provide a URL to the online version):
+2. Choose a citation style based on a CSL file. The default is Chicago author-date, but you can choose from 2,000+ [at this repository](https://www.zotero.org/styles). Download the CSL file, put it in your project folder, and add an entry to the YAML metadata:
 
    ```yaml
    ---
    title: Title of your document
-   date: "January 16, 2025"
+   date: "January 15, 2026"
    author: "Your name"
    bibliography: name_of_file.bib
-   csl: "https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl"
+   csl: "apa.csl"
    ---
    ```
 
    Some of the most common CSLs are:
     
-   - [Chicago author-date](https://raw.githubusercontent.com/citation-style-language/styles/master/chicago-author-date.csl)
-   - [Chicago note-bibliography](https://raw.githubusercontent.com/citation-style-language/styles/master/chicago-note-bibliography.csl)
-   - [Chicago full note-bibliography](https://raw.githubusercontent.com/citation-style-language/styles/master/chicago-fullnote-bibliography.csl) (no shortened notes or ibids)
-   - [APA 7th edition](https://raw.githubusercontent.com/citation-style-language/styles/master/apa.csl)
-   - [MLA 8th edition](https://raw.githubusercontent.com/citation-style-language/styles/master/modern-language-association.csl)
+   - [Chicago author-date](https://www.zotero.org/styles?q=id:chicago-author-date)
+   - [Chicago note-bibliography](https://www.zotero.org/styles?q=id:chicago-notes-bibliography)
+   - [APA 7th edition](https://www.zotero.org/styles?q=id:apa)
+   - [MLA 9th edition](https://www.zotero.org/styles?q=id:modern-language-association)
 
-3. Cite things in your document. [Check the documentation for full details of how to do this](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html). Essentially, you use `@citationkey` inside square brackets (`[]`):
+3. Cite things in your document. [Check the documentation for full details of how to do this](https://quarto.org/docs/authoring/citations.html). Essentially, you use `@citationkey` either inside square brackets (`[]`) or outside of them, depending on how you're using the reference in your text:
 
    +----------------------------------------------------+-------------------------------------------------+
    | Type...                                            | ...to get...                                    |

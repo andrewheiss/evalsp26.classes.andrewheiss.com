@@ -1,5 +1,109 @@
 # This file is generated with data/extract-news-headings.R; do not edit by hand
 
+- title: "Week 2.5 tips and FAQs"
+  categories:
+  - "FAQs"
+  date_actual: '1769617440'
+  date: "2026-01-28T16:24:00"
+  href: "/news/2026-01-29_faqs_week-2-5.html"
+  headings:
+  - id: "my-p-values-are-showing-up-as-2.3e-7.-what-does-that-mean"
+    text: "My p-values are showing up as 2.3e-7. What does that mean?"
+  - id: "sometimes-r-says-that-my-p-value-is-0is-that-correct-is-it-okay-to-have-tiny-p-values"
+    text: "Sometimes R says that my p-value is 0—is that correct? Is it okay to have
+      tiny p-values?"
+  - id: "whats-the-difference-between-the-and-pipes"
+    text: "What’s the difference between the <code>|&gt;</code> and <code>%&gt;%</code>
+      pipes?"
+  - id: "why-do-we-sometimes-combine-code-with-and-sometimes-with"
+    text: "Why do we sometimes combine code with <code>+</code> and sometimes with
+      <code>|&gt;</code>?"
+  - id: "why-doesnt-group_byspecies-work-but-group_byspecies-does"
+    text: "Why doesn’t <code>group_by(Species)</code> work but <code>group_by(species)</code>
+      does?"
+  - id: "why-does-aes-sometimes-appear-in-ggplot-and-sometimes-in-geom_whatever"
+    text: "Why does <code>aes()</code> sometimes appear in <code>ggplot()</code> and
+      sometimes in <code>geom_WHATEVER()</code>?"
+  - id: "installing-vs.-using-packages"
+    text: "Installing vs. using packages"
+  - id: "why-are-my-axis-labels-all-crowded-and-on-top-of-each-other-how-do-i-fix-that"
+    text: "Why are my axis labels all crowded and on top of each other? How do I fix
+      that?"
+  - id: "why-isnt-the-example-code-using-data-whatever-and-mapping-aes-in-ggplot-anymore-do-we-not-have-to-use-argument-names"
+    text: "Why isn’t the example code using <code>data = whatever</code> and <code>mapping
+      = aes()</code> in <code>ggplot()</code> anymore? Do we not have to use argument
+      names?"
+  - id: "whats-the-difference-between-read_csv-vs.-read.csv"
+    text: "What’s the difference between <code>read_csv()</code> vs. <code>read.csv()</code>?"
+  - id: "whats-the-difference-between-facet_grid-and-facet_wrap"
+    text: "What’s the difference between <code>facet_grid()</code> and <code>facet_wrap()</code>?"
+  - id: "why-do-i-sometimes-see-facet_wrapvarsblah-and-sometimes-facet_wrap-blah"
+    text: "Why do I sometimes see <code>facet_wrap(vars(blah))</code> and sometimes
+      <code>facet_wrap(~ blah)</code>?"
+  - id: "whats-the-difference-between-the-fill-and-color-aesthetics"
+    text: "What’s the difference between the <code>fill</code> and <code>color</code>
+      aesthetics?"
+- title: "Making cleaner, nicer Quarto documents"
+  categories:
+  - "advice"
+  date_actual: '1769601120'
+  date: "2026-01-28T11:52:00"
+  href: "/news/2026-01-28_cleaner-nicer-qmd-output.html"
+  headings:
+  - id: "render-often"
+    text: "Render often"
+  - id: "check-for-broken-code-chunks"
+    text: "Check for broken code chunks"
+  - id: "check-that-your-text-looks-okay"
+    text: "Check that your text looks okay"
+  - id: "dont-install-packages-in-your-document"
+    text: "Don’t install packages in your document"
+  - id: "clean-up-warnings-and-messages"
+    text: "Clean up warnings and messages"
+  - id: "global-chunk-options"
+    text: "Global chunk options"
+  - id: "fancy-document-settings"
+    text: "Fancy document settings"
+  - id: "chunk-names"
+    text: "Chunk names"
+- title: "Weeks 1–2 tips and FAQs"
+  categories:
+  - "FAQs"
+  date_actual: '1769564100'
+  date: "2026-01-28T01:35:00"
+  href: "/news/2026-01-28_faqs_week-01-02.html"
+  headings:
+  - id: "what-is-the-tidyverse"
+    text: "What is the tidyverse?"
+  - id: "why-do-you-keep-writing-package-names-in-s-why-do-you-include-s-after-function-names"
+    text: "Why do you keep writing package names in <code>{}</code>s? Why do you include
+      <code>()</code>s after function names?"
+  - id: "whats-the-difference-between-source-and-visual-mode-in-the-editor-window"
+    text: "What’s the difference between Source and Visual mode in the editor window?"
+  - id: "whats-the-difference-between-r-markdown-and-quarto"
+    text: "What’s the difference between R Markdown and Quarto?"
+  - id: "why-dont-i-have-options-to-render-to-pdf-or-word-or-html"
+    text: "Why don’t I have options to render to PDF (or Word or HTML)?"
+  - id: "rendered-document-format-for-icollege"
+    text: "Rendered document format for iCollege"
+  - id: "what-is-this-typst-thing-that-we-can-render-to"
+    text: "What is this  thing that we can render to?"
+  - id: "how-does-group_by-work-why-did-we-have-to-group-by-island-and-not-body_mass-and-island"
+    text: "How does <code>group_by()</code> work? Why did we have to group by <code>island</code>
+      and not <code>body_mass</code> and <code>island</code>?"
+  - id: "do-you-have-any-tips-for-remembering-all-the-different-functions-were-learning-there-are-so-many"
+    text: "Do you have any tips for remembering all the different functions we’re
+      learning? There are so many!"
+  - id: "my-histogram-bars-are-too-wide-too-narrow-not-visible.-how-do-i-fix-that"
+    text: "My histogram bars are too wide / too narrow / not visible. How do I fix
+      that?"
+- title: "Copy, paste, and tweak"
+  categories:
+  - "advice"
+  date_actual: '1769559900'
+  date: "2026-01-28T00:25:00"
+  href: "/news/2026-01-28_copy-paste-tweak.html"
+  headings: []
 - title: "Why do you use ✓s for grades?"
   categories:
   - "FAQs"
