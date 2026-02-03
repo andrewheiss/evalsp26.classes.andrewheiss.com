@@ -1,5 +1,21 @@
 # This file is generated with data/extract-news-headings.R; do not edit by hand
 
+- title: "Week 3 tips and FAQs"
+  categories:
+  - "FAQs"
+  date_actual: '1770111840'
+  date: "2026-02-03T09:44:00"
+  href: "/news/2026-02-03_faqs_week-3.html"
+  headings:
+  - id: "whats-the-difference-between-statistical-significance-and-substantial-significance"
+    text: "What’s the difference between statistical significance and substantial
+      significance?"
+  - id: "can-we-measure-substantial-significance-with-statistics"
+    text: "Can we measure substantial significance with statistics?"
+  - id: "what-are-all-the-different-ways-we-can-look-at-model-coefficients"
+    text: "What are all the different ways we can look at model coefficients?"
+  - id: "how-do-i-change-the-reference-category-for-a-categorical-variable"
+    text: "How do I change the reference category for a categorical variable?"
 - title: "Week 2.5 tips and FAQs"
   categories:
   - "FAQs"

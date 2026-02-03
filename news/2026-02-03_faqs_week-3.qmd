@@ -1,0 +1,468 @@
+---
+title: "Week 3 tips and FAQs"
+date: "2026-02-03T09:44"
+categories: [FAQs]
+toc-depth: 4
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  fig.width = 6, 
+  fig.height = 6 * 0.618, 
+  fig.align = "center", 
+  out.width = "90%",
+  collapse = TRUE
+)
+
+# Make the display() function create {tinytable} tables
+options(easystats_display_format = "tt", width = 300)
+```
+
+### What's the difference between statistical significance and substantial significance? 
+
+All that statistical significance really tells you is how confident you are that a measured effect is not zero. Or, more formally, using our null world idea, if something is significant, it means that in a hypothetical world where the effect is actually zero, the probability of seeing your measured effect is really low (less than 5%).
+
+But most of the time we don't care if an effect is maybe zero or not zero. We want to know if the effect actually matters!
+
+Here's a little example. Let's say you work for a nonprofit that is launching a new educational program for people who have recently released been released from prison. You create an RCT of 325 people and randomly assign some people to the program, and your main outcome of interest is monthly income.
+
+Here's what that data might look like:
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+
+library(tidyverse)
+library(parameters)
+library(tinytable)
+
+n_people <- 325
+
+withr::with_seed(1234, {
+  example_data1 <- tibble(
+    person_id = 1:n_people,
+    pre_income = rnorm(n = n_people, mean = 3500, sd = 200)
+  ) |>
+    mutate(
+      group = sample(
+        c("Treatment", "Control"),
+        size = n_people,
+        replace = TRUE
+      ),
+      causal_effect = rnorm(n = n_people, mean = 200, sd = 600),
+      null_effect = rnorm(n = n_people, mean = 0, sd = 600),
+      post_income = ifelse(
+        group == "Treatment",
+        pre_income + causal_effect,
+        pre_income + null_effect
+      )
+    ) |>
+    select(person_id, group, pre_income, post_income)
+})
+```
+
+```{r}
+example_data1
+```
+
+Let's look at the difference in post-program incomes between the treatment and control groups. This will be the causal effect of the program:
+
+```{r}
+model1 <- lm(post_income ~ group, data = example_data1)
+model_parameters(model1)
+```
+
+```{r}
+#| include: false
+
+model1_details <- model1 |> 
+  model_parameters(verbose = FALSE) |> 
+  split(~ Parameter)
+```
+
+Cool. It looks like the program caused monthly incomes to increase by `{r} scales::label_dollar(prefix = "\\$")(model1_details$groupTreatment$Coefficient)`. 
+
+That result is statistically significant, with a p-value of `{r} scales::label_comma(accuracy = 0.001)(model1_details$groupTreatment$p)`. That means that in a world where the actual program effect is ≈0, there's a `{r} scales::label_percent(accuracy = 0.1)(model1_details$groupTreatment$p)` chance of seeing an effect of `{r} scales::label_dollar(prefix = "\\$")(model1_details$groupTreatment$Coefficient)` or larger. That's not *super* rare to see in a null world, but it's below the completely arbitrary 5% threshold, so we declare that it's significant.
+
+The confidence interval shows that we're 95% confident that the range `{r} scales::label_dollar(prefix = "\\$")(model1_details$groupTreatment$CI_low)` and `{r} scales::label_dollar(prefix = "\\$")(model1_details$groupTreatment$CI_high)` has captured the true effect. Zero isn't in that range, so we're again pretty certain that the effect isn't zero.
+
+Statistically significant? ✓
+
+Does that finding matter? Are you, as the program manager, happy that the program is boosting monthly incomes by `{r} scales::label_dollar(accuracy = 1, prefix = "\\$")(model1_details$groupTreatment$Coefficient)` on average? Probably! 
+
+Let's look at another example. Let's say you run the RCT and get this data instead:
+
+```{r}
+#| warning: false
+#| message: false
+#| code-fold: true
+
+n_people <- 4000
+
+withr::with_seed(1234, {
+  example_data2 <- tibble(
+    person_id = 1:n_people,
+    pre_income = rnorm(n = n_people, mean = 3500, sd = 5)
+  ) |>
+    mutate(
+      group = sample(
+        c("Treatment", "Control"),
+        size = n_people,
+        replace = TRUE
+      ),
+      causal_effect = 0.5,
+      null_effect = 0,
+      post_income = ifelse(
+        group == "Treatment",
+        pre_income + causal_effect,
+        pre_income + null_effect
+      )
+    ) |>
+    select(person_id, group, pre_income, post_income)
+})
+```
+
+```{r}
+example_data2
+```
+
+Let's look at this new causal effect:
+
+```{r}
+model2 <- lm(post_income ~ group, data = example_data2)
+model_parameters(model2)
+```
+
+```{r}
+#| include: false
+
+model2_details <- model2 |> 
+  model_parameters(verbose = FALSE) |> 
+  split(~ Parameter)
+```
+
+The effect of the program is still positive---it causes a `{r} scales::label_dollar(prefix = "\\$")(model2_details$groupTreatment$Coefficient)` increase in monthly incomes, on average. 
+
+Importantly, the p-value is really really tiny: it's `{r} scales::label_comma(accuracy = 0.000001)(model2_details$groupTreatment$p)` (which, [following APA style](/news/2026-01-29_faqs_week-2-5.qmd#sometimes-r-says-that-my-p-value-is-0—is-that-correct-is-it-okay-to-have-tiny-p-values), `model_parameters()` reports as "p < 0.001"). The effect is definitely statistically significant! In a world where the effect of the program is ≈0, there's a `{r} scales::label_percent(accuracy = 0.0001)(model2_details$groupTreatment$p)` chance of seeing an effect as big as `{r} scales::label_dollar(prefix = "\\$")(model2_details$groupTreatment$Coefficient)`.
+
+That's, like, super significant.^[Not really! We can't think of p-values as almost significant or super significant---they're either significant or not.]
+
+*BUUUUUT* does it matter? Are you, as the program manager, happy that the program is boosting monthly incomes by `{r} scales::label_dollar(prefix = "\\$")(model2_details$groupTreatment$Coefficient)` on average? Should you spend tons of organizational resources to run this program if it's only giving people fifty more cents every month? I'd guess probably not.
+
+Both of these causal effects are statistically significant. But only the first is substantively important.
+
+### Can we measure substantial significance with statistics?
+
+No, not really. Kind of.
+
+You have to rely on your knowledge of the subject and the data and the context to know if the measured effect really matters.
+
+There *are* some more systematic ways to assess substantiveness beyond just managerial vibes, like these:
+
+- Justin Esarey and Nathan Danneman, “A Quantitative Method for Substantive Robustness Assessment,” *Political Science Research and Methods* 3, no. 1 (2015): 95–111, <https://doi.org/10.1017/psrm.2014.14>.
+- Justin H. Gross, “Testing What Matters (If You Must Test at All): A Context‐Driven Approach to Substantive and Statistical Significance,” *American Journal of Political Science* 59, no. 3 (2015): 775–88, <https://doi.org/10.1111/ajps.12149>.
+
+But often—especially for practical program evaluation situations where stakeholders have a lot of sway in program implementation and other decisions—the determination of a result's substantiveness is mostly vibes-based.
+
+
+### What are all the different ways we can look at model coefficients?
+
+In problem set 2, you fed your model objects to `model_parameters()` to see the coefficients, and also fed them to `modelsummary()` to see the coefficients. What's going on here with these different functions?
+
+As I noted in the little mini-lesson on regression in the middle of problem set 2, R returns regression models as objects that you can do stuff with.
+
+For instance, here's a little model based on penguins data:
+
+```{r}
+some_model <- lm(body_mass ~ bill_dep + species, data = penguins)
+```
+
+That new `some_model` object has the model results (coefficients, standard errors, p-values, diagnostics like R², etc.) stored inside it. If you want to know what those are or do things with them, you have to look at the object. 
+
+There are lots of different ways to do this! 
+
+#### Print the object name
+
+You can just run the name of the object and see a very barebones representation of the results:
+
+```{r}
+some_model
+```
+
+↑ That shows the model formula that you used + the coefficients. There are no standard errors, p-values, or anything else, really.
+
+#### Use `summary()`
+
+You can feed `some_model` to the `summary()` function to see a more detailed set of results:
+
+```{r}
+summary(some_model)
+```
+
+↑ That gives you a big wall of text (similar to what you see in Stata, if you're used to Stata), with coefficients, standard errors, t-statistics, p-values, and model details like R² and the number of observations and so on.
+
+That's fine, but it's really gross when that wall of text appears in a rendered Quarto document. Also, it's really hard to do anything with those values. Like, what if you want to round the values? Or plot them? Or only show some of the coefficients? They're all locked into this chunk of text.
+
+#### Use `tidy()` from the {broom} package
+
+[The {broom} package](https://broom.tidymodels.org/) (tangentially part of the tidyverse ecosystem) provides functions for converting model objects into data frames that are much easier to work with.
+
+There are two general functions: `tidy()` for extracting coefficient details and `glance()` for extracting model details:
+
+```{r}
+library(broom)
+
+tidy(some_model)
+glance(some_model)
+```
+
+Because `tidy()` returns a data frame, you can do all the regular dplyr stuff to it, like filtering, mutating, selecting, grouping, summarizing, and so on. Like, here's just the coefficient for bill depth, without the `statistic` column:
+
+```{r}
+tidy(some_model) |> 
+  filter(term == "bill_dep") |> 
+  select(term, estimate, std.error, p.value)
+```
+
+Since this is a data frame, we can even plot these coefficients with ggplot to see if 0 is in their confidence intervals:
+
+```{r}
+tidy(some_model, conf.int = TRUE) |> 
+  filter(term == "bill_dep") |> 
+  ggplot(aes(x = estimate, y = term)) + 
+  geom_pointrange(aes(xmin = conf.low, xmax = conf.high)) +
+  geom_vline(xintercept = 0)
+```
+
+#### Use `model_parameters()` and `model_performance()` from the {parameters} and {performance} packages
+
+{broom} is great and nice and I use it all the time in my own work, but it has a few inconveniences:
+
+1. `tidy()` doesn't show confidence intervals by default. If you want to see those, you have to include `conf.int = TRUE`. It's not a big deal, just kind of annoying to have to do all the time:
+
+   ```{r}
+   tidy(some_model, conf.int = TRUE)
+   ```
+
+2. `tidy()` shows the raw p-value, often in scientific notation like `8.10e-38`. Students will often see that and [forget that it really means](/news/2026-01-29_faqs_week-2-5.qmd#my-p-values-are-showing-up-as-2.3e-7.-what-does-that-mean) $8.1 \times 10^{-38}$ and will think that the p-value is 8.1 or something impossible. Again, not a deal-breaker—just an extra thing to have to think about when looking at the results.
+
+3. The function names `tidy()` and `glance()` don't really describe what they're doing. You just have to remember that `tidy()` shows the model parameters and coefficients and `glance()` shows the model performance details.
+
+To make life easier, there's a collection of package (similar to the tidyverse package ecosystem idea) called [easystats](https://easystats.github.io/easystats/) that contains a bunch of packages and functions to make it easier to work with models. Two of the easystats packages that you've already used are [{parameters}](https://easystats.github.io/parameters/) and [{performance}](https://easystats.github.io/performance/)
+
+These packages fix all the minor inconveniences of {broom} *and* give you a lot of other neat features.
+
+1. `model_parameters()` shows confidence intervals by default
+2. `model_parameters()` shows an APA-style p-value, where it displays as p < 0.001 when it's really small—no more `8.10e-38`!
+3. Instead of remembering that `tidy()` shows you model parameters, and `glance()` shows you model performance details, you can use `model_parameters()` and `model_performance()`
+
+```{r}
+library(parameters)
+library(performance)
+
+model_parameters(some_model)
+model_performance(some_model)
+```
+
+You can also display these as actual tables in a Quarto document if you pipe them to `display()`:
+
+```{r}
+model_parameters(some_model) |> 
+  display()
+```
+
+You can tell `model_parameters()` which parameters you want to show or not show without needing to use `filter()`:
+
+```{r}
+model_parameters(some_model, keep = "bill_dep", verbose = FALSE)
+```
+
+Even though it's printing nicely as a table, the results from `model_parameters()` are actually a data frame, so you can do all the regular dplyr stuff with them just like with `tidy()`:
+
+```{r}
+model_parameters(some_model) |> 
+  filter(Parameter == "bill_dep") |> 
+  ggplot(aes(x = Coefficient, y = Parameter)) + 
+  geom_pointrange(aes(xmin = CI_low, xmax = CI_high)) +
+  geom_vline(xintercept = 0)
+```
+
+#### Make nice polished side-by-side regression tables with {modelsummary}
+
+`model_parameters()` and `model_performance()` (or `tidy()` and `glance()` from {broom}) are great for working with models on their own, but often you'll want to show a bunch of models all at once. In problem set 2, I had you do this with `modelsummary()` from [the {modelsummary} package](https://modelsummary.com/vignettes/modelsummary.html). [Check out its documentation here.](https://modelsummary.com/):
+
+::: {.callout-note}
+#### `modelsummary()` and easystats
+
+`modelsummary()` actually uses `model_parameters()` and `model_performance()` behind the scenes to extract all these numbers from the models and build the fancy table!
+:::
+
+```{r}
+#| warning: false
+#| message: false
+
+library(modelsummary)
+
+modelsummary(
+  list(some_model)
+)
+```
+
+You can customize these tables a lot (again, [see the documentation](https://modelsummary.com/vignettes/modelsummary.html)). Like, here we can rename the coefficients, change the column names, show confidence intervals instead of standard errors, and control which goodness-of-fit statistics (GOF) appear in the bottom half:
+
+```{r}
+modelsummary(
+  list("Example model" = some_model),
+  statistic = "conf.int",
+  coef_rename = c(
+    "bill_dep" = "Bill depth (mm)",
+    "speciesChinstrap" = "Species (Chinstrap)",
+    "speciesGentoo" = "Species (Gentoo)"
+  ),
+  gof_map = c("nobs", "r.squared", "adj.r.squared", "F")
+)
+```
+
+#### Make automatic coefficient plots with `modelplot()` from {modelsummary}
+
+If you like coefficient plots but don't want to build them yourself with ggplot, like we did above, {modelsummary} also comes with a `modelplot()` function ([see the full documentation here](https://modelsummary.com/vignettes/modelplot.html)):
+
+```{r}
+modelplot(some_model) + 
+  geom_vline(xintercept = 0)
+```
+
+You can automatically plot multiple models too, either as colored lines:
+
+```{r}
+another_model <- lm(body_mass ~ bill_dep + species + sex, data = penguins)
+
+modelplot(
+  list("First model" = some_model, "A different model" = another_model)
+) +
+  geom_vline(xintercept = 0)
+```
+
+Or in facets:
+
+```{r}
+modelplot(
+  list("First model" = some_model, "A different model" = another_model),
+  facet = TRUE
+) +
+  geom_vline(xintercept = 0)
+```
+
+#### Plot model predictions and marginal effects
+
+You can do some other really neat things with model objects with [the {marginaleffects} package](https://marginaleffects.com/), which lets you plot predictions and slopes and other things you might be interested in.
+
+Like, here's how predicted body mass changes across a range of possible bill depths:
+
+```{r}
+#| warning: false
+#| message: false
+
+library(marginaleffects)
+
+plot_predictions(some_model, condition = "bill_dep")
+```
+
+Or across a range of possible bill depths in each of the species:
+
+```{r}
+plot_predictions(some_model, condition = c("bill_dep", "species"))
+```
+
+This is really helpful when you have interaction terms (where slopes are different for each species):
+
+```{r}
+model_interaction <- lm(body_mass ~ bill_dep * species, data = penguins)
+
+plot_predictions(model_interaction, condition = c("bill_dep", "species"))
+```
+
+That Gentoo line has a steeper slope than the other two species. We *could* figure out those slopes by looking at the coefficients and then adding/subtracting the different interaction terms:
+
+```{r}
+model_parameters(model_interaction)
+```
+
+…but that's annoying! `avg_slopes()` lets us get species-specific slopes automatically:
+
+```{r}
+avg_slopes(model_interaction, variables = "bill_dep", by = "species")
+```
+
+For Gentoos, a 1 mm increase in bill depth is associated with a 369 g increase in body mass, while for Chinstraps a 1 mm increase in bill depth is associated with a 205 g increase in body mass. Neat.
+
+#### Automatic interpretation with {report}
+
+Finally, remember that whole template thing you learned in past stats classes about how to interpret regression coefficients? [The {report} package](https://easystats.github.io/report/) (which is part of the larger easystats ecosystem) does this for you!
+
+```{r}
+#| R.options:
+#|   width: 100
+
+library(report)
+
+report_text(some_model)
+```
+
+### How do I change the reference category for a categorical variable?
+
+By default, R omits the first category in alphabetic order in a regression. Like here, there are three penguin species: Adelie, Chinstrap, and Gentoo. Adelie comes first, so it is omitted and all the coefficients are in relation to Adelies:
+
+```{r}
+model_species <- lm(body_mass ~ species, data = penguins)
+model_parameters(model_species)
+```
+
+Chinstraps are a little heavier than Adelies; Gentoos are a lot heavier than Adelies.
+
+But what if you want to change the reference category or base case? Like, what if we want Gentoos to be omitted?
+
+To do this, you need to change the order of the levels in the species column. You can see what the current level order is using `levels()`, like this:
+
+```{r}
+levels(penguins$species)
+```
+
+Adelie comes first.
+
+The `fct_relevel()` function lets you move other levels up to the front, like this:
+
+```{r}
+penguins_modified <- penguins |> 
+  mutate(species = fct_relevel(species, "Gentoo"))
+
+levels(penguins_modified$species)
+```
+
+Now Gentoo comes first. If we make a regression model with this new column, Gentoos will be omitted:
+
+```{r}
+model_species1 <- lm(body_mass ~ species, data = penguins_modified)
+model_parameters(model_species1)
+```
+
+Cool cool. Adelies and Chinstraps are both way lighter than Gentoos on average.
+
+Importantly, none of the results here actually changed—everything is exactly the same. The reference category ultimately doesn't matter. All that changed is the reference—these numbers are in relation to Gentoos.
+
+Another reason this doesn't matter is that you can use things like `predictions()` from {marginaleffects} to see predicted values of species weights, and it'll automatically work with whatever the reference category is.
+
+For instance, here are the predicted weights for the three species using the model where Adelies are the reference category:
+
+```{r}
+predictions(model_species, newdata = datagrid(species = unique))
+```
+
+And here are the predicted weights for the three species using the model where Gentoos are the reference category:
+
+```{r}
+predictions(model_species1, newdata = datagrid(species = unique))
+```
+
+They're the same! 
