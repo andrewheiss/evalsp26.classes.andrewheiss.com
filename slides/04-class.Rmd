@@ -149,21 +149,22 @@ class: middle
 
 .pull-left[
 <figure>
-  <img src="img/04-class/greenspace-eater.png" alt="Green space in Berkeley" title="Green space in Berkeley" width="100%">
+  <img src="img/04-class/DPIL-DP-RockstarWeb2.png" alt="Dolly Parton's Imagination Library" title="Dolly Parton's Imagination Library" width="100%">
 </figure>
 ]
 
 .pull-right[
-<figure>
-  <img src="img/04-class/greenspace-conversation.png" alt="Covid green spaces" title="Covid green spaces" width="100%">
-</figure>
+.box-1.medium[Dolly Parton's<br>Imagination Library]
+
+.box-inv-1.tiny[[Main site](https://imaginationlibrary.com/)]
+
+.box-inv-1.tiny[[Video intro](https://www.youtube.com/watch?v=tscb01jfukc)]
 ]
 
 ???
 
-<https://theconversation.com/how-cities-can-add-accessible-green-space-in-a-post-coronavirus-world-139194>
-
-<https://sf.eater.com/2020/5/14/21258980/berkeley-coronavirus-covid-19-jesse-arreguin-street-closures>
+- <https://imaginationlibrary.com/>
+- <https://imaginationlibrary.com/international-research/>
 
 ---
 

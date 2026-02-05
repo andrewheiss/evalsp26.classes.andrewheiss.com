@@ -69,6 +69,8 @@ Here are all the materials we'll use in class:
 - [Statistical testing in null worlds](https://nullworlds.andrewheiss.com/)
 - Nick Huntington‐Klein et al., “The Influence of Hidden Researcher Decisions in Applied Microeconomics,” *Economic Inquiry* 59, no. 3 (2021): 944–60, <https://doi.org/10.1111/ecin.12992>.
 - [Complex DAG example](https://stats.andrewheiss.com/testy-turtle/notebook/causal-model.html)
+- [Dolly Parton's Imagination Library](https://imaginationlibrary.com/) + [video intro](https://www.youtube.com/watch?v=tscb01jfukc)
+- [A dubious DAG](https://www.smithsonianmag.com/smart-news/growing-surrounded-books-may-bolster-skills-later-life-180970523/)
 
 ### Confounding, unblocked
 
