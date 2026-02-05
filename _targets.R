@@ -9,7 +9,7 @@ page_suffix <- ".html"
 # Slides that are too large for renderthis::to_pdf() and must be converted
 # manually with decktape. The pipeline will skip PDF generation for these and
 # expect the PDFs to already exist.
-skip_pdf_slides <- c("slides/10-slides")
+skip_pdf_slides <- c("slides/10-slides", "slides/04-class")
 
 options(
   tidyverse.quiet = TRUE,

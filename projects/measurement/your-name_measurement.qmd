@@ -1,11 +1,13 @@
 ---
 title: "Measurement"
-subtitle: "Evaluation, part 2 --- PMAP 8521, Spring 2025"
-author: "YOUR NAME HERE"
-date: "DATE GOES HERE"
+subtitle: "Evaluation, part 2 --- PMAP 8521, Spring 2026"
+author: "YOUR NAME HERE"  # Replace with your actual name
+date: "DATE GOES HERE"  # Replace with the date
 date-format: "long"
 format:
   html:
+    toc: true
+  typst:
     toc: true
   pdf:
     toc: true
@@ -13,11 +15,12 @@ format:
     toc: true
 ---
 
+
 **Feel free to remove any/all of the placeholder text and instructions here!**
 
-# 1: Measurement and abstraction for full-day kindergarten
+# Part 1: Measurement and abstraction for full-day kindergarten
 
-Read this article about half-day vs. full-day kindergarten in Utah: <https://archive.sltrib.com/story.php?ref=/news/ci_13164697>. The article is 10 years old, and half-day kindergarten still remains standard practice in most Utah school districts.
+Read this article about half-day vs. full-day kindergarten in Utah: <https://archive.sltrib.com/story.php?ref=/news/ci_13164697>. The article is 15 years old, and half-day kindergarten *still* remains standard practice in most Utah school districts.
 
 Pretend you are the administrator of the Optional Extended Day Kindergarten initiative. Based on the *Salt Lake Tribune* article (which provides hints throughout, and especially in one of the final paragraphs), and based on your own knowledge of educational outcomes, do the following: 
 
@@ -102,15 +105,14 @@ Narrow this list down to 3-4 key attributes. Discuss how you decided to narrow t
 - Measurement of program effect: 
 
 
-# 2: Measurement and abstraction for your program
+# Part 2: Measurement and abstraction for your program
 
-Repeat this exercise for the program you've chosen for your final project.
+Repeat this exercise for the *two* (2) of the outcomes for the program you've chosen for your final project.
 
 ## Possible outcomes
 
-- List
-- Things
-- Here
+- Outcome 1
+- Outcome 2
 
 For each of the these outcomes, answer these questions:
 

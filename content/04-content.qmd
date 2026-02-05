@@ -59,21 +59,55 @@ slide_frame("/slides/04-slides.html")
 youtube_list(slide_details, playlist_id)
 ```
 
-::: {.content-hidden}
 
 ## In-class stuff
 
 Here are all the materials we'll use in class:
 
 - [**Session 4 FAQ slides**](/slides/04-class.html) ([PDF](/slides/04-class.pdf))
+- [Statistical vs. substantive significance](/news/2026-02-03_faqs_week-3.qmd#whats-the-difference-between-statistical-significance-and-substantial-significance)
+- [Statistical testing in null worlds](https://andrewheiss.github.io/null-world-testing/)
+- Nick Huntington‐Klein et al., “The Influence of Hidden Researcher Decisions in Applied Microeconomics,” *Economic Inquiry* 59, no. 3 (2021): 944–60, <https://doi.org/10.1111/ecin.12992>.
 
-### Logic model for MPA/MPP program
+### Confounding, unblocked
 
-```{r echo=FALSE, out.width="100%"}
-knitr::include_graphics(here::here("files", "img", "mpa-mpp-logic-model.jpg"), error = FALSE)
+```{=html}
+<div class="ratio ratio-16x9">
+<video controls loop>
+<source src="/slides/img/05-class/video-confounding-unblocked.mp4" type="video/mp4">
+</video>
+</div>
 ```
 
-:::
+### Confounding, blocked
+
+```{=html}
+<div class="ratio ratio-16x9">
+<video controls loop>
+<source src="/slides/img/05-class/video-confounding-blocked.mp4" type="video/mp4">
+</video>
+</div>
+```
+
+### Mediation
+
+```{=html}
+<div class="ratio ratio-16x9">
+<video controls loop>
+<source src="/slides/img/05-class/video-mediating.mp4" type="video/mp4">
+</video>
+</div>
+```
+
+### Collider bias
+
+```{=html}
+<div class="ratio ratio-16x9">
+<video controls loop>
+<source src="/slides/img/05-class/video-collider.mp4" type="video/mp4">
+</video>
+</div>
+```
 
 ```{verbatim include=FALSE}
 Playlist: https://www.youtube.com/playlist?list=PLS6tnpTr39sFVrHdTifzlyS9dsJjhEhsF

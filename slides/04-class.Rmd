@@ -1,0 +1,731 @@
+---
+title: "Class 4: Logic models, measurement, and DAGs"
+author: "Andrew Heiss"
+date: "2026-02-05"
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    chakra: "libs/remark-latest.min.js"
+    css: ["default", "css/ath-slides.css", "css/ath-inferno-fonts.css", "css/animate.css"]
+    seal: false
+    anchor_sections: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.retina = 3, fig.align = "center")
+```
+
+```{r packages-data, include=FALSE}
+library(tidyverse)
+library(ggdag)
+library(palmerpenguins)
+library(modelsummary)
+```
+
+```{r xaringanExtra, echo=FALSE}
+xaringanExtra::use_xaringan_extra(c("tile_view"))
+```
+
+class: center middle main-title section-title-3
+
+# In-person<br>session 4
+
+.class-info[
+
+**February 5, 2026**
+
+.light[PMAP 8521: Program evaluation<br>
+Andrew Young School of Policy Studies
+]
+
+]
+
+---
+
+name: outline
+class: title title-inv-8
+
+# Plan for today
+
+.box-6.medium[More regression things]
+
+--
+
+.box-1.medium[Logic models and evaluation]
+
+--
+
+.box-2.medium[Measuring outcomes]
+
+--
+
+.box-5.medium[DAGs]
+
+---
+
+layout: false
+name: exam
+class: center middle section-title section-title-4 animated fadeIn
+
+# Exam 1 details
+
+---
+
+layout: false
+name: exam
+class: center middle section-title section-title-4 animated fadeIn
+
+# Final project details
+
+---
+
+layout: false
+name: regression-faqs
+class: center middle section-title section-title-6 animated fadeIn
+
+# More regression things
+
+---
+
+layout: true
+class: middle
+
+---
+
+.box-6.medium[Interactive null worlds]
+
+---
+
+.box-6.medium[Statistical vs.<br>substantive significance]
+
+---
+
+layout: false
+name: logic-models
+class: center middle section-title section-title-1 animated fadeIn
+
+# Logic models<br>and evaluation
+
+---
+
+class: title title-1
+
+# The paradox of evaluation
+
+--
+
+.box-1.medium[Evaluation is good, but expensive]
+
+.box-inv-1.sp-after.SMALL["Evaluation thinking"]
+
+--
+
+.box-1.medium[Too much evaluation is bad]
+
+.box-inv-1.sp-after-half.SMALL[Taming programs]
+
+---
+
+layout: false
+class: middle
+
+.box-1.large[Logic model]
+
+.box-inv-1[Let's make another logic model!]
+
+---
+
+class: middle
+
+.pull-left[
+<figure>
+  <img src="img/04-class/greenspace-eater.png" alt="Green space in Berkeley" title="Green space in Berkeley" width="100%">
+</figure>
+]
+
+.pull-right[
+<figure>
+  <img src="img/04-class/greenspace-conversation.png" alt="Covid green spaces" title="Covid green spaces" width="100%">
+</figure>
+]
+
+???
+
+<https://theconversation.com/how-cities-can-add-accessible-green-space-in-a-post-coronavirus-world-139194>
+
+<https://sf.eater.com/2020/5/14/21258980/berkeley-coronavirus-covid-19-jesse-arreguin-street-closures>
+
+---
+
+layout: false
+name: outcomes
+class: center middle section-title section-title-2 animated fadeIn
+
+# Measuring<br>outcomes
+
+---
+
+layout: true
+class: title title-2
+
+---
+
+# Outcomes and programs
+
+.box-2.medium[Outcome variable]
+
+.box-inv-2.sp-after-half.SMALL[Thing you're measuring]
+
+--
+
+.box-2.medium[Outcome change]
+
+.box-inv-2.sp-after-half.SMALL[∆ in thing you're measuring over time]
+
+--
+
+.box-2.medium[Program effect]
+
+.box-inv-2.SMALL[∆ in thing you're measuring over time *because of* the program]
+
+---
+
+# Outcomes and programs
+
+<figure>
+  <img src="img/04/program-effect.png" alt="Outcomes and program effect" title="Outcomes and program effect" width="100%">
+</figure>
+
+---
+
+layout: false
+class: middle
+
+.box-2.large[Abstraction]
+
+.box-inv-2[Let's abstract an outcome!]
+
+.box-inv-2.tiny[[Ladder of abstraction for witches](https://evalsp26.classes.andrewheiss.com/slides/04-slides.html#20)]
+
+---
+
+layout: false
+name: dags
+class: center middle section-title section-title-5 animated fadeIn
+
+# DAGs
+
+---
+
+layout: true
+class: middle
+
+---
+
+.box-5.large[Causal thinking is necessary—<br>even for descriptive work!]
+
+---
+
+.center[
+
+<figure>
+  <img src="img/04-class/supercentenarians.png" alt="Supercentenarians" title="Supercentenarians" width="46%">
+</figure>
+
+]
+
+???
+
+Necessity of causal thinking: Mention the McElreath tweet on birth certificate introduction and death ages: <https://twitter.com/rlmcelreath/status/1427564280744976384>
+
+<https://www.biorxiv.org/content/10.1101/704080v2>
+
+---
+
+layout: false
+
+.box-5.less-medium["Every time I get a haircut, I become more mature!"]
+
+<figure>
+  <img src="img/04-class/ben-hair.jpg" alt="Benjamin haircut" title="Benjamin haircut" width="100%">
+</figure>
+
+---
+
+.box-5.less-medium["Every time I get a haircut, I become more mature!"]
+
+```{r echo=FALSE, fig.width=5, fig.height=2, out.width="70%", fig.align="center"}
+set.seed(1234)
+dagify(
+  Y ~ X,
+  coords = list(x = c(X = 1, Y = 3),
+                y = c(X = 1, Y = 1)),
+  exposure = "X",
+  outcome = "Y",
+  labels = c("X" = "Haircut", "Y" = "Maturity")
+) %>% 
+  tidy_dagitty() %>% 
+  node_status() %>% 
+  ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges() +
+  geom_dag_point(aes(color = status), size = 15) +
+  geom_dag_text(color = "white", size = 5) +
+  geom_dag_text(aes(label = label), nudge_y = 0.1, 
+                size = 5, color = "black") +
+  scale_color_manual(values = c("#FF4136", "#0074D9"),
+                     na.value = "#7FDBFF") +
+  coord_cartesian(ylim = c(0.9, 1.2)) +
+  guides(color = "none") +
+  theme_dag()
+```
+
+.center[$$E[\text{Maturity} \mid \operatorname{do} (\text{Get haircut})]$$]
+
+---
+
+.box-5.less-medium[Getting older opens a backdoor path]
+
+```{r echo=FALSE, fig.width=5, fig.height=3, out.width="70%", fig.align="center"}
+dagify(
+  Y ~ X + Z,
+  X ~ Z,
+  coords = list(x = c(X = 1, Y = 3, Z = 2),
+                y = c(X = 1, Y = 1, Z = 2)),
+  exposure = "X",
+  outcome = "Y",
+  labels = c("X" = "Haircut", "Y" = "Maturity",
+             "Z" = "Getting older")
+) %>% 
+  tidy_dagitty() %>% 
+  node_status() %>% 
+  ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges() +
+  geom_dag_point(aes(color = status), size = 15) +
+  geom_dag_text(color = "white", size = 5) +
+  geom_dag_text(aes(label = label), nudge_y = 0.25, 
+                size = 5, color = "black") +
+  scale_color_manual(values = c("#FF4136", "#0074D9"),
+                     na.value = "#7FDBFF") +
+  coord_cartesian(ylim = c(0.9, 2.2)) +
+  guides(color = "none") +
+  theme_dag()
+```
+
+---
+
+.box-5.medium[Ice cream causes crime]
+
+--
+
+.center[
+<figure>
+  <img src="img/05-class/eat-ice-cream-do-crime.jpg" alt="Eat ice cream, do crime" title="Eat ice cream, do crime" width="100%">
+</figure>
+]
+
+--
+
+.box-inv-5[Summer weather opens a backdoor path]
+
+???
+
+- <https://twitter.com/EpiEllie/status/1080680304581451778>
+- <https://www.redbubble.com/i/sticker/Eat-Ice-Cream-Do-Crime-by-epiellie/150075475.EJUG5>
+
+
+---
+
+class: middle
+
+.box-5.medium[But what does that mean,<br>"opening a backdoor path"?]
+
+.box-5.medium[How does statistical association<br>get passed through paths?]
+
+---
+
+.box-5.less-medium.sp-after[How do I know which of these is which?]
+
+.center[
+<figure>
+  <img src="img/05-class/dag-associations.png" alt="DAG associations" title="DAG associations" width="100%">
+</figure>
+]
+
+---
+
+class: middle
+
+.pull-left[
+<figure>
+  <img src="img/04-class/slider-switch-plain-80.jpg" alt="Switch and slider" title="Switch and slider" width="100%">
+</figure>
+]
+
+.pull-right[
+```{r confounding-dag-alone, echo=FALSE, fig.width=4.5, fig.height=3.35, out.width="100%"}
+dagify(
+  Y ~ X + Z,
+  X ~ Z,
+  coords = list(x = c(X = 1, Y = 3, Z = 2),
+                y = c(X = 1, Y = 1, Z = 2))
+) %>% 
+  ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges() +
+  geom_dag_point(color = "grey80", size = 17) +
+  geom_dag_text(color = "black", size = 5) +
+  theme_dag()
+```
+]
+
+---
+
+class: middle
+
+.pull-left[
+<figure>
+  <img src="img/04-class/slider-switch-plain-80.jpg" alt="Switch and slider" title="Switch and slider" width="100%">
+</figure>
+]
+
+.pull-right[
+```{r mediating-dag-alone, echo=FALSE, fig.width=4.5, fig.height=3.35, out.width="100%"}
+dagify(
+  Y ~ X + Z,
+  Z ~ X,
+  coords = list(x = c(X = 1, Y = 3, Z = 2),
+                y = c(X = 1, Y = 1, Z = 2))
+) %>% 
+  ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges() +
+  geom_dag_point(color = "grey80", size = 17) +
+  geom_dag_text(color = "black", size = 5) +
+  theme_dag()
+```
+]
+
+---
+
+class: middle
+
+.pull-left[
+<figure>
+  <img src="img/04-class/slider-switch-plain-80.jpg" alt="Switch and slider" title="Switch and slider" width="100%">
+</figure>
+]
+
+.pull-right[
+```{r colliding-dag-alone, echo=FALSE, fig.width=4.5, fig.height=3.35, out.width="100%"}
+dagify(
+  Y ~ X,
+  Z ~ Y,
+  Z ~ X,
+  coords = list(x = c(X = 1, Y = 3, Z = 2),
+                y = c(X = 1, Y = 1, Z = 2))
+) %>% 
+  ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges() +
+  geom_dag_point(color = "grey80", size = 17) +
+  geom_dag_text(color = "black", size = 5) +
+  theme_dag()
+```
+]
+
+---
+
+.center[
+<video controls loop>
+  <source src="img/05-class/video-confounding-unblocked.mp4" type="video/mp4">
+</video>
+]
+
+---
+
+.center[
+<video controls loop>
+  <source src="img/05-class/video-confounding-blocked.mp4" type="video/mp4">
+</video>
+]
+
+---
+
+.center[
+<video controls loop>
+  <source src="img/05-class/video-mediating.mp4" type="video/mp4">
+</video>
+]
+
+---
+
+layout: true
+class: middle
+
+---
+
+.box-5.medium[d-separation]
+
+.box-inv-5[Except for the one arrow between X and Y,<br>no statistical association can flow between X and Y]
+
+.box-inv-5[This is **identification**—<br>all alternative stories are ruled out<br>and the relationship is isolated]
+
+---
+
+.box-5.medium[How do we know if we have the right DAG?]
+
+--
+
+.box-5.medium[Right nodes? Enough nodes?<br>Too many nodes?]
+
+--
+
+.box-5.medium.sp-after[Right arrows?]
+
+--
+
+.box-inv-5.large[lol]
+
+---
+
+.center.tiny[Nick Huntington‐Klein et al., “The Influence of Hidden Researcher Decisions in Applied Microeconomics,”<br>*Economic Inquiry* 59, no. 3 (2021): 944–60, <https://doi.org/10.1111/ecin.12992>.]
+
+.center[
+<figure>
+  <img src="img/04-class/many-analysts.png" alt="Many analysts" title="Many analysts" width="55%">
+</figure>
+]
+
+---
+
+layout: true
+class: middle
+
+---
+
+.box-5.large[What's the difference between<br>logic models and DAGs?]
+
+.box-inv-5[Can't I just remake my logic model in Dagitty and be done?]
+
+---
+
+layout: false
+class: title title-5
+
+# DAGs vs. Logic models
+
+.box-5.large[DAGs are a *statistical* tool]
+
+.box-inv-5[Describe a data-generating process<br>and isolate/identify relationships]
+
+--
+
+.box-5.large.sp-before[Logic models are a *managerial* tool]
+
+.box-inv-5[Oversee the inner workings of a program and its theory]
+
+---
+
+layout: true
+class: middle
+
+---
+
+.box-5.large[How exactly do colliders<br>mess up your results?]
+
+.box-5.medium[It looks like you can<br>still get the effect of X on Y]
+
+---
+
+```{r nba-dag, echo=FALSE, fig.width=5, fig.height=3, out.width="65%"}
+set.seed(1234)
+dagify(
+  Y ~ X,
+  Z ~ Y,
+  Z ~ X,
+  coords = list(x = c(X = 1, Y = 3, Z = 2),
+                y = c(X = 1, Y = 1, Z = 2)),
+  exposure = "X",
+  outcome = "Y",
+  labels = c("X" = "Height", "Y" = "Points",
+             "Z" = "Being in the NBA")
+) %>% 
+  tidy_dagitty() %>% 
+  node_status() %>% 
+  ggplot(aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges() +
+  geom_dag_point(aes(color = status), size = 15) +
+  geom_dag_text(color = "white", size = 5) +
+  geom_dag_text(aes(label = label), nudge_y = c(0.25, 0.25, -0.25), color = "black", size = 5) +
+  scale_color_manual(values = c("#FF4136", "#0074D9"),
+                     na.value = "#7FDBFF") +
+  guides(color = "none") +
+  theme_dag()
+```
+
+---
+
+.center[
+<figure>
+  <img src="img/04-class/facebook.png" alt="Facebook collider" title="Facebook collider" width="55%">
+</figure>
+]
+
+???
+
+<https://www.businessinsider.com/facebook-sent-incomplete-misinformation-data-flawed-researchers-2021-9>
+
+<https://www.nytimes.com/live/2020/2020-election-misinformation-distortions#facebook-sent-flawed-data-to-misinformation-researchers>
+
+---
+
+layout: false
+class: title title-5
+
+# Does niceness improve appearance?
+
+```{r niceness-appearance-data, include=FALSE}
+set.seed(1234)
+nice_appearance_data <- tibble(niceness = rnorm(10000, mean = 0, sd = 1),
+                               appearance = rnorm(10000, mean = 0, sd = 1))
+
+plot_labels <- tribble(
+  ~x, ~y, ~label, 
+  -2, 2, "Mean and attractive",
+  2, 2, "Nice and attractive",
+  2, -2, "Nice and ugly",
+  -2, -2, "Mean and ugly",
+)
+
+full_sample <- ggplot(nice_appearance_data, aes(x = niceness, y = appearance)) +
+  geom_point(color = "grey40", size = 0.5, alpha = 0.8) +
+  geom_smooth(size = 2, method = "lm") +
+  labs(x = "Niceness", y = "Appearance") +
+  theme_bw(base_family = "Fira Sans Condensed")
+
+full_sample_annotated <- full_sample +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  geom_label(data = plot_labels, aes(label = label, x = x, y = y),
+             fill = "#CF4446", color = "white",
+             family = "Fira Sans Condensed", fontface = "bold")
+
+collider_bias <- ggplot(filter(nice_appearance_data, 
+                               !(niceness <= 0 & appearance <= 0)), 
+       aes(x = niceness, y = appearance)) +
+  geom_point(color = "grey40", size = 0.5, alpha = 0.8) +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  geom_smooth(size = 2, method = "lm") +
+  geom_label(data = plot_labels, aes(label = label, x = x, y = y),
+             fill = "#CF4446", color = "white",
+             family = "Fira Sans Condensed", fontface = "bold") +
+  labs(x = "Niceness", y = "Appearance") +
+  theme_bw(base_family = "Fira Sans Condensed")
+collider_bias
+
+collider_dag <- dagify(
+  Y ~ X,
+  Z ~ X + Y,
+  coords = list(x = c(X = 1, Y = 3, Z = 2),
+                y = c(X = 1, Y = 1, Z = 2)),
+  exposure = "X",
+  outcome = "Y"
+) %>% 
+  tidy_dagitty() %>% 
+  node_status() %>% 
+  mutate(across(c(name, to), 
+                ~recode(., X = "Niceness", Y = "Appearance", 
+                        Z = "People you've dated"))) %>% 
+  mutate(arrow_color = ifelse(to == "People you've dated", "#F012BE", "black"))
+
+plot_dag <- ggplot(collider_dag, aes(x = x, y = y, xend = xend, yend = yend)) +
+  geom_dag_edges(aes(edge_color = arrow_color)) +
+  geom_dag_point(aes(color = status), size = 17) +
+  geom_dag_text(data = filter(collider_dag, name != "People you've dated"),
+                color = "black", size = 5, nudge_y = -0.2,
+                family = "Fira Sans Condensed", fontface = "bold") +
+  geom_dag_text(data = filter(collider_dag, name == "People you've dated"),
+                color = "black", size = 5, nudge_y = 0.2,
+                family = "Fira Sans Condensed", fontface = "bold") +
+  scale_color_manual(values = c("#2ECC40", "#0074D9"), 
+                     na.value = "grey80", guide = "none") +
+  coord_cartesian(xlim = c(0.8, 3.2), ylim = c(0.8, 2.2)) +
+  theme_dag()
+```
+
+.pull-left[
+
+```{r echo=FALSE, fig.width=4.5, fig.height=3.35, out.width="100%"}
+full_sample
+```
+
+]
+
+--
+
+.pull-right[
+
+```{r echo=FALSE, fig.width=4.5, fig.height=3.35, out.width="100%"}
+full_sample_annotated
+```
+
+]
+
+---
+
+class: title title-5
+
+# Collider distorts the true effect!
+
+.pull-left[
+
+```{r echo=FALSE, fig.width=4.5, fig.height=3.35, out.width="100%"}
+plot_dag
+```
+
+]
+
+--
+
+.pull-right[
+
+```{r echo=FALSE, fig.width=4.5, fig.height=3.35, out.width="100%"}
+collider_bias
+```
+
+]
+
+---
+
+.box-5.large[Effect of race on police use of force<br>using administrative data]
+
+---
+
+.box-5.medium[Effect of race on police use of force<br>using administrative data]
+
+.pull-left[
+<figure>
+  <img src="img/05-class/klm-dag.png" alt="Use of force" title="Use of force" width="100%">
+</figure>
+]
+
+.pull-right[
+<figure>
+  <img src="img/05-class/klm.png" alt="Use of force" title="Use of force" width="100%">
+</figure>
+]
+
+---
+
+layout: false
+class: middle
+
+.box-5.large[Let's make a DAG!]
