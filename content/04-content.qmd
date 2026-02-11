@@ -72,6 +72,40 @@ Here are all the materials we'll use in class:
 - [Dolly Parton's Imagination Library](https://imaginationlibrary.com/) + [video intro](https://www.youtube.com/watch?v=tscb01jfukc)
 - [A dubious DAG](https://www.smithsonianmag.com/smart-news/growing-surrounded-books-may-bolster-skills-later-life-180970523/)
 
+
+### Logic model and ladder of abstraction for Imagination Library
+
+
+::: {.panel-tabset}
+#### Part 1 (inputs and activities)
+
+```{r echo=FALSE, out.width="100%"}
+knitr::include_graphics(here::here("files", "img", "imagination-library-1.jpg"), error = FALSE)
+```
+
+#### Part 2 (outputs and outcomes)
+
+```{r echo=FALSE, out.width="100%"}
+knitr::include_graphics(here::here("files", "img", "imagination-library-2.jpg"), error = FALSE)
+```
+
+#### Part 3 (ladder of abstraction)
+
+```
+                     Presence of books in the house
+                          Position of books
+           Quality of books - new books - library participation
+      Time spent reading                        Story time
+Average hours of parents reading            # of books checked out
+     Words spoken at home
+```
+
+```{r echo=FALSE, out.width="100%"}
+knitr::include_graphics(here::here("files", "img", "imagination-library-3.jpg"), error = FALSE)
+```
+
+:::
+
 ### Confounding, unblocked
 
 ```{=html}
