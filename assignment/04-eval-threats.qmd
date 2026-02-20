@@ -1,12 +1,5 @@
 ---
-title: "Threats to validity"
-date: "2026-02-27"
+title: "~~Threats to validity~~"
 ---
 
-::: {.callout-warning}
-
-### Assignment not ready yet!
-
-I'm updating this assignment and will post full details and instructions at least two weeks before the deadline.
-
-:::
+This assignment is **cancelled**!

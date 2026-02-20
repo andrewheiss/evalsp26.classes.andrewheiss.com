@@ -1,12 +1,102 @@
 ---
 title: "Causal model"
-date: "2026-02-20"
+date: "2026-02-27"
 ---
 
-::: {.callout-warning}
+For your [final project](/assignment/final-project.qmd), you will conduct an evaluation for a social program of your choosing. In this assignment, you will decide how to model the causal effect of your program on your primary outcome. 
 
-### Assignment not ready yet!
+If you decide to use a different program for your final project, that's okay! This assignment doesn't have to be related to your final program, but it would be extraordinarily helpful—a more polished version of this assignment can be included as part of your final project.
 
-I'm updating this assignment and will post full details and instructions at least two weeks before the deadline.
+
+## Instructions
+
+You need to complete the two tasks below. Ideally you should type this in a Quarto file and render your document to HTML or Word or PDF, but you can also write in Word if you want (though your final project will need to be in Quarto, and this would give you practice).[^citations]
+
+[^citations]: And if you want to be super brave, try using [Quarto's citation system](/resource/markdown.qmd#citations)!
+
+**I've created a Quarto template you can use here:** [{{< fa file-archive >}} `causal-model.zip`](/projects/causal-model.zip). It's also [available on Posit.cloud](https://posit.cloud/spaces/737332/content/11957648).
+
+**Submit this assignment as a PDF or Word file on iCollege.**
+
+---
+
+::: {.callout-tip}
+
+### Including DAGs in your document
+
+You can either make your DAGs with something like Dagitty or with R. See [the DAGs example](example/dags.qmd) for step-by-step instructions.
+
+If you use Dagitty, you'll need to export the image (Model > Export as PNG) and put it in the same folder as your .qmd file. Then include it as an image using [the Markdown syntax for images](https://quarto.org/docs/authoring/figures.html):
+
+```markdown
+blah blah see @fig-my-dag blah blah
+
+![Some neat caption](name-of-your-image.png){#fig-my-dag}
+
+blah blah
+```
+
+If you use R, you'll want to use {ggdag}:
+
+```{.r}
+library(ggdag)
+
+# Remember that you can change the variable names here--they can be basically
+# anything, but cannot include spaces. The labels can have spaces. Adjust the
+# variable names (y, x2, etc) and labels ("Outcome", "Something", etc.) as
+# necessary.
+my_dag <- dagify(
+  y ~ x + z1 + z2,
+  x ~ z1 + z2,
+  z2 ~ z1,
+  labels = c(
+    "y" = "Outcome",
+    "x" = "Treatment",
+    "z1" = "Something",
+    "z2" = "Something else"
+  ),
+  exposure = "x",
+  outcome = "y"
+)
+
+# If you set text = TRUE, you'll see the variable names in the DAG points
+ggdag(my_dag, text = FALSE, use_labels = "label") +
+  theme_dag()
+
+# If you want the treatment and outcomes colored differently,
+# replace ggdag() with ggdag_status()
+ggdag_status(my_dag, text = FALSE, use_labels = "label") +
+  theme_dag() +
+  theme(legend.position = "bottom")
+```
 
 :::
+
+## Assignment outline
+
+### Task 1: DAG from a news article
+
+#### Part 1: Implicit DAG
+
+Find a recent news article that makes a causal claim and interpret that claim by drawing an appropriate diagram *of the claim they make* with any evidence they provide in the article.
+
+Summarize the causal claim. Describe what the authors controlled for (if anything). Explain your version of their implicit DAG here. Justify the inclusion of each node (point) and connection (line) in the graph. *(≈150 words)*
+
+INCLUDE IMAGE HERE
+
+#### Part 2: Better DAG
+
+The article likely omitted some confounders or included some colliders or did (or didn't do) something else that casts doubt on the causal claim. 
+
+Create a second, better DAG of the same causal claim. Describe what *you* think should be included in the DAG to model the data generating process. Justify the inclusion of each node (point) and connection (line) in the graph. Identify which nodes need to be controlled for or adjusted to close backdoor paths and identify/isolate the causal effect. *(≈200 words)*
+
+INCLUDE IMAGE HERE
+
+
+### Task 2: DAG for your program
+
+Identify **one** (1) outcome that you're most interested in from your final project program. Draw a DAG that shows the causal effect of your program's intervention on the outcome. **You just need one ideal DAG here.**
+
+Describe what *you* think should be included in the DAG to model the data generating process. Justify the inclusion of each node (point) and connection (line) in the graph. Identify which nodes need to be controlled for or adjusted to close backdoor paths and identify/isolate the causal effect. *(≈200 words)*
+
+INCLUDE IMAGE HERE

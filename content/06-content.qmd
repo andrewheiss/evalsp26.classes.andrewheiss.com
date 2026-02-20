@@ -25,7 +25,7 @@ slide_details <- tibble::tribble(
 - {{< fa file-pdf >}} Guido Imbens, "Statistical Significance, *p*-Values, and the Reporting of Uncertainty" [@Imbens:2021]. This is available on iCollege, and [it's also free here](https://doi.org/10.1257/jep.35.3.157).
 - {{< fa arrow-up-right-from-square >}} Randall Munroe, ["Significant"](https://xkcd.com/882/)
 - {{< fa arrow-up-right-from-square >}} Alexander Coppock, ["10 Things to Know About Statistical Power"](https://egap.org/resource/10-things-to-know-about-statistical-power/)
-- {{< fa trophy >}} Play around with FiveThirtyEight, ["Hack Your Way To Scientific Glory"](https://projects.fivethirtyeight.com/p-hacking/)
+- {{< fa trophy >}} Play around with FiveThirtyEight, ["Hack Your Way To Scientific Glory"](https://stats.andrewheiss.com/hack-your-way/)
 - {{< fa book >}} Chapter 9 in *Impact Evaluation in Practice* [@wb-eval]
 - {{< fa book >}} Chapter 11 in *The Effect* [@Huntington-Klein:2021]
 
@@ -50,32 +50,16 @@ slide_frame("/slides/06-slides.html")
 youtube_list(slide_details, playlist_id)
 ```
 
-::: {.content-hidden}
 
 ## In-class stuff
 
 Here are all the materials we'll use in class:
 
 - [**Session 6 FAQ slides**](/slides/06-class.html) ([PDF](/slides/06-class.pdf))
-- [{{< fa file-excel >}} Tutoring CATE example](/files/tutoring_cate.xlsx)
-
-  ```r
-  library(tidyverse)
-  library(readxl)
-  library(parameters)
-  
-  tutoring_data <- read_excel("tutoring_cate.xlsx", sheet = "raw_data")
-  
-  model_naive <- lm(outcome ~ program, data = tutoring_data)
-  model_parameters(model_naive)
-  
-  model_adjusted <- lm(outcome ~ program + low_grade, data = tutoring_data)
-  model_parameters(model_adjusted)
-  ```
-
-### Art → Life expectancy DAG we made together
-
-![Art → Life expectancy](img/art-life-dag.png)
+- [Statistical testing in null worlds](https://nullworlds.andrewheiss.com/)
+- [Hack Your Way To Scientific Glory](https://stats.andrewheiss.com/hack-your-way/)
+- [Interactive DAGs](https://dags.andrewheiss.com/)
+- [Dagitty](https://www.dagitty.net/)
 
 
 ### Confounding, unblocked
@@ -117,8 +101,6 @@ Here are all the materials we'll use in class:
 </video>
 </div>
 ```
-
-:::
 
 ```{verbatim include=FALSE}
 Playlist: https://www.youtube.com/playlist?list=PLS6tnpTr39sFJtz7egfUASfhhz6zuj7GZ

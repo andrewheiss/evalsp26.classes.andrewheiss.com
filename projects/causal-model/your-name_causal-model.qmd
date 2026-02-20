@@ -1,11 +1,13 @@
 ---
-title: "Causal models"
-subtitle: "Evaluation, part 3 --- PMAP 8521, Spring 2025"
-author: "YOUR NAME HERE"
-date: "DATE GOES HERE"
+title: "Causal model"
+subtitle: "Evaluation, part 3 --- PMAP 8521, Spring 2026"
+author: "YOUR NAME HERE"  # Replace with your actual name
+date: "DATE GOES HERE"  # Replace with the date
 date-format: "long"
 format:
   html:
+    toc: true
+  typst:
     toc: true
   pdf:
     toc: true
@@ -13,81 +15,40 @@ format:
     toc: true
 ---
 
+
 **Feel free to remove any/all of the placeholder text and instructions here!**
 
+::: {.callout-tip title="Inserting DAG images"}
+You'll need to include images in this assignment, similar to what you did with the background and theory assignment.
 
-## 1: DAG I
+You can export figures from dagitty and include them here, or you can use R to draw the DAGs. 
 
-**Diagram A**: Find a news article that makes a causal claim and interpret that claim by drawing an appropriate diagram *of the claim they make* with any evidence they provide in the article.
+See the assignment instruction page for hints and sample code.
+:::
 
-INCLUDE IMAGE HERE
+# Task 1: DAG from a news article
 
-**Diagram B**: The article likely won't explain all the things the researchers controlled for, so you'll need to create an ideal DAG. What else should be included in the causal process to measure the effect of X on Y? 
+## Part 1: Implicit DAG
 
-INCLUDE IMAGE HERE
+Find a recent news article that makes a causal claim and interpret that claim by drawing an appropriate diagram *of the claim they make* with any evidence they provide in the article.
 
-Export the figures from dagitty and include it in your assignment, or use this code to draw the DAG with R:
-
-```{r setup, warning=FALSE, message=FALSE}
-library(tidyverse)
-library(ggdag)
-```
-
-```{r example-dag-code}
-# Remember that you can change the variable names here--they can be basically
-# anything, but cannot include spaces. The labels can have spaces. Adjust the
-# variable names (y, x2, etc) and labels ("Outcome", "Something", etc.) as
-# necessary.
-my_dag <- dagify(y ~ x1 + x2 + z,
-                 z ~ x1, 
-                 x2 ~ x1 + z,
-                 labels = c("y" = "Outcome",
-                            "x1" = "Something",
-                            "x2" = "Something else",
-                            "z" = "Yet another thing"),
-                 exposure = "z",
-                 outcome = "y")
-
-# If you set text = TRUE, you'll see the variable names in the DAG points
-# The `seed` argument makes it so that the random layout is the same every time
-ggdag(my_dag, text = FALSE, use_labels = "label", seed = 1234) + 
-  theme_dag()
-
-# If you want the treatment and outcomes colored differently, 
-# replace ggdag() with ggdag_status()
-ggdag_status(my_dag, text = FALSE, use_labels = "label", seed = 1234) + 
-  theme_dag() + 
-  theme(legend.position = "bottom")
-```
-
-Summarize the causal claim. Describe what the authors controlled for and what else you included in the DAG. Justify the inclusion of each node (point) and connection (line) in the graph. *(≈150 words)*
-
-Identify all backdoor paths between your exposure and outcome. What variables need to be controlled for / adjusted to close the backdoors? Did this happen in the study or article? *(≈100 words)*
-
-
-## 2: DAG II
-
-Find a different news article with a causal claim and do the same thing as above. 
-
-**Diagram A**: Find a news article that makes a causal claim and interpret that claim by drawing an appropriate diagram *of the claim they make* with any evidence they provide in the article.
+Summarize the causal claim. Describe what the authors controlled for (if anything). Explain your version of their implicit DAG here. Justify the inclusion of each node (point) and connection (line) in the graph. *(≈150 words)*
 
 INCLUDE IMAGE HERE
 
-**Diagram B**: The article likely won't explain all the things the researchers controlled for, so you'll need to create an ideal DAG. What else should be included in the causal process to measure the effect of X on Y? 
+## Part 2: Better DAG
+
+The article likely omitted some confounders or included some colliders or did (or didn't do) something else that casts doubt on the causal claim. 
+
+Create a second, better DAG of the same causal claim. Describe what *you* think should be included in the DAG to model the data generating process. Justify the inclusion of each node (point) and connection (line) in the graph. Identify which nodes need to be controlled for or adjusted to close backdoor paths and identify/isolate the causal effect. *(≈200 words)*
 
 INCLUDE IMAGE HERE
 
-Summarize the causal claim. Describe what the authors controlled for and what else you included in the DAG. Justify the inclusion of each node (point) and connection (line) in the graph. *(≈150 words)*
 
-Identify all backdoor paths between your exposure and outcome. What variables need to be controlled for / adjusted to close the backdoors? Did this happen in the study or article? *(≈100 words)*
+# Task 2: DAG for your program
 
+Identify **one** (1) outcome that you're most interested in from your final project program. Draw a DAG that shows the causal effect of your program's intervention on the outcome. **You just need one ideal DAG here.**
 
-## 3: DAG for your program
-
-Identify the outcome you care most about from your final project program. Draw a DAG that shows the causal effect of your program's intervention on the outcome. **You just need one ideal DAG here.**
+Describe what *you* think should be included in the DAG to model the data generating process. Justify the inclusion of each node (point) and connection (line) in the graph. Identify which nodes need to be controlled for or adjusted to close backdoor paths and identify/isolate the causal effect. *(≈200 words)*
 
 INCLUDE IMAGE HERE
-
-Summarize the causal claim. Describe what needs to be controlled for and what else you included in the DAG. Justify the inclusion of each node (point) and connection (line) in the graph. *(≈150 words)*
-
-Identify all backdoor paths between your exposure and outcome. What variables need to be controlled for / adjusted to close the backdoors? Did this happen in the study or article? *(≈100 words)*
