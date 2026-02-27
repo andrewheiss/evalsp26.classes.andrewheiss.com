@@ -1,6 +1,6 @@
 ---
 title: "Randomization and matching"
-date: "2026-02-26"
+date: "2026-03-05"
 ---
 
 ```{r slides-videos, echo=FALSE, include=FALSE}

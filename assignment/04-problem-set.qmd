@@ -1,13 +1,6 @@
 ---
-title: "Problem set 4"
+title: "~~Problem set 4~~"
 subtitle: "Difference-in-differences"
-date: "2026-03-13"
 ---
 
-::: {.callout-warning}
-
-### Assignment not ready yet!
-
-I'm updating this assignment and will post full details and instructions at least two weeks before the deadline.
-
-:::
+This assignment is **cancelled**!
