@@ -97,14 +97,14 @@ save_data <- list(
   tar_target(data_plot_barrel_dag_rct,
              ggsave(here_rel("files", "data", "generated_data", "barrel-dag-rct.png"),
                     plot = gen_barrel_dags$plot_rct_dag,
-                    width = 5, height = 2.5, units = "in", bg = "white",
-                    dev = grDevices::png, type = "cairo-png", dpi = 300),
+                    width = 4, height = 2.5, units = "in", bg = "white",
+                    device = ragg::agg_png, res = 300),
              format = "file"),
   tar_target(data_plot_barrel_dag_obs,
              ggsave(here_rel("files", "data", "generated_data", "barrel-dag-observational.png"),
                     plot = gen_barrel_dags$plot_obs_dag,
-                    width = 5, height = 2.5, units = "in", bg = "white",
-                    dev = grDevices::png, type = "cairo-png", dpi = 300),
+                    width = 4, height = 2.5, units = "in", bg = "white",
+                    device = ragg::agg_png, res = 300),
              format = "file"),
 
   # Actual data
@@ -315,67 +315,111 @@ create_nets <- function() {
 create_barrel_dags <- function() {
   suppressPackageStartupMessages(library(ggdag))
 
+  status_colors <- c(
+    exposure = "#0074D9",
+    outcome = "#FF851B",
+    latent = "grey50"
+  )
+
   node_details <- tribble(
-    ~name, ~label, ~x, ~y,
-    "barrel", "Rain barrel", 1, 3,
-    "water_bill", "Water bill", 3, 3,
-    "yard_size", "Yard size", 2, 5,
-    "garden", "Home garden", 2, 4,
-    "attitude_env", "Environmental attitudes", 2, 2,
-    "temperature", "Average temperature", 2, 1
+    ~name          , ~label                    , ~x   , ~y ,
+    "barrel"       , "Rain barrel"             , 1    ,  3 ,
+    "water_bill"   , "Water bill"              , 3    ,  3 ,
+    "yard_size"    , "Yard size"               , 2    ,  5 ,
+    "garden"       , "Home garden"             , 2.15 ,  4 ,
+    "attitude_env" , "Environmental attitudes" , 2    ,  2 ,
+    "temperature"  , "Average temperature"     , 2    ,  1
   )
 
   node_labels <- node_details$label
   names(node_labels) <- node_details$name
 
-  rain_dag <- dagify(water_bill ~ barrel + yard_size + attitude_env + temperature + garden,
-                     barrel ~ yard_size + attitude_env + temperature + garden,
-                     garden ~ yard_size + attitude_env,
-                     exposure = "barrel",
-                     outcome = "water_bill",
-                     coords = node_details,
-                     labels = node_labels)
+  rain_dag <- dagify(
+    water_bill ~ barrel + yard_size + attitude_env + temperature + garden,
+    barrel ~ yard_size + attitude_env + temperature + garden,
+    garden ~ yard_size + attitude_env,
+    exposure = "barrel",
+    outcome = "water_bill",
+    coords = node_details,
+    labels = node_labels
+  )
 
   # Turn DAG into a tidy data frame for plotting
-  rain_dag_tidy <- rain_dag %>%
-    tidy_dagitty() %>%
-    node_status()   # Add column for exposure/outcome/latent
+  rain_dag_tidy <- rain_dag |>
+    tidy_dagitty() |>
+    node_status() # Add column for exposure/outcome/latent
 
-  status_colors <- c(exposure = "#0074D9", outcome = "#FF851B", latent = "grey50")
-
-  plot_obs_dag <- ggplot(rain_dag_tidy, aes(x = x, y = y, xend = xend, yend = yend)) +
-    geom_dag_edges(start_cap = ggraph::circle(1, "lines"),
-                   end_cap = ggraph::circle(1, "lines"),
-                   edge_width = 0.5,
-                   arrow_directed = grid::arrow(length = grid::unit(0.25, "lines"), type = "closed")) +
+  plot_obs_dag <- ggplot(
+    rain_dag_tidy,
+    aes(x = x, y = y, xend = xend, yend = yend)
+  ) +
+    geom_dag_edges(
+      start_cap = ggraph::circle(1, "lines"),
+      end_cap = ggraph::circle(1, "lines")
+    ) +
     geom_dag_point(aes(color = status), size = 7) +
-    geom_dag_label_repel(aes(label = label, fill = status), seed = 1234,
-                         color = "white", fontface = "bold", size = 3) +
+    geom_dag_label(
+      data = filter(rain_dag_tidy, !is.na(status)),
+      aes(label = label, fill = status),
+      nudge_y = -0.45,
+      color = "white",
+      fontface = "bold",
+      size = 3
+    ) +
+    geom_dag_label(
+      data = filter(rain_dag_tidy, is.na(status)),
+      aes(label = label, fill = status),
+      nudge_x = -0.1,
+      hjust = 1,
+      color = "white",
+      fontface = "bold",
+      size = 3
+    ) +
     scale_color_manual(values = status_colors, na.value = "grey20") +
     scale_fill_manual(values = status_colors, na.value = "grey20") +
     guides(color = "none", fill = "none") +
     theme_dag()
 
-  rain_dag_rct <- dagify(water_bill ~ barrel + yard_size + attitude_env + temperature + garden,
-                         garden ~ yard_size + attitude_env,
-                         exposure = "barrel",
-                         outcome = "water_bill",
-                         coords = node_details,
-                         labels = node_labels)
+  rain_dag_rct <- dagify(
+    water_bill ~ barrel + yard_size + attitude_env + temperature + garden,
+    garden ~ yard_size + attitude_env,
+    exposure = "barrel",
+    outcome = "water_bill",
+    coords = node_details,
+    labels = node_labels
+  )
 
-  rain_dag_tidy_rct <- rain_dag_rct %>%
-    tidy_dagitty() %>%
-    node_status()   # Add column for exposure/outcome/latent
+  rain_dag_tidy_rct <- rain_dag_rct |>
+    tidy_dagitty() |>
+    node_status() # Add column for exposure/outcome/latent
 
-  plot_rct_dag <- ggplot(rain_dag_tidy_rct, aes(x = x, y = y, xend = xend, yend = yend)) +
-    geom_dag_edges(start_cap = ggraph::circle(1, "lines"),
-                   end_cap = ggraph::circle(1, "lines"),
-                   edge_width = 0.5,
-                   arrow_directed = grid::arrow(length = grid::unit(0.25, "lines"), type = "closed")) +
+  plot_rct_dag <- ggplot(
+    rain_dag_tidy_rct,
+    aes(x = x, y = y, xend = xend, yend = yend)
+  ) +
+    geom_dag_edges(
+      start_cap = ggraph::circle(1, "lines"),
+      end_cap = ggraph::circle(1, "lines")
+    ) +
     geom_dag_point(aes(color = status), size = 7) +
-    geom_dag_label_repel(aes(label = label, fill = status), seed = 1234,
-                         color = "white", fontface = "bold", size = 3) +
-    scale_color_manual(values = status_colors, na.value = "gr ey20") +
+    geom_dag_label(
+      data = filter(rain_dag_tidy_rct, !is.na(status)),
+      aes(label = label, fill = status),
+      nudge_y = -0.45,
+      color = "white",
+      fontface = "bold",
+      size = 3
+    ) +
+    geom_dag_label(
+      data = filter(rain_dag_tidy_rct, is.na(status)),
+      aes(label = label, fill = status),
+      nudge_x = -0.1,
+      hjust = 1,
+      color = "white",
+      fontface = "bold",
+      size = 3
+    ) +
+    scale_color_manual(values = status_colors, na.value = "grey20") +
     scale_fill_manual(values = status_colors, na.value = "grey20") +
     guides(color = "none", fill = "none") +
     theme_dag()
