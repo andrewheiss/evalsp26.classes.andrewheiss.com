@@ -1,0 +1,223 @@
+---
+title: "RCTs, matching, and inverse probability weighting"
+subtitle: "Problem set 3 --- PMAP 8521, Spring 2026"
+author: "YOUR NAME HERE"  # Replace with your actual name
+date: "DATE GOES HERE"  # Replace with the date
+date-format: "long"
+format:
+  html:
+    toc: true
+  typst:
+    toc: true
+  pdf:
+    toc: true
+  docx:
+    toc: true
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.height = 6 * 0.618,
+  fig.retina = 3,
+  fig.align = "center",
+  out.width = "80%"
+)
+```
+
+# Program overview
+
+::: {.callout-warning title="Fake data!"}
+This isn't actually a real program or real data!
+:::
+
+The metropolitan Atlanta area is interested in helping residents become more environmentally conscious, reduce their water consumption, and save money on their monthly water bills. To do this, Fulton, DeKalb, Gwinnett, Cobb, and Clayton counties have jointly initiated a new program that provides free rain barrels to families who request them. These barrels collect rain water, and the reclaimed water can be used for non-potable purposes (like watering lawns and gardens). Officials hope that families that use the barrels will rely more on rain water and will subsequently use fewer county water resources, thus saving both the families and the counties money.
+
+Being evaluation-minded, the counties hired an evaluator (you!) before rolling out their program. You convinced them to fund and run a randomized controlled trial (RCT) during 2024, and the counties rolled out the program city-wide in 2025. 
+
+I have given you two datasets in `data/`: `barrels_rct.csv` with data from the RCT, and `barrels_obs.csv` with observational data from self-selected participants. These datasets contain the following variables:
+
+| Variable          | Definition                                                         |
+|:------------------|:-------------------------------------------------------------------|
+| `id`              | A unique ID number for each household                              |
+| `water_bill`      | The family's average monthly water bill, in dollars                |
+| `barrel`          | An indicator variable showing if the family participated           |
+| `barrel_num`      | A 0/1 numeric version of `barrel`                                  |
+| `yard_size`       | The size of the family's yard, in square feet                      |
+| `home_garden`     | An indicator variable showing if the family has a home garden      |
+| `home_garden_num` | A 0/1 numeric version of `home_garden`                             |
+| `attitude_env`    | The family's self-reported attitude toward the environment (1--10) |
+| `temperature`     | The average outside temperature                                    |
+
+
+# Your goal
+
+Your task in this problem set is to analyze these two datasets to find the causal effect (or average treatment effect (ATE)) of this hypothetical program.
+
+@fig-program-dag shows the full DAG for the rain barrel program. There are four confounders that complicate the relationship between barrel use and water bills.
+
+![Rain barrel program DAG](images/barrel-dag-observational.png){#fig-program-dag width="75%" fig-align="center"}
+
+***Follow these two examples from class as guides:***
+
+- [RCTs](https://evalsp26.classes.andrewheiss.com/example/rcts/)
+- [Matching and IPW](https://evalsp26.classes.andrewheiss.com/example/matching-ipw/)
+
+The code below loads the data. **You don't need to modify anything in this chunk of code---you only need to run it.**
+
+```{r}
+#| label: load-libraries-data
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(parameters)
+library(marginaleffects)
+library(patchwork)
+library(MatchIt)
+library(modelsummary)
+
+barrels_rct <- read_csv("data/barrels_rct.csv") |> 
+  # This makes it so "No barrel" is the reference category
+  mutate(barrel = fct_relevel(barrel, "No barrel"))
+
+barrels_obs <- read_csv("data/barrels_observational.csv") |> 
+  # This makes it so "No barrel" is the reference category
+  mutate(barrel = fct_relevel(barrel, "No barrel"))
+```
+
+
+# Task 1: Causal effects from an RCT
+
+## Part 1: Modified DAG
+
+You remember from PMAP 8521 that when running an RCT, you can draw the DAG for the program like @fig-rct-dag.
+
+![Rain barrel program DAG as an RCT](images/barrel-dag-rct.png){#fig-rct-dag width="75%" fig-align="center"}
+
+**Explain how @fig-rct-dag is different from @fig-program-dag and why it lets us identify the causal effect of the program.**
+
+Do that here.
+
+
+## Part 2: Balance
+
+### Part 2a: Treatment assignment
+
+Use `count()` and `mutate()` to recreate this table showing how many households were assigned to each group:
+
+```r
+#> # A tibble: 2 × 3
+#>   barrel        n proportion
+#>   <fct>     <int>      <dbl>
+#> 1 No barrel   221      0.448
+#> 2 Barrel      272      0.552
+```
+
+```{r}
+#| label: recreate-me-treatment-balance
+
+# Do stuff here
+```
+
+**Discuss the sample size for the RCT data and how many people were assigned to treatment/control. Are you happy with this randomization?**
+
+Do that here.
+
+
+### Part 2b: Pre-treatment characteristics
+
+Technically, as long as randomization was done correctly, we don't need to worry that much about covariate balance. Not every pre-treatment characteristic needs to be perfectly equal across treatment and control groups. It's still a good idea to check for general balance, though, just in case there was a failure in randomization (i.e. if only people with big yards were assigned to treatment).
+
+**Are the four pre-treatment confounders balanced across treatment and control groups? Are you happy with this balance?**
+
+Insert as many chunks as you need to check the balance of the RCT across the four different pre-treatment characteristics: yard size, home garden, environmental attitudes, and average temperature.
+
+```{r}
+# Do that here, and in other chunks too. 
+# You don't need to do everything in one giant chunk.
+```
+
+
+## Part 3: Estimating the effect
+
+With a properly randomized RCT, we can estimate the causal effect with a simple regression. Use `lm()` and `model_parameters()` to recreate this output:
+
+```r
+#> Parameter       | Coefficient |   SE |           95% CI | t(491) |      p
+#> -------------------------------------------------------------------------
+#> (Intercept)     |      228.44 | 2.04 | [224.44, 232.45] | 112.07 | < .001
+#> barrel [Barrel] |      -40.57 | 2.74 | [-45.97, -35.18] | -14.78 | < .001
+```
+
+```{r}
+#| label: recreate-me-rct-ate
+
+# Do stuff here
+```
+
+**What is the average causal effect of the rain barrel program on monthly water bills? Is it statistically significant? How credible do you find this estimate?**
+
+Do that there.
+
+
+# Task 2: Causal effects from observational data
+
+RCTs are expensive and not always feasible. In this task, you'll use the larger observational dataset (`barrels_obs`) to try to recover a similar causal estimate using matching and inverse probability weighting.
+
+## Part 1: Naive difference in means
+
+As a baseline, use `lm()` to calculate the average difference in water bills for those in the program and those not in the program *using the observational data* (`barrels_obs`).
+
+```{r}
+#| label: naive-diff-in-means
+
+# Do that here
+```
+
+**How does this naive estimate compare to the RCT estimate from Task 1? Is it the same? Why or why not? Should you trust it?**
+
+Do that here.
+
+
+## Part 2: Matching
+
+Because participants self-selected into the program, the four confounders in @fig-program-dag (`yard_size`, `home_garden`, `attitude_env`, and `temperature`) open backdoor paths between barrel use and water bills. Use Mahalanobis nearest-neighbor matching to close them.
+
+```{r}
+# Do that here, and in other chunks too. 
+# You don't need to do everything in one giant chunk.
+```
+
+**What is the matching-based ATE? How does it compare to the naive estimate and the RCT estimate?**
+
+Do that here.
+
+
+## Part 3: Inverse probability weighting
+
+Now estimate the same causal effect using inverse probability weighting (IPW).
+
+```{r}
+# Do that here, and in other chunks too. 
+# You don't need to do everything in one giant chunk.
+```
+
+**What is the IPW-based ATE? How does it compare to the matching estimate and the RCT estimate?**
+
+Do that here.
+
+
+# Task 3: Comparing all results
+
+Put your four ATE estimates (RCT, naive, matching, and IPW) in one side-by-side regression table using `modelsummary()`. Make it clean and polished---use nicer coefficient names, relevant goodness-of-fit statistics, an informative caption, and a cross-referenceable label.
+
+```{r}
+#| label: tbl-all-ates
+#| tbl-cap: ATE estimates from RCT, naive regression, matching, and IPW
+
+# Do that here
+```

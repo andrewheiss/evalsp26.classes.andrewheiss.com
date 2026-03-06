@@ -1,0 +1,179 @@
+---
+title: "IPW: Smoking and weight gain"
+date: "2026-03-05"
+date-format: "long"
+format:
+  html:
+    toc: true
+  typst:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Do people who quit smoking gain weight?
+
+The NHANES I Epidemiologic Follow-up Study (NHEFS) is a national longitudinal study that was jointly initiated by the National Center for Health Statistics and the National Institute on Aging in collaboration with other agencies of the Public Health Service. The NHEFS was designed to investigate the relationships between clinical, nutritional, and behavioral factors. ([See here](https://wwwn.cdc.gov/nchs/nhanes/nhefs/) for complete details.)
+
+You're going to use data from the NHEFS to find the causal effect of quitting smoking on weight gain.
+
+
+## Load data
+
+```{r}
+#| label: libraries-data
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(parameters)
+library(marginaleffects)
+library(ggdag)
+library(ggdist)
+
+nhefs <- read_csv("data/nhefs.csv")
+nhefs_details <- read_csv("data/nhefs_codebook.csv")
+```
+
+**Causal variables**:
+
+- Treatment/exposure: `qsmk` (Respondent quit smoking between 1st questionnaire and 1982, 1 = yes, 0 = no)
+- Outcome: `wt82_71` (Respondent weight change between 1971 and 1982 in kilograms)
+
+**Confounders**:
+
+- Demographics
+  - `age`: age
+  - `sex`: sex
+  - `race`: race
+  - `education`: education
+- Health
+  - `wt71`: baseline weight in 1971
+  - `active`: daily activity level
+  - `exercise`: exercise
+- Smoking history
+  - `smokeintensity`: smoking intensity
+  - `smokeyrs`: years of smoking
+
+
+## Check difference in outcome across treatment status
+
+Is there a visual difference?
+
+```{r}
+ggplot(nhefs, aes(x = wt82_71, fill = factor(qsmk))) + 
+  geom_density()
+
+ggplot(nhefs, aes(x = wt82_71, y = factor(qsmk), fill = factor(qsmk))) +
+  # stat_pointinterval() + 
+  stat_halfeye()
+```
+
+```{r}
+nhefs |> 
+  group_by(qsmk) |> 
+  summarize(avg_gain = mean(wt82_71)) |> 
+  mutate(diff = avg_gain - lag(avg_gain))
+```
+
+```{r}
+model_naive <- lm(wt82_71 ~ qsmk, data = nhefs)
+model_parameters(model_naive, verbose = FALSE)
+```
+
+
+## Draw a DAG
+
+```{r}
+#| fig-width: 8
+#| fig-height: 5
+set.seed(1234)
+
+smk_wt_dag <- dagify(
+  # Specify causes of quitting smoking and weight gain:
+  qsmk ~ sex + race + age + education + 
+    smokeintensity + smokeyrs + exercise + active + wt71,
+  wt82_71 ~ qsmk + sex + race + age + education + 
+    smokeintensity + smokeyrs + exercise + active + wt71,
+  # Specify causal question:
+  exposure = "qsmk", 
+  outcome = "wt82_71"
+)
+
+ggdag_status(smk_wt_dag)
+```
+
+## Treatment model
+
+```{r}
+quit_model <- glm(
+  qsmk ~ sex + race + age + education + smokeintensity + smokeyrs + exercise + active + wt71,
+  data = nhefs,
+  family = binomial(link = "logit")
+)
+```
+
+## Propensity scores and weights
+
+```{r}
+quit_probabilities <- predictions(quit_model, nhefs) |> 
+  rename(propensity = estimate)
+
+quit_ipw <- quit_probabilities |> 
+  select(-c(p.value, conf.low, conf.high)) |> 
+  mutate(ipw = (qsmk / propensity) + ((1 - qsmk) / (1 - propensity)))
+```
+
+Investigate your weights. They should be clustered around 1 (with an average of 1), without any huge values.
+
+```{r}
+ggplot(quit_ipw, aes(x = ipw)) + 
+  geom_histogram(binwidth = 1, color = "white", boundary = 0)
+```
+
+```{r}
+quit_ipw |> 
+  summarize(avg_ipw = mean(ipw))
+```
+
+## Outcome model
+
+```{r}
+model_outcome <- lm(wt82_71 ~ qsmk, data = quit_ipw, weights = ipw)
+model_parameters(model_outcome, verbose = FALSE)
+```
+
+```{r}
+plot_predictions(model_outcome, condition = "qsmk")
+```
+
+
+## Treatment and outcome model simultaneously
+
+```{r}
+#| message: false
+library(WeightIt)
+
+weights_auto <- weightit(
+  qsmk ~ sex + race + age + education + smokeintensity + smokeyrs + exercise + active + wt71,
+  data = nhefs,
+  method = "glm",
+  estimand = "ATE"
+)
+
+model_ipw_auto <- lm_weightit(
+  wt82_71 ~ qsmk,
+  data = nhefs,
+  weightit = weights_auto
+)
+
+model_parameters(model_ipw_auto, verbose = FALSE)
+```
+
+```{r}
+plot_predictions(model_ipw_auto, condition = "qsmk")
+```
+
+

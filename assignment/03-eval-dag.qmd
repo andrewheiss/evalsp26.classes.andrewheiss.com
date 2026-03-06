@@ -24,7 +24,7 @@ You need to complete the two tasks below. Ideally you should type this in a Quar
 
 ### Including DAGs in your document
 
-You can either make your DAGs with something like Dagitty or with R. See [the DAGs example](example/dags.qmd) for step-by-step instructions.
+You can either make your DAGs with something like Dagitty or with R. See [the DAGs example](/example/dags.qmd) for step-by-step instructions.
 
 If you use Dagitty, you'll need to export the image (Model > Export as PNG) and put it in the same folder as your .qmd file. Then include it as an image using [the Markdown syntax for images](https://quarto.org/docs/authoring/figures.html):
 

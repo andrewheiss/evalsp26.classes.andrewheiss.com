@@ -4,10 +4,57 @@ subtitle: "RCTs and IPW/Matching"
 date: "2026-03-13"
 ---
 
-::: {.callout-warning}
+For this problem set, you'll practice analyzing RCTs and working with matching and inverse probability weighting.
 
-### Assignment not ready yet!
+As always, if you're struggling, *please* use Discord and talk to me and your classmates! Don't suffer in silence!
 
-I'm updating this assignment and will post full details and instructions at least two weeks before the deadline.
+::: {.callout-important}
+### Check the example!
+
+These example pages will be helpful!
+
+- [{{< fa laptop-code >}} RCTs](/example/rcts.qmd)
+- [{{< fa laptop-code >}} Matching and IPW](/example/matching-ipw.qmd)
+:::
+
+## Instructions
+
+1. Open the project either on your computer ([follow these instructions to get started!](/resource/install.qmd)) or in Posit.cloud
+
+   - [{{< fa file-archive >}} `03-problem-set.zip`](/projects/03-problem-set.zip): If you're using R on your own computer, download this file, [*unzip it*](/resource/unzipping.qmd), and double click on the file named `03-problem-set.Rproj`
+   - [{{< fa cloud >}} Posit.cloud project](https://posit.cloud/spaces/737332/content/12042211): Use this link if you're using Posit.cloud in your browser
+
+2. Rename the Quarto file named `your-name_03-problem-set.qmd` to something that matches your name and open it in RStudio.
+
+3. Complete the tasks given in the Quarto file. You can definitely copy, paste, and adapt from other code in the document—don't try to write everything from scratch!
+
+4. When you're all done, click on the "Render" button at the top of the editing window and create a Typst (pdf), PDF, or Word version of your document. Upload that file to iCollege. **Do not upload a rendered HTML file** (they don't work on iCollege).
+
+```{r render-button, echo=FALSE, out.width="50%", indent="   ", fig.align="center"}
+knitr::include_graphics("/files/img/assignments/render-button.png", error = FALSE)
+```
+
+## Tips
+
+::: {.callout-tip}
+### Running chunks
+
+Remember that you can run an entire chunk by clicking on the green play arrow in the top right corner of the chunk. You can also run lines of code line-by-line if you place your cursor on some R code and press <kbd>⌘</kbd> + <kbd>enter</kbd> (for macOS users) or <kbd>ctrl</kbd> + <kbd>enter</kbd> (for Windows users).
+
+Make sure you run each chunk sequentially. If you run a chunk in the middle of the document without running previous ones, it might not work, since previous chunks might do things that later chunks depend on.
+:::
+
+::: {.callout-tip}
+### Inserting chunks
+
+You'll need to insert some of your own code chunks. Rather than typing them by hand (that's tedious!), use the "Insert" button at the top of the editing window, or press  <kbd>⌥</kbd> + <kbd>⌘</kbd> + <kbd>I</kbd> on macOS, or <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>I</kbd> on Windows.
+
+```{r}
+#| label: insert-chunk-button
+#| echo: false
+#| out-width: 19%
+#| fig-align: center
+knitr::include_graphics("/files/img/assignments/insert-chunk-button.png", error = FALSE)
+```
 
 :::
