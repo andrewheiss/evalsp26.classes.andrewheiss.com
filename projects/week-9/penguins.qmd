@@ -1,0 +1,89 @@
+---
+title: "Penguins and interactions"
+date: "2026-03-12"
+date-format: "long"
+format:
+  html:
+    toc: true
+---
+
+```{r}
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(parameters)
+library(marginaleffects)
+
+penguins <- penguins |> drop_na(sex)
+```
+
+
+```{r}
+model_basic <- lm(
+  body_mass ~ flipper_len + species,
+  data = penguins
+)
+
+# With parameters
+model_parameters(model_basic)
+
+# With marginaleffects
+avg_comparisons(model_basic)
+```
+
+
+```{r}
+basic_predictions <- predictions(model_basic)
+
+ggplot(penguins, aes(x = flipper_len, y = body_mass)) +
+  geom_point(aes(color = species), alpha = 0.4) +
+  geom_smooth(data = basic_predictions, aes(y = estimate, color = species))
+```
+
+```{r}
+plot_predictions(
+  model_basic,
+  condition = c("flipper_len", "species"),
+  points = 1
+)
+```
+
+```{r}
+model_interaction <- lm(
+  body_mass ~ flipper_len * species,
+  data = penguins
+)
+
+# With parameters
+model_parameters(model_interaction)
+
+# With marginaleffects
+avg_comparisons(model_interaction, by = "species", variable = "flipper_len")
+```
+
+
+```{r}
+ggplot(penguins, aes(x = flipper_len, y = body_mass)) +
+  geom_point(aes(color = species), alpha = 0.4) +
+  geom_smooth(aes(color = species), method = "lm", se = FALSE)
+```
+
+```{r}
+interaction_predictions <- predictions(model_interaction)
+
+ggplot(penguins, aes(x = flipper_len, y = body_mass)) +
+  geom_point(aes(color = species), alpha = 0.4) +
+  geom_smooth(
+    data = interaction_predictions,
+    aes(y = estimate, color = species)
+  )
+```
+
+```{r}
+plot_predictions(
+  model_interaction,
+  condition = c("flipper_len", "species"),
+  points = 1
+)
+```
