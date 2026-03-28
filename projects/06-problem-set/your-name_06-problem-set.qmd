@@ -11,6 +11,7 @@ format:
     toc: true
   typst:
     toc: true
+    citeproc: true
   pdf:
     toc: true
   docx:
