@@ -48,16 +48,23 @@ slide_frame("/slides/11-slides.html")
 youtube_list(slide_details, playlist_id)
 ```
 
-::: {.content-hidden}
-
 ## In-class stuff
 
 Here are all the materials we'll use in class:
 
-- [Week 11 R code](/projects/week-11.zip) (on [Posit.cloud](https://posit.cloud/spaces/599025/content/10105266))
+- [**Week 11 FAQ slides**](/slides/11-class.html) ([PDF](/slides/11-class.pdf))
+- [Week 11 R code](/projects/week-11.zip) (on [Posit.cloud](https://posit.cloud/spaces/737332/content/12220198))
 
-:::
+Other resources:
 
+- [Citations](https://quarto.org/docs/authoring/citations.html) 
+  - [Complete instructions](/resource/citations.qmd)
+  - With [RStudio](https://posit.co/blog/rstudio-1-4-preview-citations/)
+  - [Citation syntax](/resource/markdown.qmd#citations)
+  - [Example of a citation-heavy document](https://stats.andrewheiss.com/snoopy-spring/) ([`source`](https://github.com/andrewheiss/snoopy-spring/blob/main/index.qmd))
+- [Cross references](https://quarto.org/docs/authoring/cross-references.html)
+- [Inline code](https://quarto.org/docs/computations/inline-code.html)
+  - [Bonus pro method for inline reporting with lists](https://www.tjmahr.com/lists-knitr-secret-weapon/)
 
 ```{verbatim include=FALSE}
 Playlist: https://www.youtube.com/playlist?list=PLS6tnpTr39sEsOSeMK19h6RWUB5kHrn0q

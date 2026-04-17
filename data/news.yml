@@ -1,5 +1,12 @@
 # This file is generated with data/extract-news-headings.R; do not edit by hand
 
+- title: "Final deadlines for things"
+  categories:
+  - "course details"
+  date_actual: '1776371520'
+  date: "2026-04-16T20:32:00"
+  href: "/news/2026-04-16_final-deadlines.html"
+  headings: []
 - title: "Week 3 tips and FAQs"
   categories:
   - "FAQs"

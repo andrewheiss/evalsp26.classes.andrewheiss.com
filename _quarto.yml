@@ -30,12 +30,12 @@ website:
 
   draft-mode: unlinked
 
-  # announcement:
-  #   icon: calendar-check
-  #   dismissable: true
-  #   content: "**Reminder!** The final deadline for all assignments other than the final project is **Tuesday, April 29 at 11:59 PM** ([details](/news/2025-04-23_final-deadlines.html))"
-  #   type: danger
-  #   position: below-navbar
+  announcement:
+    icon: calendar-check
+    dismissable: true
+    content: "**Reminder!** The final deadline for all assignments other than the final project is **Tuesday, April 28 at 11:59 PM** ([details](/news/2026-04-16_final-deadlines.html))"
+    type: danger
+    position: below-navbar
 
   favicon: "/files/icon-512.png"
 
