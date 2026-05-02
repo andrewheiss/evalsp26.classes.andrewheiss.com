@@ -1,5 +1,29 @@
 # This file is generated with data/extract-news-headings.R; do not edit by hand
 
+- title: "What can I do to keep learning R?"
+  categories:
+  - "FAQs"
+  date_actual: '1777732080'
+  date: "2026-05-02T14:28:00"
+  href: "/news/2026-05-02_how-to-keep-learning-llms.html"
+  headings:
+  - id: "what-kind-of-communities-can-i-follow-online-to-keep-up-with-this-r-stuff"
+    text: "What kind of communities can I follow online to keep up with this R stuff?"
+  - id: "who-in-the-r-world-should-i-be-following"
+    text: "Who in the R world should I be following?"
+  - id: "will-r-ever-be-fully-replaced-by-ai"
+    text: "Will R ever be fully replaced by AI?"
+  - id: "will-you-incorporate-llms-and-ai-prompting-into-the-course-in-the-future"
+    text: "Will you incorporate LLMs and AI prompting into the course in the future?"
+  - id: "why-wont-you-incorporate-llms-and-ai-prompting-into-the-course"
+    text: "Why won’t you incorporate LLMs and AI prompting into the course?"
+- title: "Class website future"
+  categories:
+  - "course details"
+  date_actual: '1777726740'
+  date: "2026-05-02T12:59:00"
+  href: "/news/2026-05-02_website-future.html"
+  headings: []
 - title: "Final deadlines for things"
   categories:
   - "course details"
